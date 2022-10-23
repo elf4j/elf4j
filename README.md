@@ -19,6 +19,6 @@ A no-fluff Java logging facade.
 
 Client applications can switch logging frameworks at deployment time, no code change needed. There have been similar efforts such as Apache Commons Logging and SLF4J. If you have used some of those over the years, you may understand why attempts like this still exist.
 
-ELF4J has no dependency other than the JDK. Hopefully, the [`Logger`](https://github.com/elf4j/elf4j-api/blob/main/README.md#the-logger) API is boringly simple and easy to use. The out-of-the-box logging behavior is no-op, intentionally, but some working logging providers are available: [LOG4J](https://github.com/elf4j/elf4j-log4j), [tinylog](https://github.com/elf4j/elf4j-tinylog), [LOGBACK](https://github.com/elf4j/elf4j-logback), ... 
+ELF4J has no dependency other than the JDK. Hopefully, the [`Logger`](https://github.com/elf4j/elf4j-api/blob/main/README.md#the-logger) API is boringly simple and easy to use. The out-of-the-box logging behavior is no-op but some working logging providers are available: [LOG4J](https://github.com/elf4j/elf4j-log4j), [tinylog](https://github.com/elf4j/elf4j-tinylog), [LOGBACK](https://github.com/elf4j/elf4j-logback), ... 
 
-The [Java Service Provider Interfaces (SPI)](https://docs.oracle.com/javase/tutorial/sound/SPI-intro.html) mechanism is employed so the client application can elect or change the in-effect logging framework, at deployment time, without code change.
+Thanks to the [Java Service Provider Interfaces (SPI)](https://docs.oracle.com/javase/tutorial/sound/SPI-intro.html) mechanism, The API client application can opt to switch among those logging providers at deployment time, without code change.
