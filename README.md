@@ -21,4 +21,4 @@ Client applications can switch logging frameworks at deployment time, no code ch
 
 ELF4J has no dependency other than the JDK. Hopefully, the [`Logger`](https://github.com/elf4j/elf4j-api/blob/main/README.md#the-logger) API is boringly simple and easy to use. The out-of-the-box logging behavior is no-op but some working logging providers are available: [LOG4J](https://github.com/elf4j/elf4j-log4j), [tinylog](https://github.com/elf4j/elf4j-tinylog), [LOGBACK](https://github.com/elf4j/elf4j-logback), ... 
 
-Thanks to the [Java Service Provider Interfaces (SPI)](https://docs.oracle.com/javase/tutorial/sound/SPI-intro.html) mechanism, The API client application can opt to switch among those logging providers at deployment time, without code change.
+Thanks to the [Java Service Provider Interfaces (SPI)](https://docs.oracle.com/javase/tutorial/sound/SPI-intro.html) mechanism, the API client application can opt to switch among those logging providers at deployment time, without code change.
