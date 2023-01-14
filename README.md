@@ -84,12 +84,12 @@ logger.log("A log {} can have {}", "message", "arguments");
 This is by convention, and does not syntactically appear in the API or SPI. Both the API user and the Service Provider
 must honor such convention.
 
-**Immutability**
+**IMMUTABILITY**
 
 The API client should assume any ELF4J `Logger` instance is immutable, thus thread-safe. The Service Provider
 implementation must support such assumption.
 
-**Logger Name**
+**LOGGER NAME**
 
 To get an ELF4J `Logger` instance, the API user may supply a name or class to suggest the name of the logger when
 calling the `Logger#instance(...)` methods. However, it is up to the Service Provider how, if at all, to use the
@@ -97,13 +97,13 @@ user-supplied value to determine the logger name. e.g. if the API user ends up p
 no-arg `Logger#instance()` method, then the name of the logger instance is undefined; the provider may opt to supply a
 default, e.g. the name of the caller class.
 
-**Log Level**
+**LOG LEVEL**
 
 If the API user gets a `Logger` instance via a `Logger#instance(...)` call, the default log level of such instance is
 decided by the Service Provider implementation. If the API user gets a `Logger` instance via a `Logger#at[Level]()`
 call, then the Service Provider should supply such instance with the requested level.
 
-**`Supplier` Functional Arguments**
+**`SUPPLIER` FUNCTIONAL ARGUMENTS**
 
 An `Object`-type argument passed to any of the `Logger#log(...)` methods must be treated specially if the actual type at
 runtime is `java.util.function.Supplier`. That is, the result of `Supplier#get()`, instead of the `Supplier` function
@@ -127,12 +127,12 @@ because this lambda is used as a parameter declared as an `Object` rather than a
 
 Note that ELF4J is a logging service facade, rather than implementation. As such,
 
-No-op by default:
+**NO-OP BY DEFAULT**
 
 - Nothing will be logging out (no-op) unless a properly configured external ELF4J logging provider is discovered at the
   application start time. The ELF4J facade itself only ships with the default no-op logging provider.
 
-Only one in-effect logging provider:
+**ONLY ONE IN-EFFECT LOGGING PROVIDER**
 
 - An API user can select or change to
   use [any ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-of-the-elf4j-spi)
