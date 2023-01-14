@@ -73,7 +73,7 @@ public interface Logger {
 
 ## Conventions, Defaults, And Implementation Notes
 
-**Placeholder Token**
+**PLACEHOLDER TOKEN**
 
 The empty curly braces token `{}` is chosen to be the placeholder for message arguments. e.g.
 
