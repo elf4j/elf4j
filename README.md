@@ -2,7 +2,7 @@
 
 # elf4j
 
-API and SPI of a No-fluff Java Logging Facade - Easy Logging Facade for Java (ELF4J)
+API and SPI of a no-fluff Java logging facade - Easy Logging Facade for Java (ELF4J)
 
 ## User Stories
 
