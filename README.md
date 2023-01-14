@@ -19,14 +19,6 @@ Java 8 or better
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.elf4j/elf4j.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.elf4j%22%20AND%20a:%22elf4j%22)
 
-```xml
-
-<dependency>
-    <groupId>io.github.elf4j</groupId>
-    <artifactId>elf4j</artifactId>
-</dependency>
-```
-
 ## The Logger - Service Interface And Access API
 
 ```java
