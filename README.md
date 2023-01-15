@@ -6,10 +6,11 @@ API and SPI of a no-fluff Java logging facade - Easy Logging Facade for Java (EL
 
 1. As an application developer, I want to program logs of my application against an API, so that I can choose or
    change the actual logging implementation at the deployment time without code change.
-2. As a logging framework provider, I want to have
-   a [Service Provider Interfaces (SPI)](https://docs.oracle.com/javase/tutorial/sound/SPI-intro.html) definition I can
-   implement, so that my independent logging framework can be discovered and used by any ELF4J API application at the
-   deployment time.
+2. As a logging Service Provider of the
+   Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html), I want to
+   have a [Service Provider Interfaces (SPI)](https://docs.oracle.com/javase/tutorial/sound/SPI-intro.html) definition I
+   can implement, so that my independent logging framework can be discovered and used by any ELF4J API application at
+   the deployment time.
 
 ## Prerequisite
 
@@ -211,9 +212,9 @@ class ReadmeSample2 {
 }
 ```
 
-## For Service Providers - Service Provider Interface (SPI)
+## For Service Providers - The Service Provider Interface (SPI)
 
-As with the [Java Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html),
+As with the Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html),
 the logging Service Provider should supply a concrete and complete implementation, including both the provider class for
 the `LoggerFactory` [SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html) and the service class for
 the `Logger` API, such that the ELF4J API client application can discover and load the provider implementation using
