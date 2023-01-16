@@ -113,8 +113,9 @@ logger.log(
         "Object");
 ```
 
-Per the lambda expression syntax requirement, the downcast of `Supplier/Supplier<?>/Supplier<String>` here is necessary
-because this lambda is used as a parameter declared as an `Object` rather than a functional interface.
+Note that the downcast of `Supplier/Supplier<?>/Supplier<String>` here is necessary per lambda expression syntax
+requirement because this lambda is used as a parameter declared as an `Object` rather than a functional interface. No
+need of downcast if the `Supplier` function is passed as a reference instead of a lambda expression.
 
 ## For API Users - Sample Usage
 
