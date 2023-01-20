@@ -1,5 +1,3 @@
-![Visitor Count](https://profile-counter.glitch.me/elf4j/count.svg)
-
 # elf4j
 
 API and SPI of a no-fluff Java logging facade - Easy Logging Facade for Java (ELF4J)
@@ -248,3 +246,5 @@ public interface LoggerFactory {
 More providers to come:
 
 - ...
+
+![Visitor Count](https://profile-counter.glitch.me/elf4j/count.svg)
