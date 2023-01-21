@@ -249,3 +249,5 @@ public interface LoggerFactory {
 More providers to come:
 
 - ...
+
+![Visitor Count](https://profile-counter.glitch.me/elf4j/count.svg)
