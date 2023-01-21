@@ -9,9 +9,8 @@ API and SPI of a no-fluff Java logging facade - Easy Logging Facade for Java (EL
 1. As an application developer, I want to use a logging service API, so that I can choose or change the actual logging
    service implementation among various providers, at the application deployment time without code change.
 2. As a logging service provider, I want to have a Service Provider
-   Interfaces [(SPI)](https://docs.oracle.com/javase/tutorial/sound/SPI-intro.html) definition, so that, by implementing
-   such SPI, my independent logging service framework can be chosen and used by the client application at its deployment
-   time.
+   Interface [(SPI)](https://docs.oracle.com/javase/tutorial/sound/SPI-intro.html) to implement, so that my independent
+   logging service framework can be chosen and used by the client application at its deployment time.
 
 Note: The basic delivery mechanism for the user stories is the
 Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html).
