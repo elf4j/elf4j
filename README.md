@@ -90,26 +90,26 @@ implementation must support such assumption.
 **Logger Name**
 
 To get an ELF4J `Logger` instance, the API user may supply a name or class to suggest the name of the logger when
-calling one of the parameterized `Logger.instance` methods. However, it is up to the Service Provider how, if at all, to
+calling one of the parameterized Logger.instance methods. However, it is up to the Service Provider how, if at all, to
 use the user-supplied value to determine the logger name. e.g. if the API user ends up passing in `null` or using the
-no-arg `Logger.instance` method, then the name of the logger instance is undefined; the provider may opt to supply a
+no-arg Logger.instance method, then the name of the logger instance is undefined; the provider may opt to supply a
 default, e.g. the name of the caller class.
 
 **Log Level**
 
-If the API user gets a `Logger` instance via one of the `Logger.instance` methods, the default log level of such
-instance is decided by the Service Provider implementation. If the API user gets a `Logger` instance via one of the
+If the API user gets a `Logger` instance via one of the Logger.instance methods, the default log level of such
+instance is decided by the Service Provider implementation. If the API user gets a Logger instance via one of the
 Logger.at*Level* methods, then the Service Provider should supply the instance with the requested level.
 
 **`Supplier` Functional Arguments**
 
-An `Object`-type argument passed to any of the `Logger.log` methods must be treated specially if the actual type at
-runtime is `java.util.function.Supplier`. That is, the result of `Supplier.get()`, instead of the `Supplier` function
+An `Object`-type argument passed to any of the Logger.log methods must be treated specially if the actual type at
+runtime is `java.util.function.Supplier`. That is, the result of Supplier.get method, instead of the `Supplier` function
 itself, should be used when computing the final log message.
 
 This special handling of `Supplier`-type arguments is by convention, and not syntactically enforced by the API or SPI.
-This allows for the API user to mix up arguments of `Supplier` and other `Object` types within the same call
-of `Logger.log` in order to get sensible outcome for the final log message:
+This allows for the API user to mix up arguments of `Supplier` and other `Object` types within the same call of
+Logger.log in order to get sensible outcome for the final log message:
 
 ```jshelllanguage
 logger.log(
