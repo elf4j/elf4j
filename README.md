@@ -104,8 +104,8 @@ Logger.at*Level* methods, then the Service Provider should supply the instance w
 **`Supplier` Functional Arguments**
 
 An `Object`-type argument passed to any of the Logger.log methods must be treated specially if the actual type at
-runtime is `java.util.function.Supplier`. That is, the result of Supplier.get method, instead of the `Supplier` function
-itself, should be used when computing the final log message.
+runtime is `java.util.function.Supplier`. That is, the result of the Supplier.get method, instead of the usual
+Objects.toString result, should be used when computing the final log message.
 
 This special handling of `Supplier`-type arguments is by convention, and not syntactically enforced by the API or SPI.
 This allows for the API user to mix up arguments of `Supplier` and other `Object` types within the same call of
