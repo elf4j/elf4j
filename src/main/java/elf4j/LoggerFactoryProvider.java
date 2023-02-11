@@ -73,12 +73,12 @@ enum LoggerFactoryProvider {
                     return loadedFactory;
                 }
             }
-            log("Configuration error: Desired ELF4J logger factory " + desiredLoggerFactoryFqcn.get()
-                    + " not found in discovered factories: " + loadedFactories + "falling back to NO-OP logging...");
+            log("Configuration error: Desired ELF4J logger factory: " + desiredLoggerFactoryFqcn.get()
+                    + " not found in discovered factories: " + loadedFactories + ": Falling back to NO-OP logging...");
             return new NoopLoggerFactory();
         }
         if (loadedFactories.isEmpty()) {
-            log("No ELF4J logger factory discovered: This is OK only if no logging is desired, falling back to NO-OP logging...");
+            log("No ELF4J logger factory discovered: This is OK only if no logging is desired: Falling back to NO-OP logging...");
             return new NoopLoggerFactory();
         }
         if (loadedFactories.size() == 1) {
@@ -88,8 +88,8 @@ enum LoggerFactoryProvider {
         }
         log("Configuration error: Expected only one ELF4J logger factory but discovered " + loadedFactories.size()
                 + ": " + loadedFactories
-                + ", please either re-provision to have only one factory in the classpath, or select the desired factory by using the '"
-                + ELF4J_LOGGER_FACTORY_FQCN + "' system property, falling back to NO-OP logging...");
+                + ": Please either re-provision to have only one factory in the classpath, or select the desired factory by using the system property: "
+                + ELF4J_LOGGER_FACTORY_FQCN + ": Falling back to NO-OP logging...");
         return new NoopLoggerFactory();
     }
 }
