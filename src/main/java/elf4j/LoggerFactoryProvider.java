@@ -33,8 +33,8 @@ import java.util.Optional;
 import java.util.ServiceLoader;
 
 /**
- * Provisions one single ELF4J logging provider for the client application - either the properly configured or, in case
- * of setup errors, the default no-op logging provider.
+ * Provisions one single ELF4J logging provider for the client application - either the properly configured or the
+ * default no-op logging provider.
  */
 enum LoggerFactoryProvider {
     /**
