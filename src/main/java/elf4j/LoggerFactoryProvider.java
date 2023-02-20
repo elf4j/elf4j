@@ -57,15 +57,15 @@ enum LoggerFactoryProvider {
 
     private LoggerFactory getLoggerFactory() {
         List<LoggerFactory> loadedFactories = loadLoggerFactories();
-        Optional<String> selectedLoggerFactory = getSelectedLoggerFactory();
-        if (selectedLoggerFactory.isPresent()) {
+        Optional<String> selectedLoggerFactoryName = getSelectedLoggerFactoryName();
+        if (selectedLoggerFactoryName.isPresent()) {
             for (LoggerFactory loadedFactory : loadedFactories) {
-                if (loadedFactory.getClass().getName().equals(selectedLoggerFactory.get())) {
+                if (loadedFactory.getClass().getName().equals(selectedLoggerFactoryName.get())) {
                     log("Setup success: As selected, using ELF4J logger factory: " + loadedFactory);
                     return loadedFactory;
                 }
             }
-            log("Configuration error: Selected ELF4J logger factory '" + selectedLoggerFactory.get()
+            log("Configuration error: Selected ELF4J logger factory '" + selectedLoggerFactoryName.get()
                     + "' not found in discovered factories: " + loadedFactories + ": Falling back to NO-OP logging...");
             return new NoopLoggerFactory();
         }
@@ -91,12 +91,12 @@ enum LoggerFactoryProvider {
         return loggerFactories;
     }
 
-    private static Optional<String> getSelectedLoggerFactory() {
-        String desiredLoggerFactoryFqcn = System.getProperty(ELF4J_LOGGER_FACTORY_FQCN);
-        if (desiredLoggerFactoryFqcn == null || desiredLoggerFactoryFqcn.trim().isEmpty()) {
+    private static Optional<String> getSelectedLoggerFactoryName() {
+        String selectedLoggerFactoryFqcn = System.getProperty(ELF4J_LOGGER_FACTORY_FQCN);
+        if (selectedLoggerFactoryFqcn == null || selectedLoggerFactoryFqcn.trim().isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(desiredLoggerFactoryFqcn.trim());
+        return Optional.of(selectedLoggerFactoryFqcn.trim());
     }
 
     private static void log(String message) {
