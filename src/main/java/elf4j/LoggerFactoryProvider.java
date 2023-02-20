@@ -32,53 +32,45 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ServiceLoader;
 
+/**
+ * Provisions one single ELF4J logging provider for the client application - either the properly configured or, in case
+ * of setup errors, the default no-op logging provider.
+ */
 enum LoggerFactoryProvider {
+    /**
+     * Sole instance
+     */
     INSTANCE;
-    static final String ELF4J_LOGGER_FACTORY_FQCN = "elf4j.logger.factory.fqcn";
+    /**
+     * System property to select the desired logger factory by its fully qualified class name in case multiple logging
+     * provider candidates are available
+     */
+    private static final String ELF4J_LOGGER_FACTORY_FQCN = "elf4j.logger.factory.fqcn";
+    /**
+     * Discovered and loaded only once
+     */
     private final LoggerFactory loggerFactory;
 
     LoggerFactoryProvider() {
         this.loggerFactory = getLoggerFactory();
     }
 
-    private static Optional<String> getLoggerFactorySelection() {
-        String desiredLoggerFactoryFqcn = System.getProperty(ELF4J_LOGGER_FACTORY_FQCN);
-        if (desiredLoggerFactoryFqcn == null || desiredLoggerFactoryFqcn.trim().isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(desiredLoggerFactoryFqcn.trim());
-    }
-
-    private static List<LoggerFactory> loadLoggerFactories() {
-        List<LoggerFactory> loggerFactories = new ArrayList<>();
-        ServiceLoader.load(LoggerFactory.class).forEach(loggerFactories::add);
-        return loggerFactories;
-    }
-
-    private static void log(String message) {
-        System.err.println("ELF4J status: " + message);
-    }
-
-    LoggerFactory loggerFactory() {
-        return loggerFactory;
-    }
-
     private LoggerFactory getLoggerFactory() {
         List<LoggerFactory> loadedFactories = loadLoggerFactories();
-        Optional<String> desiredLoggerFactoryFqcn = getLoggerFactorySelection();
-        if (desiredLoggerFactoryFqcn.isPresent()) {
+        Optional<String> selectedLoggerFactory = getSelectedLoggerFactory();
+        if (selectedLoggerFactory.isPresent()) {
             for (LoggerFactory loadedFactory : loadedFactories) {
-                if (loadedFactory.getClass().getName().equals(desiredLoggerFactoryFqcn.get())) {
+                if (loadedFactory.getClass().getName().equals(selectedLoggerFactory.get())) {
                     log("Setup success: As selected, using ELF4J logger factory: " + loadedFactory);
                     return loadedFactory;
                 }
             }
-            log("Configuration error: Desired ELF4J logger factory: " + desiredLoggerFactoryFqcn.get()
-                    + " not found in discovered factories: " + loadedFactories + ": Falling back to NO-OP logging...");
+            log("Configuration error: Selected ELF4J logger factory '" + selectedLoggerFactory.get()
+                    + "' not found in discovered factories: " + loadedFactories + ": Falling back to NO-OP logging...");
             return new NoopLoggerFactory();
         }
         if (loadedFactories.isEmpty()) {
-            log("No ELF4J logger factory discovered: This is OK only if no logging is desired: Falling back to NO-OP logging...");
+            log("No ELF4J logger factory discovered: This is OK only if no logging is expected via ELF4J: Falling back to NO-OP logging...");
             return new NoopLoggerFactory();
         }
         if (loadedFactories.size() == 1) {
@@ -88,8 +80,33 @@ enum LoggerFactoryProvider {
         }
         log("Configuration error: Expected only one ELF4J logger factory but discovered " + loadedFactories.size()
                 + ": " + loadedFactories
-                + ": Please either re-provision to have only one factory in the classpath, or select the desired factory by using the system property: "
-                + ELF4J_LOGGER_FACTORY_FQCN + ": Falling back to NO-OP logging...");
+                + ": Please either re-provision to have only one logging provider, or select the desired factory by its fully qualified class name using the system property '"
+                + ELF4J_LOGGER_FACTORY_FQCN + "': Falling back to NO-OP logging...");
         return new NoopLoggerFactory();
+    }
+
+    private static List<LoggerFactory> loadLoggerFactories() {
+        List<LoggerFactory> loggerFactories = new ArrayList<>();
+        ServiceLoader.load(LoggerFactory.class).forEach(loggerFactories::add);
+        return loggerFactories;
+    }
+
+    private static Optional<String> getSelectedLoggerFactory() {
+        String desiredLoggerFactoryFqcn = System.getProperty(ELF4J_LOGGER_FACTORY_FQCN);
+        if (desiredLoggerFactoryFqcn == null || desiredLoggerFactoryFqcn.trim().isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(desiredLoggerFactoryFqcn.trim());
+    }
+
+    private static void log(String message) {
+        System.err.println("ELF4J status: " + message);
+    }
+
+    /**
+     * @return the provisioned ELF4J logger factory for the client application
+     */
+    LoggerFactory loggerFactory() {
+        return loggerFactory;
     }
 }
