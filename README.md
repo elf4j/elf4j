@@ -138,7 +138,7 @@ Note that ELF4J is a logging service facade, rather than implementation. As such
 - If multiple external provider JARs are present, however, then the system property `elf4j.logger.factory.fqcn` has to
   be used to select the desired provider. e.g.
   ```
-  java -jar MyApplication.jar -Delf4j.logger.factory.fqcn="elf4j.log4j.Log4jLoggerFactory"
+  java -Delf4j.logger.factory.fqcn="elf4j.log4j.Log4jLoggerFactory" -jar MyApplication.jar
   ```
   No-op if the selected provider JAR is absent from the classpath.
 - It is considered a setup error to have multiple provider JARs in the classpath without a selection. ELF4J falls back
