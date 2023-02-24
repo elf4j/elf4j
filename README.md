@@ -1,10 +1,6 @@
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.elf4j/elf4j.svg?label=ELF4J)](https://search.maven.org/search?q=g:%22io.github.elf4j%22%20AND%20a:%22elf4j%22)
-
-# elf4j
-
 API and SPI of a no-fluff Java logging facade - Easy Logging Facade for Java (ELF4J)
 
-## User Stories
+# User Stories
 
 1. As an application developer, I want to use a logging service API, so that I can choose or change the actual logging
    service implementation among various providers, at the application deployment time without code change.
@@ -15,17 +11,17 @@ API and SPI of a no-fluff Java logging facade - Easy Logging Facade for Java (EL
 Note: The basic delivery mechanism for the user stories is the
 Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html).
 
-## Prerequisite
+# Prerequisite
 
 Java 8 or better
 
-## Get It...
+# Get It...
 
 Available at:
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.elf4j/elf4j.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.elf4j%22%20AND%20a:%22elf4j%22)
 
-## The Logger: Service Interface And Access API
+# The Logger: Service Interface And Access API
 
 ```java
 public interface Logger {
@@ -69,7 +65,7 @@ public interface Logger {
 }
 ```
 
-## Conventions, Defaults, And Implementation Notes
+# Conventions, Defaults, And Implementation Notes
 
 **Placeholder Token**
 
@@ -122,7 +118,7 @@ Note that the downcast of `Supplier/Supplier<?>/Supplier<String>` here is mandat
 this lambda is to supply a parameter declared as an `Object` rather than a functional interface. No need of downcast if
 the `Supplier` function is passed in as a reference instead of a lambda expression.
 
-## For API Users: Sample Usage
+# For API Users: Sample Usage
 
 Note that ELF4J is a logging service facade, rather than implementation. As such,
 
@@ -223,7 +219,7 @@ class ReadmeSample2 {
 }
 ```
 
-## For Service Providers: The Service Provider Interface (SPI)
+# For Service Providers: The Service Provider Interface (SPI)
 
 As with the Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html),
 the logging Service Provider should supply a concrete and complete implementation, including both the provider class for
@@ -241,7 +237,7 @@ public interface LoggerFactory {
 }
 ```
 
-## Available Logging Service Providers Of The ELF4J SPI
+# Available Logging Service Providers Of The ELF4J SPI
 
 - [tinylog provider](https://github.com/elf4j/elf4j-tinylog)
 - [LOG4J provider](https://github.com/elf4j/elf4j-log4j)
