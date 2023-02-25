@@ -31,19 +31,14 @@ import elf4j.spi.LoggerFactory;
  * Default implementation of {@link LoggerFactory} SPI. Produces the default {@link NoopLogger} instance.
  */
 public final class NoopLoggerFactory implements LoggerFactory {
+    /**
+     * Default constructor required by {@link java.util.ServiceLoader}
+     */
+    public NoopLoggerFactory() {
+    }
 
     @Override
     public Logger logger() {
-        return NoopLogger.INSTANCE;
-    }
-
-    @Override
-    public Logger logger(String name) {
-        return NoopLogger.INSTANCE;
-    }
-
-    @Override
-    public Logger logger(Class<?> clazz) {
         return NoopLogger.INSTANCE;
     }
 }

@@ -38,22 +38,6 @@ public interface Logger {
     }
 
     /**
-     * @param name suggested name of the Logger instance
-     * @return Logger instance with the suggested name
-     */
-    static Logger instance(String name) {
-        return LoggerFactoryProvider.INSTANCE.loggerFactory().logger(name);
-    }
-
-    /**
-     * @param clazz Class used to suggest the Logger name
-     * @return Logger instance using the given Class as the suggested name
-     */
-    static Logger instance(Class<?> clazz) {
-        return LoggerFactoryProvider.INSTANCE.loggerFactory().logger(clazz);
-    }
-
-    /**
      * @return Logger instance with the same name, and DEBUG log level
      */
     Logger atDebug();
@@ -82,11 +66,6 @@ public interface Logger {
      * @return log Level of the logger instance
      */
     Level getLevel();
-
-    /**
-     * @return name of the logger instance
-     */
-    String getName();
 
     /**
      * @return true if the Logger instance is configured to be active per its name and Level, false otherwise

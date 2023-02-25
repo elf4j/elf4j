@@ -38,19 +38,4 @@ public interface LoggerFactory {
      * @return a Logger instance with a default name at the provider's discretion, usually the caller class name.
      */
     Logger logger();
-
-    /**
-     * @param name Client proposed name of the Logger instance returned. It's up to the provider whether to honor the
-     *             logger name as requested although, usually, the name request is honored verbatim.
-     * @return Logger instance with the requested name
-     */
-    Logger logger(String name);
-
-    /**
-     * @param clazz used to suggest the name of the Logger instance returned. It's up to the provider how, if at all, to
-     *              use the class to name the logger. Usually the fully qualified class name is used to name the
-     *              logger.
-     * @return Logger instance of the requesting class
-     */
-    Logger logger(Class<?> clazz);
 }

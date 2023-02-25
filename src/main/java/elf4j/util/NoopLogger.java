@@ -67,11 +67,6 @@ public enum NoopLogger implements Logger {
     }
 
     @Override
-    public String getName() {
-        return NoopLogger.INSTANCE.getClass().getName();
-    }
-
-    @Override
     public boolean isEnabled() {
         return false;
     }

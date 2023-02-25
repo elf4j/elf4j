@@ -29,16 +29,6 @@ public interface Logger {
         return LoggerFactoryProvider.INSTANCE.loggerFactory().logger();
     }
 
-    static Logger instance(String name) {
-        return LoggerFactoryProvider.INSTANCE.loggerFactory().logger(name);
-    }
-
-    static Logger instance(Class<?> clazz) {
-        return LoggerFactoryProvider.INSTANCE.loggerFactory().logger(clazz);
-    }
-
-    String getName();
-
     Level getLevel();
 
     boolean isEnabled();
@@ -78,45 +68,28 @@ logger.log("A log {} can have {}", "message", "arguments");
 This is by convention, and does not syntactically appear in the API or SPI. Both the API user and the Service Provider
 must honor such convention.
 
-**Immutability**
+**Thread Safety**
 
-The API client should assume any ELF4J `Logger` instance is immutable, thus thread-safe. The Service Provider
-implementation must support such assumption.
-
-**Logger Name**
-
-To get an ELF4J `Logger` instance, the API user may supply a name or class to suggest the name of the logger when
-calling one of the parameterized Logger.instance methods. However, it is up to the Service Provider how, if at all, to
-use the user-supplied value to determine the logger name. e.g. if the API user ends up passing in `null` or using the
-no-arg Logger.instance method, then the name of the logger instance is undefined; the provider may opt to supply a
-default, e.g. the name of the caller class.
+Any `Logger` instance should be thread-safe.
 
 **Log Level**
 
-If the API user gets a `Logger` instance via one of the Logger.instance methods, the default log level of such
-instance is decided by the Service Provider implementation. If the API user gets a Logger instance via one of the
-Logger.at*Level* methods, then the Service Provider should supply the instance with the requested level.
+If the API user gets a Logger instance via the `Logger.instance()` method, the default severity level of such instance
+is decided by the Service Provider implementation. If the API user gets a Logger instance via one of the
+fluent-style `at<Level>` methods, then the Service Provider should supply the Logger instance with the requested level.
 
-**`Supplier` Functional Arguments**
+**Lazy Arguments of `Supplier` Functional type**
 
-An `Object`-type argument passed to any of the Logger.log methods must be treated specially if the actual type at
-runtime is `java.util.function.Supplier`. That is, the result of the Supplier.get method, instead of the usual
-Objects.toString result, should be used when computing the final log message.
+An `Object` type argument passed to any of the logging methods must be treated specially if the actual type at
+runtime is `java.util.function.Supplier`. That is, the Supplier function must be applied first before the function
+result is used to compute the final log message.
 
-This special handling of `Supplier`-type arguments is by convention, and not syntactically enforced by the API or SPI.
-This allows for the API user to mix up arguments of `Supplier` and other `Object` types within the same call of
-Logger.log in order to get sensible outcome for the final log message:
+The special handling of lazy arguments is by convention, and not syntactically enforced by the API or SPI. This allows
+for the API user to mix up lazy and eager arguments within the same logging method call.
 
-```jshelllanguage
-logger.log(
-        "A Logger.log method's arguments can be a mixture of {} type and other {} types in order to get sensible logging message result.",
-        (Supplier) () -> "Supplier function",
-        "Object");
-```
-
-Note that the downcast of `Supplier/Supplier<?>/Supplier<String>` here is mandatory per lambda expression syntax because
-this lambda is to supply a parameter declared as an `Object` rather than a functional interface. No need of downcast if
-the `Supplier` function is passed in as a reference instead of a lambda expression.
+Note that a `Supplier` downcast on lazy arguments is mandatory per lambda syntax because the lambda is to supply a
+parameter declared as an `Object` rather than a functional interface. No need of downcast if the `Supplier` function is
+passed in as a reference instead of a lambda expression.
 
 # For API Users: Sample Usage
 
@@ -145,78 +118,66 @@ Note that ELF4J is a logging service facade, rather than implementation. As such
   to no-op in all error scenarios.
 
 ```java
-class ReadmeSample {
-    private final Logger defaultLogger = Logger.instance();
+class SampleUsage {
+    @Nested
+    class plainText {
+        Logger logger = Logger.instance();
 
-    @Test
-    void messagesAndArgs() {
-        defaultLogger.log("default logger name is usually the same as the API caller class name");
-        assertEquals(ReadmeSample.class.getName(), defaultLogger.getName());
-        defaultLogger.log("default log level is {}, which depends on the individual logging provider",
-                defaultLogger.getLevel());
-        Logger info = defaultLogger.atInfo();
-        info.log("level set omitted here but we know the level is {}", INFO);
-        assertEquals(INFO, info.getLevel());
-        info.log("Supplier and other Object args can be mixed: Object arg1 {}, Supplier arg2 {}, Object arg3 {}",
-                "a11111",
-                (Supplier) () -> "a22222",
-                "a33333");
-        info.atWarn()
-                .log("switched to WARN level on the fly. that is, {} is a different Logger instance from {}",
-                        "`info.atWarn()`",
-                        "`info`");
-        assertNotSame(info, info.atWarn());
-        assertEquals(info.getName(), info.atWarn().getName(), "same name, only level is different");
-        assertEquals(WARN, info.atWarn().getLevel());
-        assertEquals(INFO, info.getLevel(), "immutable info's level never changes");
-    }
-
-    @Test
-    void exceptionMessageAndArgs() {
-        Logger error = defaultLogger.atError();
-        Throwable ex = new Exception("ex message");
-        error.log(ex);
-        error.atInfo()
-                .log("{} is an immutable Logger instance whose name is {}, and level is {}",
-                        error,
-                        error.getName(),
-                        error.getLevel());
-        assertEquals(Level.ERROR, error.getLevel());
-        error.atError()
-                .log(ex,
-                        "here the {} call is unnecessary because a Logger instance is immutable, and the {} instance's log level is already and will always be {}",
-                        "atError()",
-                        error,
-                        ERROR);
-        error.log(ex,
-                "now at Level.ERROR, together with the exception stack trace, logging some items expensive to compute: 1. {} 2. {} 3. {} 4. {}",
-                "usually an Object-type argument's Object.toString result is used for the final log message, except that...",
-                (Supplier) () -> "the Supplier.get result will be used instead for a Supplier-type argument",
-                "this allows for a mixture of Supplier and other Object types of arguments to compute to a sensible final log message",
-                (Supplier) () -> Arrays.stream(new Object[] {
-                                "suppose this is an expensive message argument coming as a Supplier" })
-                        .collect(Collectors.toList()));
-    }
-}
-
-@Nested
-class ReadmeSample2 {
-    private final Logger logger = Logger.instance(ReadmeSample2.class);
-
-    @Test
-    void levelGuard() {
-        if (logger.atDebug().isEnabled()) {
-            logger.atDebug()
-                    .log("a {} message guarded by a {}, so that no {} is created unless this logger instance - name and level combined - is {}",
-                            "long and expensive-to-construct",
-                            "level check",
-                            "message object",
-                            "enabled by system configuration of the logging provider");
+        @Test
+        void declarationsAndLevels() {
+            logger.log("Logger instance is thread-safe so it can be declared as a local, instance, or static variable");
+            logger.log("Default severity level is decided by the logging provider implementation");
+            Logger trace = logger.atTrace();
+            trace.log("Explicit severity level is specified by user i.e. TRACE");
+            Logger.instance().atTrace().log("Same explicit level TRACE");
+            logger.atDebug().log("Severity level is DEBUG");
+            logger.atInfo().log("Severity level is INFO");
+            trace.atWarn()
+                    .log("Severity level is WARN i.e. The atWarn() method on ANY Logger instance returns a Logger instance at WARN level, regardless the level of the original Logger instance");
+            logger.atError().log("Severity level is ERROR");
+            Logger.instance()
+                    .atDebug()
+                    .atError()
+                    .atTrace()
+                    .atWarn()
+                    .atInfo()
+                    .log("Not a practical example but the severity level is INFO");
         }
-        logger.atDebug()
-                .log((Supplier) () -> "alternative to the level guard, using a Supplier<?> function like this should achieve the same goal of avoiding unnecessary message creation, pending quality of the logging provider");
+    }
+
+    @Nested
+    class textWithArguments {
+        Logger info = Logger.instance().atInfo();
+
+        @Test
+        void lazyAndEagerArgumentsCanBeMixed() {
+            info.log("Message can have any number of arguments of {} type", Object.class.getTypeName());
+            info.log(
+                    "Lazy arguments (of {} type) whose values may be {} can be mixed with eager arguments of non-Supplier types",
+                    Supplier.class.getTypeName(),
+                    (Supplier) () -> "expensive to compute");
+            info.atWarn()
+                    .log("Note that the Supplier downcast is mandatory per lambda syntax because the arguments are declared as Object type rather than functional interface");
+        }
+    }
+
+    @Nested
+    class throwable {
+        Logger logger = Logger.instance();
+
+        @Test
+        void asTheFirstArgument() {
+            Exception exception = new Exception("Exception message");
+            logger.atWarn().log(exception);
+            logger.atError()
+                    .log(exception,
+                            "Exception is always passed in as the first argument to a logging method. The {} message and arguments that follow work the same way {}.",
+                            "optional",
+                            (Supplier) () -> "as usual");
+        }
     }
 }
+
 ```
 
 # For Service Providers: The Service Provider Interface (SPI)
@@ -230,10 +191,6 @@ the `java.util.ServiceLoader`.
 ```java
 public interface LoggerFactory {
     Logger logger();
-
-    Logger logger(String name);
-
-    Logger logger(Class<?> clazz);
 }
 ```
 

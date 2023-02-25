@@ -45,7 +45,7 @@ enum LoggerFactoryProvider {
      * System property to select the desired logger factory by its fully qualified class name in case multiple logging
      * provider candidates are available
      */
-    private static final String ELF4J_LOGGER_FACTORY_FQCN = "elf4j.logger.factory.fqcn";
+    static final String ELF4J_LOGGER_FACTORY_FQCN = "elf4j.logger.factory.fqcn";
     /**
      * Discovered and loaded only once
      */
@@ -53,6 +53,31 @@ enum LoggerFactoryProvider {
 
     LoggerFactoryProvider() {
         this.loggerFactory = getLoggerFactory();
+    }
+
+    private static Optional<String> getSelectedLoggerFactoryName() {
+        String selectedLoggerFactoryFqcn = System.getProperty(ELF4J_LOGGER_FACTORY_FQCN);
+        if (selectedLoggerFactoryFqcn == null || selectedLoggerFactoryFqcn.trim().isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(selectedLoggerFactoryFqcn.trim());
+    }
+
+    private static List<LoggerFactory> loadLoggerFactories() {
+        List<LoggerFactory> loggerFactories = new ArrayList<>();
+        ServiceLoader.load(LoggerFactory.class).forEach(loggerFactories::add);
+        return loggerFactories;
+    }
+
+    private static void log(String message) {
+        System.err.println("ELF4J status: " + message);
+    }
+
+    /**
+     * @return the provisioned ELF4J logger factory for the client application
+     */
+    LoggerFactory loggerFactory() {
+        return loggerFactory;
     }
 
     private LoggerFactory getLoggerFactory() {
@@ -83,30 +108,5 @@ enum LoggerFactoryProvider {
                 + ": Please either re-provision to have only one logging provider, or select the desired factory by its fully qualified class name using the system property '"
                 + ELF4J_LOGGER_FACTORY_FQCN + "': Falling back to NO-OP logging...");
         return new NoopLoggerFactory();
-    }
-
-    private static List<LoggerFactory> loadLoggerFactories() {
-        List<LoggerFactory> loggerFactories = new ArrayList<>();
-        ServiceLoader.load(LoggerFactory.class).forEach(loggerFactories::add);
-        return loggerFactories;
-    }
-
-    private static Optional<String> getSelectedLoggerFactoryName() {
-        String selectedLoggerFactoryFqcn = System.getProperty(ELF4J_LOGGER_FACTORY_FQCN);
-        if (selectedLoggerFactoryFqcn == null || selectedLoggerFactoryFqcn.trim().isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(selectedLoggerFactoryFqcn.trim());
-    }
-
-    private static void log(String message) {
-        System.err.println("ELF4J status: " + message);
-    }
-
-    /**
-     * @return the provisioned ELF4J logger factory for the client application
-     */
-    LoggerFactory loggerFactory() {
-        return loggerFactory;
     }
 }

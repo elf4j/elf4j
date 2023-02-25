@@ -24,6 +24,7 @@
 
 package elf4j.util;
 
+import elf4j.Level;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -32,19 +33,32 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class NoopLoggerTest {
 
+    NoopLogger nopLogger = NoopLogger.INSTANCE;
+
     @Nested
-    class getName {
+    class isEnabled {
+
         @Test
-        void instanceToString() {
-            assertEquals(NoopLogger.INSTANCE.getClass().getName(), NoopLogger.INSTANCE.getName());
+        void noLevelEnabled() {
+            assertFalse(nopLogger.isEnabled());
+            assertFalse(nopLogger.atTrace().isEnabled());
+            assertFalse(nopLogger.atDebug().isEnabled());
+            assertFalse(nopLogger.atInfo().isEnabled());
+            assertFalse(nopLogger.atWarn().isEnabled());
+            assertFalse(nopLogger.atError().isEnabled());
         }
     }
 
     @Nested
-    class isEnabled {
+    class level {
         @Test
-        void noLevelEnabled() {
-            assertFalse(NoopLogger.INSTANCE.isEnabled());
+        void alwaysOff() {
+            assertEquals(Level.OFF, nopLogger.getLevel());
+            assertEquals(Level.OFF, nopLogger.atTrace().getLevel());
+            assertEquals(Level.OFF, nopLogger.atDebug().getLevel());
+            assertEquals(Level.OFF, nopLogger.atInfo().getLevel());
+            assertEquals(Level.OFF, nopLogger.atWarn().getLevel());
+            assertEquals(Level.OFF, nopLogger.atError().getLevel());
         }
     }
 }
