@@ -19,7 +19,7 @@ Java 8 or better
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.elf4j/elf4j.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.elf4j%22%20AND%20a:%22elf4j%22)
 
-# The Logger: Service Interface And Access API
+# Service Interface And Access API
 
 ```java
 public interface Logger {
@@ -50,6 +50,14 @@ public interface Logger {
     void log(Throwable t, Object message);
 
     void log(Throwable t, String message, Object... args);
+}
+```
+
+# Service Provider Interface (SPI)
+
+```java
+public interface LoggerFactory {
+    Logger logger();
 }
 ```
 
@@ -89,7 +97,7 @@ Note that a `Supplier` downcast on lazy arguments is mandatory per lambda syntax
 parameter declared as an `Object` rather than a functional interface. No need of downcast if the `Supplier` function is
 passed in as a reference instead of a lambda expression.
 
-# For API Users: Sample Usage
+# For API Users...
 
 Note that ELF4J is a logging service facade, rather than implementation. As such,
 
@@ -174,22 +182,15 @@ class SampleUsage {
         }
     }
 }
-
 ```
 
-# For Service Providers: The Service Provider Interface (SPI)
+# For Logging Service Providers...
 
 As with the Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html),
 the logging Service Provider should supply a concrete and complete implementation, including both the provider class for
 the `LoggerFactory` [SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html) and the service class for
 the `Logger` API, such that the ELF4J API client application can discover and load the provider implementation using
 the `java.util.ServiceLoader`.
-
-```java
-public interface LoggerFactory {
-    Logger logger();
-}
-```
 
 # Available Logging Service Providers Of The ELF4J SPI
 
