@@ -78,7 +78,7 @@ If the API user gets a Logger instance via the `Logger.instance()` method, the d
 is decided by the Service Provider implementation. If the API user gets a Logger instance via one of the
 fluent-style `at<Level>` methods, then the Service Provider should supply the Logger instance with the requested level.
 
-**Lazy Arguments of `Supplier` Functional type**
+**Lazy Arguments**
 
 An `Object` type argument passed to any of the logging methods must be treated specially if the actual type at
 runtime is `java.util.function.Supplier`. That is, the Supplier function must be applied first before the function
