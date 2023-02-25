@@ -19,8 +19,7 @@ class SampleUsage {
             Logger.instance().atTrace().log("Same explicit level TRACE");
             logger.atDebug().log("Severity level is DEBUG");
             logger.atInfo().log("Severity level is INFO");
-            trace.atWarn()
-                    .log("Severity level is WARN i.e. The atWarn() method on ANY Logger instance returns a Logger instance at WARN level, regardless the level of the original Logger instance");
+            trace.atWarn().log("Severity level is WARN, not TRACE");
             logger.atError().log("Severity level is ERROR");
             Logger.instance()
                     .atDebug()
