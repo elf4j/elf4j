@@ -12,7 +12,8 @@ class SampleUsage {
 
         @Test
         void declarationsAndLevels() {
-            logger.log("Logger instance is thread-safe so it can be declared as a local, instance, or static variable");
+            logger.log(
+                    "Logger instance is thread-safe so it can be declared and used as a local, instance, or static variable");
             logger.log("Default severity level is decided by the logging provider implementation");
             Logger trace = logger.atTrace();
             trace.log("Explicit severity level is specified by user i.e. TRACE");
@@ -39,11 +40,11 @@ class SampleUsage {
         void lazyAndEagerArgumentsCanBeMixed() {
             info.log("Message can have any number of arguments of {} type", Object.class.getTypeName());
             info.log(
-                    "Lazy arguments (of {} type) whose values may be {} can be mixed with eager arguments of non-Supplier types",
+                    "Lazy arguments, of {} type, whose values may be {} can be mixed with eager arguments of non-Supplier types",
                     Supplier.class.getTypeName(),
                     (Supplier) () -> "expensive to compute");
             info.atWarn()
-                    .log("Note that the Supplier downcast is mandatory per lambda syntax because the arguments are declared as Object type rather than functional interface");
+                    .log("The Supplier downcast is mandatory per lambda syntax because arguments are declared as generic Object rather than functional interface");
         }
     }
 
@@ -57,7 +58,7 @@ class SampleUsage {
             logger.atWarn().log(exception);
             logger.atError()
                     .log(exception,
-                            "Exception is always passed in as the first argument to a logging method. The {} message and arguments that follow work the same way {}.",
+                            "Exception is always the first argument to a logging method. The {} message and arguments that follow work the same way {}.",
                             "optional",
                             (Supplier) () -> "as usual");
         }

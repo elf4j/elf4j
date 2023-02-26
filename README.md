@@ -19,7 +19,9 @@ Java 8 or better
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.elf4j/elf4j.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.elf4j%22%20AND%20a:%22elf4j%22)
 
-# Service Interface And Access API
+# Use it...
+
+## Service Interface And Access API
 
 ```java
 public interface Logger {
@@ -53,7 +55,7 @@ public interface Logger {
 }
 ```
 
-# Service Provider Interface (SPI)
+## Service Provider Interface (SPI)
 
 ```java
 public interface LoggerFactory {
@@ -61,7 +63,7 @@ public interface LoggerFactory {
 }
 ```
 
-# Conventions, Defaults, And Implementation Notes
+## Conventions, Defaults, And Implementation Notes
 
 **Placeholder Token**
 
@@ -97,7 +99,7 @@ Note that a `Supplier` downcast on lazy arguments is mandatory per lambda syntax
 parameter declared as an `Object` rather than a functional interface. No need of downcast if the `Supplier` function is
 passed in as a reference instead of a lambda expression.
 
-# For API Users...
+## For Logging Service API Users...
 
 Note that ELF4J is a logging service facade, rather than implementation. As such,
 
@@ -131,7 +133,8 @@ class SampleUsage {
 
         @Test
         void declarationsAndLevels() {
-            logger.log("Logger instance is thread-safe so it can be declared as a local, instance, or static variable");
+            logger.log(
+                    "Logger instance is thread-safe so it can be declared and used as a local, instance, or static variable");
             logger.log("Default severity level is decided by the logging provider implementation");
             Logger trace = logger.atTrace();
             trace.log("Explicit severity level is specified by user i.e. TRACE");
@@ -158,11 +161,11 @@ class SampleUsage {
         void lazyAndEagerArgumentsCanBeMixed() {
             info.log("Message can have any number of arguments of {} type", Object.class.getTypeName());
             info.log(
-                    "Lazy arguments (of {} type) whose values may be {} can be mixed with eager arguments of non-Supplier types",
+                    "Lazy arguments, of {} type, whose values may be {} can be mixed with eager arguments of non-Supplier types",
                     Supplier.class.getTypeName(),
                     (Supplier) () -> "expensive to compute");
             info.atWarn()
-                    .log("Note that the Supplier downcast is mandatory per lambda syntax because the arguments are declared as Object type rather than functional interface");
+                    .log("The Supplier downcast is mandatory per lambda syntax because arguments are declared as generic Object rather than functional interface");
         }
     }
 
@@ -176,7 +179,7 @@ class SampleUsage {
             logger.atWarn().log(exception);
             logger.atError()
                     .log(exception,
-                            "Exception is always passed in as the first argument to a logging method. The {} message and arguments that follow work the same way {}.",
+                            "Exception is always the first argument to a logging method. The {} message and arguments that follow work the same way {}.",
                             "optional",
                             (Supplier) () -> "as usual");
         }
@@ -184,7 +187,7 @@ class SampleUsage {
 }
 ```
 
-# For Logging Service Providers...
+## For Logging Service Providers...
 
 As with the Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html),
 the logging Service Provider should supply a concrete and complete implementation, including both the provider class for
