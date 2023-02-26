@@ -65,22 +65,22 @@ public interface LoggerFactory {
 
 ## Conventions, Defaults, And Implementation Notes
 
-**Placeholder Token**
+### Placeholder Token
 
 The empty curly braces token `{}` should be the placeholder for message arguments. This is by convention, and does
 not syntactically appear in the API or SPI. Both the API user and the Service Provider must honor such convention.
 
-**Thread Safety**
+### Thread Safety
 
 Any `Logger` instance should be thread-safe.
 
-**Log Level**
+### Severity Level
 
 If a Logger instance is obtained via the `Logger.instance()` method, then the default severity level of such instance is
 decided by the Service Provider implementation. If a Logger instance is obtained via one of the fluent-style `at<Level>`
 methods, then its severity level should be as requested.
 
-**Lazy Arguments**
+### Lazy Arguments
 
 An `Object` type argument passed to any of the logging methods must be treated specially if the actual type at
 runtime is `java.util.function.Supplier`. That is, the Supplier function must be applied first before the function
@@ -95,14 +95,14 @@ downcast if the `Supplier` function is passed in as a reference instead of a lam
 
 ## For Logging Service API Users...
 
-Note that ELF4J is a logging service facade, rather than implementation. As such,
+Note that ELF4J is a logging service facade, rather than implementation.
 
-**No-op By Default**
+### No-op By Default
 
 - Nothing will be logging out (no-op) unless a properly configured external ELF4J logging provider is discovered at the
   application start time. The ELF4J facade itself only ships with the default no-op logging provider.
 
-**Only One In-effect Logging Provider**
+### Only One In-effect Logging Provider
 
 - An API user can select or change to
   use [any ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-of-the-elf4j-spi)
