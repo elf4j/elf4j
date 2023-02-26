@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ServiceLoader;
 
-final class LoggerFactoryConfiguration {
+final class LoggingServiceConfiguration {
     /**
      * System property to select the desired logger factory by its fully qualified class name in case multiple logging
      * provider candidates are available

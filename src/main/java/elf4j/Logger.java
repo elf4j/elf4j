@@ -34,7 +34,7 @@ public interface Logger {
      * @return Logger instance with default name and Level
      */
     static Logger instance() {
-        return LoggerFactoryProvider.INSTANCE.loggerFactory().logger();
+        return LoggingService.INSTANCE.loggerFactory().logger();
     }
 
     /**

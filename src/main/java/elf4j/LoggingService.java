@@ -34,7 +34,7 @@ import java.util.Optional;
  * Provisions one single ELF4J logging provider for the client application - either the properly configured or the
  * default no-op logging provider.
  */
-enum LoggerFactoryProvider {
+enum LoggingService {
     /**
      * Sole instance
      */
@@ -42,8 +42,8 @@ enum LoggerFactoryProvider {
 
     final Implementation implementation;
 
-    LoggerFactoryProvider() {
-        this.implementation = new Implementation(new LoggerFactoryConfiguration());
+    LoggingService() {
+        this.implementation = new Implementation(new LoggingServiceConfiguration());
     }
 
     LoggerFactory loggerFactory() {
@@ -56,10 +56,10 @@ enum LoggerFactoryProvider {
          * Discovered and loaded only once
          */
         private final LoggerFactory loggerFactory;
-        private final LoggerFactoryConfiguration loggerFactoryConfiguration;
+        private final LoggingServiceConfiguration loggingServiceConfiguration;
 
-        Implementation(LoggerFactoryConfiguration loggerFactoryConfiguration) {
-            this.loggerFactoryConfiguration = loggerFactoryConfiguration;
+        Implementation(LoggingServiceConfiguration loggingServiceConfiguration) {
+            this.loggingServiceConfiguration = loggingServiceConfiguration;
             this.loggerFactory = getLoggerFactory();
         }
 
@@ -75,8 +75,8 @@ enum LoggerFactoryProvider {
         }
 
         private LoggerFactory getLoggerFactory() {
-            List<LoggerFactory> provisionedFactories = loggerFactoryConfiguration.getProvisionedLoggerFactories();
-            Optional<String> selectedLoggerFactoryName = loggerFactoryConfiguration.getSelectedLoggerFactoryName();
+            List<LoggerFactory> provisionedFactories = loggingServiceConfiguration.getProvisionedLoggerFactories();
+            Optional<String> selectedLoggerFactoryName = loggingServiceConfiguration.getSelectedLoggerFactoryName();
             if (selectedLoggerFactoryName.isPresent()) {
                 for (LoggerFactory provisionedFactory : provisionedFactories) {
                     if (provisionedFactory.getClass().getName().equals(selectedLoggerFactoryName.get())) {
@@ -101,7 +101,7 @@ enum LoggerFactoryProvider {
             log("Configuration error: Expected only one ELF4J logger factory but discovered "
                     + provisionedFactories.size() + ": " + provisionedFactories
                     + ": Please either re-provision to have only one logging provider, or select the desired factory by its fully qualified class name using the system property '"
-                    + LoggerFactoryConfiguration.ELF4J_LOGGER_FACTORY_FQCN + "': Falling back to NO-OP logging...");
+                    + LoggingServiceConfiguration.ELF4J_LOGGER_FACTORY_FQCN + "': Falling back to NO-OP logging...");
             return new NoopLoggerFactory();
         }
     }
