@@ -31,39 +31,42 @@ import elf4j.Logger;
  * No-op implementation of {@link Logger} API
  */
 public enum NoopLogger implements Logger {
-    /**
-     * sole instance
-     */
-    INSTANCE;
+    TRACE(Level.TRACE), DEBUG(Level.DEBUG), INFO(Level.INFO), WARN(Level.WARN), ERROR(Level.ERROR), OFF(Level.OFF);
+
+    private final Level level;
+
+    NoopLogger(Level level) {
+        this.level = level;
+    }
 
     @Override
     public Logger atDebug() {
-        return this;
+        return DEBUG;
     }
 
     @Override
     public Logger atError() {
-        return this;
+        return ERROR;
     }
 
     @Override
     public Logger atInfo() {
-        return this;
+        return INFO;
     }
 
     @Override
     public Logger atTrace() {
-        return this;
+        return TRACE;
     }
 
     @Override
     public Logger atWarn() {
-        return this;
+        return WARN;
     }
 
     @Override
     public Level getLevel() {
-        return Level.OFF;
+        return this.level;
     }
 
     @Override

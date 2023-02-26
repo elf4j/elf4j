@@ -25,7 +25,7 @@
 package elf4j.util;
 
 import elf4j.Level;
-import org.junit.jupiter.api.Nested;
+import elf4j.Logger;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,32 +33,24 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class NoopLoggerTest {
 
-    NoopLogger nopLogger = NoopLogger.INSTANCE;
-
-    @Nested
-    class isEnabled {
-
-        @Test
-        void noLevelEnabled() {
-            assertFalse(nopLogger.isEnabled());
-            assertFalse(nopLogger.atTrace().isEnabled());
-            assertFalse(nopLogger.atDebug().isEnabled());
-            assertFalse(nopLogger.atInfo().isEnabled());
-            assertFalse(nopLogger.atWarn().isEnabled());
-            assertFalse(nopLogger.atError().isEnabled());
-        }
+    @Test
+    void levels() {
+        Logger defaultInstance = new NoopLoggerFactory().logger();
+        assertEquals(Level.OFF, defaultInstance.getLevel());
+        assertEquals(Level.TRACE, defaultInstance.atTrace().getLevel());
+        assertEquals(Level.DEBUG, defaultInstance.atDebug().getLevel());
+        assertEquals(Level.INFO, defaultInstance.atInfo().getLevel());
+        assertEquals(Level.WARN, defaultInstance.atWarn().getLevel());
+        assertEquals(Level.ERROR, defaultInstance.atError().getLevel());
     }
 
-    @Nested
-    class level {
-        @Test
-        void alwaysOff() {
-            assertEquals(Level.OFF, nopLogger.getLevel());
-            assertEquals(Level.OFF, nopLogger.atTrace().getLevel());
-            assertEquals(Level.OFF, nopLogger.atDebug().getLevel());
-            assertEquals(Level.OFF, nopLogger.atInfo().getLevel());
-            assertEquals(Level.OFF, nopLogger.atWarn().getLevel());
-            assertEquals(Level.OFF, nopLogger.atError().getLevel());
-        }
+    @Test
+    void noLevelEnabled() {
+        assertFalse(NoopLogger.OFF.isEnabled());
+        assertFalse(NoopLogger.TRACE.isEnabled());
+        assertFalse(NoopLogger.DEBUG.isEnabled());
+        assertFalse(NoopLogger.INFO.isEnabled());
+        assertFalse(NoopLogger.WARN.isEnabled());
+        assertFalse(NoopLogger.ERROR.isEnabled());
     }
 }
