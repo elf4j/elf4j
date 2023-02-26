@@ -26,7 +26,7 @@ Java 8 or better
 ```java
 public interface Logger {
     static Logger instance() {
-        return LoggerFactoryProvider.INSTANCE.loggerFactory().logger();
+        return LoggingService.INSTANCE.loggerFactory().logger();
     }
 
     Level getLevel();
