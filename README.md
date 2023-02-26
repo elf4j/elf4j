@@ -67,14 +67,8 @@ public interface LoggerFactory {
 
 **Placeholder Token**
 
-The empty curly braces token `{}` is chosen to be the placeholder for message arguments. e.g.
-
-```jshelllanguage
-logger.log("A log {} can have {}", "message", "arguments");
-```
-
-This is by convention, and does not syntactically appear in the API or SPI. Both the API user and the Service Provider
-must honor such convention.
+The empty curly braces token `{}` should be the placeholder for message arguments. This is by convention, and does
+not syntactically appear in the API or SPI. Both the API user and the Service Provider must honor such convention.
 
 **Thread Safety**
 
@@ -82,9 +76,9 @@ Any `Logger` instance should be thread-safe.
 
 **Log Level**
 
-If the API user gets a Logger instance via the `Logger.instance()` method, the default severity level of such instance
-is decided by the Service Provider implementation. If the API user gets a Logger instance via one of the
-fluent-style `at<Level>` methods, then the Service Provider should supply the Logger instance with the requested level.
+If a Logger instance is obtained via the `Logger.instance()` method, then the default severity level of such instance is
+decided by the Service Provider implementation. If a Logger instance is obtained via one of the fluent-style `at<Level>`
+methods, then its severity level should be as requested.
 
 **Lazy Arguments**
 
@@ -95,9 +89,9 @@ result is used to compute the final log message.
 The special handling of lazy arguments is by convention, and not syntactically enforced by the API or SPI. This allows
 for the API user to mix up lazy and eager arguments within the same logging method call.
 
-Note that a `Supplier` downcast on lazy arguments is mandatory per lambda syntax because the lambda is to supply a
-parameter declared as an `Object` rather than a functional interface. No need of downcast if the `Supplier` function is
-passed in as a reference instead of a lambda expression.
+Note that a `Supplier` lambda expression argument has to be explicitly downcast. That is mandated by lambda syntax
+because the `Logger` API declares the lazy argument as an `Object` rather than a functional interface. No need of
+downcast if the `Supplier` function is passed in as a reference instead of a lambda expression.
 
 ## For Logging Service API Users...
 
