@@ -2,6 +2,7 @@ package elf4j;
 
 import elf4j.spi.LoggerFactory;
 import elf4j.util.NoopLoggerFactory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,8 +20,14 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class LoggingServiceTest {
+    LoggingService.LoggerFactoryLocator loggerFactoryLocator;
     @Mock LoggingServiceConfiguration mockLoggingServiceConfiguration;
     @Mock LoggerFactory mockLoggerFactory;
+
+    @BeforeEach
+    void setUp() {
+        loggerFactoryLocator = new LoggingService.LoggerFactoryLocator(mockLoggingServiceConfiguration);
+    }
 
     @Nested
     class fallback {
@@ -31,14 +38,14 @@ class LoggingServiceTest {
             factories.add(mockLoggerFactory);
             when(mockLoggingServiceConfiguration.getProvisionedLoggerFactories()).thenReturn(factories);
 
-            assertTrue(new LoggingService.Implementation(mockLoggingServiceConfiguration).loggerFactory() instanceof NoopLoggerFactory);
+            assertTrue(loggerFactoryLocator.getLoggerFactory() instanceof NoopLoggerFactory);
         }
 
         @Test
         void noProvider() {
             when(mockLoggingServiceConfiguration.getProvisionedLoggerFactories()).thenReturn(Collections.emptyList());
             when(mockLoggingServiceConfiguration.getSelectedLoggerFactoryName()).thenReturn(Optional.empty());
-            assertTrue(new LoggingService.Implementation(mockLoggingServiceConfiguration).loggerFactory() instanceof NoopLoggerFactory);
+            assertTrue(loggerFactoryLocator.getLoggerFactory() instanceof NoopLoggerFactory);
         }
 
         @Test
@@ -49,7 +56,7 @@ class LoggingServiceTest {
             factories.add(mockLoggerFactory);
             when(mockLoggingServiceConfiguration.getProvisionedLoggerFactories()).thenReturn(factories);
 
-            assertTrue(new LoggingService.Implementation(mockLoggingServiceConfiguration).loggerFactory() instanceof NoopLoggerFactory);
+            assertTrue(loggerFactoryLocator.getLoggerFactory() instanceof NoopLoggerFactory);
         }
     }
 
@@ -61,8 +68,7 @@ class LoggingServiceTest {
             factories.add(mockLoggerFactory);
             when(mockLoggingServiceConfiguration.getProvisionedLoggerFactories()).thenReturn(factories);
 
-            assertSame(mockLoggerFactory,
-                    new LoggingService.Implementation(mockLoggingServiceConfiguration).loggerFactory());
+            assertSame(mockLoggerFactory, loggerFactoryLocator.getLoggerFactory());
         }
 
         @Test
@@ -74,7 +80,7 @@ class LoggingServiceTest {
             factories.add(new NoopLoggerFactory());
             when(mockLoggingServiceConfiguration.getProvisionedLoggerFactories()).thenReturn(factories);
 
-            assertTrue(new LoggingService.Implementation(mockLoggingServiceConfiguration).loggerFactory() instanceof NoopLoggerFactory);
+            assertTrue(loggerFactoryLocator.getLoggerFactory() instanceof NoopLoggerFactory);
         }
     }
 }

@@ -39,42 +39,35 @@ enum LoggingService {
      * Sole instance
      */
     INSTANCE;
-
-    final Implementation implementation;
+    /**
+     * Discovered and loaded only once
+     */
+    final LoggerFactory provisionedFactory;
 
     LoggingService() {
-        this.implementation = new Implementation(new LoggingServiceConfiguration());
+        this.provisionedFactory = new LoggerFactoryLocator(new LoggingServiceConfiguration()).getLoggerFactory();
     }
 
+    /**
+     * @return the provisioned ELF4J logger factory for the client application
+     */
     LoggerFactory loggerFactory() {
-        return this.implementation.loggerFactory();
+        return this.provisionedFactory;
     }
 
-    static final class Implementation {
+    static final class LoggerFactoryLocator {
 
-        /**
-         * Discovered and loaded only once
-         */
-        private final LoggerFactory loggerFactory;
         private final LoggingServiceConfiguration loggingServiceConfiguration;
 
-        Implementation(LoggingServiceConfiguration loggingServiceConfiguration) {
+        LoggerFactoryLocator(LoggingServiceConfiguration loggingServiceConfiguration) {
             this.loggingServiceConfiguration = loggingServiceConfiguration;
-            this.loggerFactory = getLoggerFactory();
         }
 
         private static void log(String message) {
             System.err.println("ELF4J status: " + message);
         }
 
-        /**
-         * @return the provisioned ELF4J logger factory for the client application
-         */
-        LoggerFactory loggerFactory() {
-            return loggerFactory;
-        }
-
-        private LoggerFactory getLoggerFactory() {
+        LoggerFactory getLoggerFactory() {
             List<LoggerFactory> provisionedFactories = loggingServiceConfiguration.getProvisionedLoggerFactories();
             Optional<String> selectedLoggerFactoryName = loggingServiceConfiguration.getSelectedLoggerFactoryName();
             if (selectedLoggerFactoryName.isPresent()) {
