@@ -1,4 +1,6 @@
-API and SPI of a no-fluff Java logging facade - Easy Logging Facade for Java ([ELF4J](https://github.com/elf4j/elf4j))
+[![](https://img.shields.io/static/v1?label=github&message=repo&color=blue)](https://github.com/elf4j/elf4j)
+
+API and SPI of a no-fluff Java logging facade - Easy Logging Facade for Java (ELF4J)
 
 # User Stories
 
