@@ -34,7 +34,7 @@ import java.util.Optional;
  * Provisions one single ELF4J logging provider for the client application - either the properly configured or the
  * default no-op logging provider.
  */
-enum LoggingService {
+enum LoggingServiceLocator {
     /**
      * Sole instance
      */
@@ -44,7 +44,7 @@ enum LoggingService {
      */
     final LoggerFactory provisionedFactory;
 
-    LoggingService() {
+    LoggingServiceLocator() {
         this.provisionedFactory = new LoggerFactoryLocator(new LoggingServiceConfiguration()).getLoggerFactory();
     }
 
