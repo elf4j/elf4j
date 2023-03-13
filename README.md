@@ -206,7 +206,7 @@ the `java.util.ServiceLoader`.
 - [tinylog provider](https://github.com/elf4j/elf4j-tinylog)
 - [LOG4J provider](https://github.com/elf4j/elf4j-log4j)
 - [LOGBACK provider](https://github.com/elf4j/elf4j-logback)
-- [java.util.logging (JUL) provider](https://github.com/elf4j/elf4j-jul)
+- [Java 4 (java.util.logging) provider](https://github.com/elf4j/elf4j-jul)
 - [SLF4J provider](https://github.com/elf4j/elf4j-slf4j)
 - ...
 
