@@ -107,17 +107,26 @@ Note that ELF4J is a logging service facade, rather than implementation.
 ### Only One In-effect Logging Provider
 
 - An API user can select or change to
-  use [any ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-of-the-elf4j-spi)
+  use any [ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-of-the-elf4j-spi)
   at deploy time, without code change.
 - The default and recommended setup is to ensure that only the one desired logging provider JAR is present in the
   classpath at deploy time, or, no external provider JAR if no-op is desired. In this case, nothing further is needed
-  for the ELF4J API to work.
+  for the ELF4J to work.
 - If multiple external provider JARs are present, however, then the system property `elf4j.logger.factory.fqcn` has to
   be used to select the desired provider. e.g.
 
-  `java -Delf4j.logger.factory.fqcn="elf4j.log4j.Log4jLoggerFactory" -jar MyApplication.jar`
+  ```
+  java -Delf4j.logger.factory.fqcn="elf4j.log4j.Log4jLoggerFactory" -jar MyApplication.jar
+  ```
 
-  No-op if the selected provider JAR is absent from the classpath.
+  No-op applies if the selected provider JAR is absent from the classpath.
+
+  The system property can also be used to ensure all logging initiated by the ELF4J facade is OFF (no-op):
+
+  ```
+  java -Delf4j.logger.factory.fqcn="elf4j.util.NoopLoggerFactory" -jar MyApplication.jar
+  ```
+
 - It is considered a setup error to have multiple provider JARs in the classpath without a selection. ELF4J falls back
   to no-op in all error scenarios.
 
@@ -193,15 +202,12 @@ the `java.util.ServiceLoader`.
 
 # Available Logging Service Providers Of The ELF4J SPI
 
+- A native ELF4J provider implementation: [elf4j-impl](https://github.com/elf4j/elf4j-impl)
 - [tinylog provider](https://github.com/elf4j/elf4j-tinylog)
 - [LOG4J provider](https://github.com/elf4j/elf4j-log4j)
 - [LOGBACK provider](https://github.com/elf4j/elf4j-logback)
 - [java.util.logging (JUL) provider](https://github.com/elf4j/elf4j-jul)
 - [SLF4J provider](https://github.com/elf4j/elf4j-slf4j)
-- ...
-
-More providers to come:
-
 - ...
 
 ![Visitor Count](https://profile-counter.glitch.me/elf4j/count.svg)
