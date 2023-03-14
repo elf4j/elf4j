@@ -73,7 +73,7 @@ enum LoggingServiceLocator {
             if (selectedLoggerFactoryName.isPresent()) {
                 for (LoggerFactory provisionedFactory : provisionedFactories) {
                     if (provisionedFactory.getClass().getName().equals(selectedLoggerFactoryName.get())) {
-                        log("Setup success: As selected, using ELF4J logger factory: " + provisionedFactory);
+                        log("As selected, using ELF4J logger factory: " + provisionedFactory);
                         return provisionedFactory;
                     }
                 }
@@ -88,7 +88,7 @@ enum LoggingServiceLocator {
             }
             if (provisionedFactories.size() == 1) {
                 LoggerFactory provisionedLoggerFactory = provisionedFactories.get(0);
-                log("Setup success: As provisioned, using ELF4J logger factory: " + provisionedLoggerFactory);
+                log("As provisioned, using ELF4J logger factory: " + provisionedLoggerFactory);
                 return provisionedLoggerFactory;
             }
             log("Configuration error: Expected only one ELF4J logger factory but discovered "
