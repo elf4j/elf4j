@@ -23,7 +23,7 @@ Java 8 or better
 
 # Use it...
 
-## Service Interface And Access API
+## Service Interface and Access API
 
 ```java
 public interface Logger {
@@ -65,7 +65,7 @@ public interface LoggerFactory {
 }
 ```
 
-## Conventions, Defaults, And Implementation Notes
+## Conventions, Defaults, and Implementation Notes
 
 ### Placeholder Token
 
@@ -99,7 +99,7 @@ downcast if the `Supplier` function is passed in as a reference instead of a lam
 
 Note that ELF4J is a logging service facade, rather than implementation.
 
-### No-op By Default
+### No-op by Default
 
 - Nothing will be logging out (no-op) unless a properly configured external ELF4J logging provider is discovered at the
   application start time. The ELF4J facade itself only ships with the default no-op logging provider.
@@ -200,7 +200,7 @@ the `LoggerFactory` [SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi
 the `Logger` API, such that the ELF4J API client application can discover and load the provider implementation using
 the `java.util.ServiceLoader`.
 
-# Available Logging Service Providers Of The ELF4J SPI
+# Available Logging Service Providers of the ELF4J SPI
 
 - A native ELF4J provider implementation: [elf4j-impl](https://github.com/elf4j/elf4j-impl)
 - [tinylog provider](https://github.com/elf4j/elf4j-tinylog)
