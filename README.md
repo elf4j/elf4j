@@ -118,7 +118,7 @@ ELF4J is a logging service facade, rather than implementation:
   java -Delf4j.logger.factory.fqcn="elf4j.log4j.Log4jLoggerFactory" -jar MyApplication.jar
   ```
 
-  This system property can also be used to turn OFF (no-op) all logging initiated by the ELF4J facade:
+  This system property can also be used to turn OFF (no-op) all logging service initiated by the ELF4J facade:
 
   ```
   java -Delf4j.logger.factory.fqcn="elf4j.util.NoopLoggerFactory" -jar MyApplication.jar
