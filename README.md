@@ -1,8 +1,8 @@
-[![](https://img.shields.io/static/v1?label=github&message=repo&color=blue)](https://github.com/elf4j/elf4j)
+# elf4j
 
 API and SPI of a no-fluff Java logging facade - Easy Logging Facade for Java (ELF4J)
 
-# User Stories
+## User Stories
 
 1. As an application developer, I want to use a logging service API, so that I can choose or change the actual logging
    engine framework among various service providers, at the application deployment time without code change.
@@ -13,17 +13,17 @@ API and SPI of a no-fluff Java logging facade - Easy Logging Facade for Java (EL
 * The basic delivery mechanism for the user stories is intended to be the
   Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html).
 
-# Prerequisite
+## Prerequisite
 
 Java 8 or better
 
-# Get It...
+## Get It...
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.elf4j/elf4j.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.elf4j%22%20AND%20a:%22elf4j%22)
 
-# Use it...
+## Use it...
 
-## Service Interface and Access API
+### Service Interface and Access API
 
 ```java
 public interface Logger {
@@ -57,7 +57,7 @@ public interface Logger {
 }
 ```
 
-## Service Provider Interface (SPI)
+### Service Provider Interface (SPI)
 
 ```java
 public interface LoggerFactory {
@@ -65,24 +65,24 @@ public interface LoggerFactory {
 }
 ```
 
-## Conventions, Defaults, and Implementation Notes
+### Conventions, Defaults, and Implementation Notes
 
-### Placeholder Token
+#### Placeholder Token
 
 The empty curly braces token `{}` should be the placeholder for message arguments. This is by convention, and does
 not syntactically appear in the API or SPI. Both the API user and the Service Provider must honor such convention.
 
-### Thread Safety
+#### Thread Safety
 
 Any `Logger` instance should be thread-safe.
 
-### Severity Level
+#### Severity Level
 
 If a Logger instance is obtained via the `Logger.instance()` method, then the default severity level of such instance is
 decided by the Service Provider implementation. If a Logger instance is obtained via one of the fluent-style `at<Level>`
 methods, then its severity level should be as requested.
 
-### Lazy Arguments
+#### Lazy Arguments
 
 An `Object` type argument passed to any of the logging methods must be treated specially if the actual type at
 runtime is `java.util.function.Supplier`. That is, the Supplier function must be applied first before the function
@@ -95,16 +95,16 @@ Note that a `Supplier` lambda expression argument has to be explicitly downcast.
 because the `Logger` API declares the lazy argument as an `Object` rather than a functional interface. No need of
 downcast if the `Supplier` function is passed in as a reference instead of a lambda expression.
 
-## For Logging Service API Users...
+### For Logging Service API Users...
 
 Note that ELF4J is a logging service facade, rather than implementation.
 
-### No-op by Default
+#### No-op by Default
 
 - Nothing will be logging out (no-op) unless a properly configured external ELF4J logging provider is discovered at the
   application start time. The ELF4J facade itself only ships with the default no-op logging provider.
 
-### Only One In-effect Logging Provider
+#### Only One In-effect Logging Provider
 
 - An API user can select or change to
   use any [ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-of-the-elf4j-spi)
@@ -192,7 +192,7 @@ class SampleUsage {
 }
 ```
 
-## For Logging Service Providers...
+### For Logging Service Providers...
 
 As with the Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html),
 the logging Service Provider should supply a concrete and complete implementation, including both the provider class for
@@ -200,7 +200,7 @@ the `LoggerFactory` [SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi
 the `Logger` API, such that the ELF4J API client application can discover and load the provider implementation using
 the `java.util.ServiceLoader`.
 
-# Available Logging Service Providers of the ELF4J SPI
+## Available Logging Service Providers of the ELF4J SPI
 
 - A native ELF4J provider implementation: [elf4j-impl](https://github.com/elf4j/elf4j-impl)
 - [tinylog provider](https://github.com/elf4j/elf4j-tinylog)
