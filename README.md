@@ -10,8 +10,8 @@ API and SPI of a no-fluff Java logging facade - Easy Logging Facade for Java (EL
    Interface [(SPI)](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html) to implement, so that my independent
    logging framework can be chosen and used by the client application at its deployment time without code change.
 
-Note: The basic delivery mechanism for the user stories is the
-Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html).
+* The basic delivery mechanism for the user stories is intended to be the
+  Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html).
 
 # Prerequisite
 
@@ -28,12 +28,8 @@ Java 8 or better
 ```java
 public interface Logger {
     static Logger instance() {
-        return LoggingServiceLocator.INSTANCE.loggerFactory().logger();
+        return ServiceProviderLocator.INSTANCE.loggerFactory().logger();
     }
-
-    Level getLevel();
-
-    boolean isEnabled();
 
     Logger atTrace();
 
@@ -44,6 +40,10 @@ public interface Logger {
     Logger atWarn();
 
     Logger atError();
+
+    Level getLevel();
+
+    boolean isEnabled();
 
     void log(Object message);
 

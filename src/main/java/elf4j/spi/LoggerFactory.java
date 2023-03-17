@@ -35,7 +35,7 @@ import elf4j.Logger;
  */
 public interface LoggerFactory {
     /**
-     * @return a Logger instance with a default name at the provider's discretion, usually the caller class name.
+     * @return a concrete Logger instance
      */
     Logger logger();
 }

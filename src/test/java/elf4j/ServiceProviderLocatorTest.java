@@ -19,14 +19,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class LoggingServiceLocatorTest {
-    LoggingServiceLocator.LoggerFactoryLocator loggerFactoryLocator;
-    @Mock LoggingServiceConfiguration mockLoggingServiceConfiguration;
+class ServiceProviderLocatorTest {
+    ServiceProviderLocator.LoggerFactoryLocator loggerFactoryLocator;
+    @Mock ServiceProviderLocator.LoggingServiceConfiguration mockLoggingServiceConfiguration;
     @Mock LoggerFactory mockLoggerFactory;
 
     @BeforeEach
     void setUp() {
-        loggerFactoryLocator = new LoggingServiceLocator.LoggerFactoryLocator(mockLoggingServiceConfiguration);
+        loggerFactoryLocator = new ServiceProviderLocator.LoggerFactoryLocator(mockLoggingServiceConfiguration);
     }
 
     @Nested
