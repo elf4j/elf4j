@@ -102,16 +102,15 @@ ELF4J is a logging service facade, rather than implementation:
 #### No-op by Default
 
 - Nothing will be logging out (no-op) unless a properly configured external ELF4J service provider is discovered at the
-  application start time. For convenience, the ELF4J facade itself only ships with a default no-op logging provider.
+  application start time. The ELF4J facade itself only ships with a default no-op logging provider.
 
 #### Only One In-effect Logging Provider
 
 - The API user can select or change to
   use any [ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-of-the-elf4j-spi)
   at deploy time, without code change.
-- The recommended setup is to ensure that only the one desired logging provider JAR is present in the classpath at
-  deploy time; or no external provider JAR if no-op is desired. In this case, nothing further is needed for ELF4J to
-  work.
+- The recommended setup is to ensure that only the one desired logging provider JAR is present in the classpath; or no
+  external provider JAR if no-op is desired. In this case, nothing further is needed for ELF4J to work.
 - If multiple external provider JARs are present, somehow, then the system property `elf4j.logger.factory.fqcn` has to
   be used to select the desired provider. No-op applies if the specified provider JAR is absent from the classpath.
 
@@ -119,7 +118,7 @@ ELF4J is a logging service facade, rather than implementation:
   java -Delf4j.logger.factory.fqcn="elf4j.log4j.Log4jLoggerFactory" -jar MyApplication.jar
   ```
 
-  This system property can also be used to ensure no logging (no-op) is initiated by the ELF4J facade:
+  This system property can also be used to turn OFF (no-op) all logging initiated by the ELF4J facade:
 
   ```
   java -Delf4j.logger.factory.fqcn="elf4j.util.NoopLoggerFactory" -jar MyApplication.jar
@@ -195,8 +194,8 @@ class SampleUsage {
 As with the Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html),
 the logging Service Provider implementation should be concrete and complete, including both the provider class for
 the `LoggerFactory` [SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html) and the service class for
-the `Logger` API, such that the client application can discover and load the logging implementation using
-the `java.util.ServiceLoader`.
+the `Logger` API, such that the client application can discover and load the logging implementation
+with `java.util.ServiceLoader`.
 
 ## Available Logging Service Providers of the ELF4J SPI
 
