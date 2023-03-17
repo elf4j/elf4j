@@ -27,52 +27,73 @@ package elf4j;
 import java.util.function.Supplier;
 
 /**
- * All {@link Logger} instances from this API should be immutable.
+ * Logging service interface and access API as in the <a
+ * href="https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html">Java Service Provider Framework</a>.
+ * <p></p>
+ * All {@link Logger} instances from this API should be thread-safe.
  */
 public interface Logger {
     /**
+     * Service access API
+     *
      * @return Logger instance with default name and Level
      */
     static Logger instance() {
-        return LoggingServiceLocator.INSTANCE.loggerFactory().logger();
+        return ServiceProviderLocator.INSTANCE.loggerFactory().logger();
     }
 
     /**
-     * @return Logger instance with the same name, and DEBUG log level
+     * Service access API
+     *
+     * @return Logger instance with {@link Level#DEBUG} severity level
      */
     Logger atDebug();
 
     /**
-     * @return Logger instance with the same name, and ERROR log level
+     * Service access API
+     *
+     * @return Logger instance with {@link Level#ERROR} severity level
      */
     Logger atError();
 
     /**
-     * @return Logger instance with the same name, and INFO log level
+     * Service access API
+     *
+     * @return Logger instance with {@link Level#INFO} severity level
      */
     Logger atInfo();
 
     /**
-     * @return Logger instance with the same name, and TRACE log level
+     * Service access API
+     *
+     * @return Logger instance with {@link Level#TRACE} severity level
      */
     Logger atTrace();
 
     /**
-     * @return Logger instance with the same name, and WARN log level
+     * Service access API
+     *
+     * @return Logger instance with {@link Level#WARN} severity level
      */
     Logger atWarn();
 
     /**
-     * @return log Level of the logger instance
+     * Service interface API
+     *
+     * @return Severity level of the logger instance
      */
     Level getLevel();
 
     /**
-     * @return true if the Logger instance is configured to be active per its name and Level, false otherwise
+     * Service interface API
+     *
+     * @return true if the active logging of this instance enabled per configuration, false otherwise
      */
     boolean isEnabled();
 
     /**
+     * Service interface API
+     *
      * @param message to be logged. If the actual type is {@link java.util.function.Supplier}, the result of
      *                {@link Supplier#get()}, instead of the {@code message} itself, should be used to construct the
      *                final log message.
@@ -80,6 +101,8 @@ public interface Logger {
     void log(Object message);
 
     /**
+     * Service interface API
+     *
      * @param message to be logged
      * @param args    the arguments to replace the placeholders in the message. If any of the argument's actual type is
      *                {@link java.util.function.Supplier}, the result of {@link Supplier#get()}, instead of the argument
@@ -88,11 +111,15 @@ public interface Logger {
     void log(String message, Object... args);
 
     /**
+     * Service interface API
+     *
      * @param t the Throwable to be logged
      */
     void log(Throwable t);
 
     /**
+     * Service interface API
+     *
      * @param t       the Throwable to be logged
      * @param message the message to be logged. If the actual type is {@link java.util.function.Supplier}, the result of
      *                {@link Supplier#get()}, instead of the {@code message} itself, should be used to construct the
@@ -101,6 +128,8 @@ public interface Logger {
     void log(Throwable t, Object message);
 
     /**
+     * Service interface API
+     *
      * @param t       the Throwable to be logged
      * @param message the message to be logged
      * @param args    the arguments to replace the placeholders in the message. If any of argument's actual type is

@@ -25,31 +25,34 @@
 package elf4j;
 
 /**
- * Defines log levels
+ * Severity levels of logs. The {@link Enum#ordinal()} value each level is of significance in that, combined with system
+ * configuration, it determines the actual loggability at runtime.
  */
 public enum Level {
     /**
-     * log level TRACE
+     * TRACE
      */
     TRACE,
     /**
-     * log level DEBUG
+     * DEBUG
      */
     DEBUG,
     /**
-     * log level INFO
+     * INFO
      */
     INFO,
     /**
-     * log level WARN
+     * WARN
      */
     WARN,
     /**
-     * log level ERROR
+     * ERROR
      */
     ERROR,
     /**
-     * log level OFF
+     * OFF
+     * <p></p>
+     * Highest ordinal so it can never be smaller than that of any configured minimum loggable Level
      */
     OFF
 }
