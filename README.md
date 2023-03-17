@@ -192,10 +192,10 @@ class SampleUsage {
 ### For Logging Service Providers...
 
 As with the Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html),
-the logging Service Provider implementation should be concrete and complete, including both the provider class for
-the `LoggerFactory` [SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html) and the service class for
-the `Logger` API, such that the client application can discover and load the logging implementation
-with `java.util.ServiceLoader`.
+the logging _service provider_ implementation should be concrete and complete, including both the _provider class_ for
+the `LoggerFactory` [SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html) and the _service class_ for
+the `Logger` API. The implementation should be packaged with the proper _provider-configuration_ file in the resource
+directory `META-INF/services` as specified by `java.util.ServiceLoader`.
 
 ## Available Logging Service Providers of the ELF4J SPI
 
