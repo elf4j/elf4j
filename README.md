@@ -97,37 +97,6 @@ for the API user to mix up lazy and eager arguments within the same logging meth
 
 ### For Logging Service API Users...
 
-Note that ELF4J is a logging service facade and specification, rather than the implementation. As such,
-
-#### No-op by Default
-
-- Nothing will be logging out (no-op) unless a properly configured external ELF4J service provider is discovered at the
-  application start time. The ELF4J facade itself only ships with a default no-op logging provider.
-
-#### Only One In-effect Logging Provider
-
-- The API user can select or change to
-  use any [ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-of-the-elf4j-spi)
-  at deploy time, without code change.
-- The recommended setup is to ensure that only the one desired logging provider JAR be present in the classpath; or no
-  external provider JAR if no-op is desired. In this case, nothing further is needed for ELF4J to work.
-- If multiple external provider JARs are present, somehow, then the system property `elf4j.logger.factory.fqcn` has to
-  be used to select the desired provider. No-op applies if the specified provider JAR is absent from the classpath.
-
-  ```
-  java -Delf4j.logger.factory.fqcn="elf4j.log4j.Log4jLoggerFactory" -jar MyApplication.jar
-  ```
-
-  With the provided no-op logger factory, this system property can also be used to turn OFF (no-op) all logging services
-  discovered by the ELF4J facade:
-
-  ```
-  java -Delf4j.logger.factory.fqcn="elf4j.util.NoopLoggerFactory" -jar MyApplication.jar
-  ```
-
-- It is considered a setup error to have multiple provider JARs in the classpath without a selection. The ELF4J facade
-  falls back to no-op on all errors related to logging service provider discovery.
-
 ```java
 class SampleUsage {
     static Logger logger = Logger.instance();
@@ -188,6 +157,37 @@ class SampleUsage {
     }
 }
 ```
+
+Note that ELF4J is a logging service facade and specification, rather than the implementation. As such,
+
+#### No-op by Default
+
+- Nothing will be logging out (no-op) unless a properly configured external ELF4J service provider is discovered at the
+  application start time. The ELF4J facade itself only ships with a default no-op logging provider.
+
+#### Only One In-effect Logging Provider
+
+- The API user can select or change to
+  use any [ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-of-the-elf4j-spi)
+  at deploy time, without code change.
+- The recommended setup is to ensure that only the one desired logging provider JAR be present in the classpath; or no
+  external provider JAR if no-op is desired. In this case, nothing further is needed for ELF4J to work.
+- If multiple external provider JARs are present, somehow, then the system property `elf4j.logger.factory.fqcn` has to
+  be used to select the desired provider. No-op applies if the specified provider JAR is absent from the classpath.
+
+  ```
+  java -Delf4j.logger.factory.fqcn="elf4j.log4j.Log4jLoggerFactory" -jar MyApplication.jar
+  ```
+
+  With the provided no-op logger factory, this system property can also be used to turn OFF (no-op) all logging services
+  discovered by the ELF4J facade:
+
+  ```
+  java -Delf4j.logger.factory.fqcn="elf4j.util.NoopLoggerFactory" -jar MyApplication.jar
+  ```
+
+- It is considered a setup error to have multiple provider JARs in the classpath without a selection. The ELF4J facade
+  falls back to no-op on all errors related to logging service provider discovery.
 
 ### For Logging Service Providers...
 
