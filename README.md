@@ -65,7 +65,7 @@ public interface LoggerFactory {
 }
 ```
 
-### Conventions, Defaults, and Implementation Notes
+### Conventions, Defaults, and Implementation Notes (a.k.a."the Spec")
 
 #### Placeholder Token
 
@@ -91,13 +91,13 @@ result is used to compute the final log message.
 The special handling of lazy arguments is by convention, and not syntactically enforced by the API or SPI. This allows
 for the API user to mix up lazy and eager arguments within the same logging method call.
 
-Note that a `Supplier` lambda expression argument has to be explicitly downcast. That is mandated by lambda syntax
-because the `Logger` API declares the lazy argument as an `Object` rather than a functional interface. No need of
-downcast if the `Supplier` function is passed in as a reference instead of a lambda expression.
+- Lambda expressions of `Supplier` arguments have to be explicitly downcast. That is mandated by lambda syntax
+  because the `Logger` API declares the lazy argument as an `Object` rather than a functional interface. No need of
+  downcast if the `Supplier` argument is passed in as a reference instead of a lambda expression.
 
 ### For Logging Service API Users...
 
-ELF4J is a logging service facade, rather than implementation:
+Note that ELF4J is a logging service facade and specification, rather than the implementation. As such,
 
 #### No-op by Default
 
@@ -109,7 +109,7 @@ ELF4J is a logging service facade, rather than implementation:
 - The API user can select or change to
   use any [ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-of-the-elf4j-spi)
   at deploy time, without code change.
-- The recommended setup is to ensure that only the one desired logging provider JAR is present in the classpath; or no
+- The recommended setup is to ensure that only the one desired logging provider JAR be present in the classpath; or no
   external provider JAR if no-op is desired. In this case, nothing further is needed for ELF4J to work.
 - If multiple external provider JARs are present, somehow, then the system property `elf4j.logger.factory.fqcn` has to
   be used to select the desired provider. No-op applies if the specified provider JAR is absent from the classpath.
@@ -118,21 +118,22 @@ ELF4J is a logging service facade, rather than implementation:
   java -Delf4j.logger.factory.fqcn="elf4j.log4j.Log4jLoggerFactory" -jar MyApplication.jar
   ```
 
-  This system property can also be used to turn OFF (no-op) all logging service initiated by the ELF4J facade:
+  With the provided no-op logger factory, this system property can also be used to turn OFF (no-op) all logging service
+  discovered by the ELF4J facade:
 
   ```
   java -Delf4j.logger.factory.fqcn="elf4j.util.NoopLoggerFactory" -jar MyApplication.jar
   ```
 
-- It is considered a setup error to have multiple provider JARs in the classpath without a selection. ELF4J falls back
-  to no-op in all error scenarios.
+- It is considered a setup error to have multiple provider JARs in the classpath without a selection. The ELF4J facade
+  falls back to no-op in all error scenarios related to logging service provider discovery.
 
 ```java
 class SampleUsage {
+    static Logger logger = Logger.instance();
+
     @Nested
     class plainText {
-        Logger logger = Logger.instance();
-
         @Test
         void declarationsAndLevels() {
             logger.log(
@@ -157,7 +158,7 @@ class SampleUsage {
 
     @Nested
     class textWithArguments {
-        Logger info = Logger.instance().atInfo();
+        Logger info = logger.atInfo();
 
         @Test
         void lazyAndEagerArgumentsCanBeMixed() {
@@ -173,15 +174,14 @@ class SampleUsage {
 
     @Nested
     class throwable {
-        Logger logger = Logger.instance();
-
         @Test
         void asTheFirstArgument() {
             Exception exception = new Exception("Exception message");
-            logger.atWarn().log(exception);
-            logger.atError()
+            logger.atError().log(exception);
+            logger.atError().log(exception, "Optional log message");
+            logger.atInfo()
                     .log(exception,
-                            "Exception is always the first argument to a logging method. The {} message and arguments that follow work the same way {}.",
+                            "Exception is always the first argument to a logging method. The {} log message and following arguments work the same way {}.",
                             "optional",
                             (Supplier) () -> "as usual");
         }
