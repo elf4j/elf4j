@@ -126,7 +126,7 @@ Note that ELF4J is a logging service facade and specification, rather than the i
   ```
 
 - It is considered a setup error to have multiple provider JARs in the classpath without a selection. The ELF4J facade
-  falls back to no-op in all error scenarios related to logging service provider discovery.
+  falls back to no-op on all errors related to logging service provider discovery.
 
 ```java
 class SampleUsage {
