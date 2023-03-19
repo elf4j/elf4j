@@ -174,13 +174,13 @@ Note that ELF4J is a logging service facade and specification, rather than the i
   the classpath; or no external provider JAR if no-op is desired. In this case, nothing further is needed for ELF4J to
   work.
 - If multiple external providers are present, somehow, then the system property `elf4j.logger.factory.fqcn` has to be
-  used to select the desired provider. No-op applies if the specified provider JAR is absent from the classpath.
+  used to select the desired provider. No-op applies if the specified provider is absent from the classpath.
 
   ```
   java -Delf4j.logger.factory.fqcn="elf4j.log4j.Log4jLoggerFactory" MyApplication
   ```
 
-  With the provided no-op logger factory, this system property can also be used to turn OFF (no-op) all logging services
+  With the default no-op logging provider, this system property can also be used to turn OFF all logging services
   discovered by the ELF4J facade:
 
   ```
