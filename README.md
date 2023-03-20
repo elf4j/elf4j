@@ -26,8 +26,6 @@ Java 8 or better
 ### Service Interface and Access API
 
 ```java
-import elf4j.Level;
-
 public interface Logger {
     static Logger instance() {
         return ServiceProviderLocator.INSTANCE.loggerFactory().logger();
