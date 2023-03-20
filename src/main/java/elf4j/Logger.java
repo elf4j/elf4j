@@ -45,19 +45,19 @@ public interface Logger {
     /**
      * Service access API
      *
-     * @return Logger instance with {@link Level#DEBUG} severity level
+     * @return Logger instance with {@link Level#TRACE} severity level
      */
-    default Logger atDebug() {
-        return this.atLevel(Level.DEBUG);
+    default Logger atTrace() {
+        return this.atLevel(Level.TRACE);
     }
 
     /**
      * Service access API
      *
-     * @return Logger instance with {@link Level#ERROR} severity level
+     * @return Logger instance with {@link Level#DEBUG} severity level
      */
-    default Logger atError() {
-        return this.atLevel(Level.ERROR);
+    default Logger atDebug() {
+        return this.atLevel(Level.DEBUG);
     }
 
     /**
@@ -72,28 +72,28 @@ public interface Logger {
     /**
      * Service access API
      *
-     * @param level of the requested Logger instance
-     * @return Logger instance of the specified level
-     */
-    Logger atLevel(Level level);
-
-    /**
-     * Service access API
-     *
-     * @return Logger instance with {@link Level#TRACE} severity level
-     */
-    default Logger atTrace() {
-        return this.atLevel(Level.TRACE);
-    }
-
-    /**
-     * Service access API
-     *
      * @return Logger instance with {@link Level#WARN} severity level
      */
     default Logger atWarn() {
         return this.atLevel(Level.WARN);
     }
+
+    /**
+     * Service access API
+     *
+     * @return Logger instance with {@link Level#ERROR} severity level
+     */
+    default Logger atError() {
+        return this.atLevel(Level.ERROR);
+    }
+
+    /**
+     * Service access API
+     *
+     * @param level of the requested Logger instance
+     * @return Logger instance of the specified level
+     */
+    Logger atLevel(Level level);
 
     /**
      * Service interface API
