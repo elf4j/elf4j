@@ -63,28 +63,23 @@ public enum NoopLogger implements Logger {
     }
 
     @Override
-    public Logger atDebug() {
-        return DEBUG;
-    }
-
-    @Override
-    public Logger atError() {
-        return ERROR;
-    }
-
-    @Override
-    public Logger atInfo() {
-        return INFO;
-    }
-
-    @Override
-    public Logger atTrace() {
-        return TRACE;
-    }
-
-    @Override
-    public Logger atWarn() {
-        return WARN;
+    public Logger atLevel(Level level) {
+        switch (level) {
+            case TRACE:
+                return NoopLogger.TRACE;
+            case DEBUG:
+                return NoopLogger.DEBUG;
+            case INFO:
+                return NoopLogger.INFO;
+            case WARN:
+                return NoopLogger.WARN;
+            case ERROR:
+                return NoopLogger.ERROR;
+            case OFF:
+                return NoopLogger.OFF;
+            default:
+                throw new UnsupportedOperationException();
+        }
     }
 
     @Override

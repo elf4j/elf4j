@@ -26,20 +26,34 @@ Java 8 or better
 ### Service Interface and Access API
 
 ```java
+import elf4j.Level;
+
 public interface Logger {
     static Logger instance() {
         return ServiceProviderLocator.INSTANCE.loggerFactory().logger();
     }
 
-    Logger atTrace();
+    default Logger atTrace() {
+        return this.atLevel(Level.TRACE);
+    }
 
-    Logger atDebug();
+    default Logger atDebug() {
+        return this.atLevel(Level.DEBUG);
+    }
 
-    Logger atInfo();
+    default Logger atInfo() {
+        return this.atLevel(Level.INFO);
+    }
 
-    Logger atWarn();
+    default Logger atWarn() {
+        return this.atLevel(Level.WARN);
+    }
 
-    Logger atError();
+    default Logger atError() {
+        return this.atLevel(Level.ERROR);
+    }
+
+    Logger atLevel(Level level);
 
     Level getLevel();
 
