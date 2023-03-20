@@ -179,12 +179,12 @@ Note that ELF4J is a logging service facade and specification, rather than the i
 
 #### Only One In-effect Logging Provider
 
-- The API user can select or change to
-  use any [ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-of-the-elf4j-spi)
-  at deploy time, without code change.
-- The recommended setup is to ensure that only the one desired logging provider with its associated JAR(s) be present in
-  the classpath; or no external provider JAR if no-op is desired. In this case, nothing further is needed for ELF4J to
-  work.
+- The ELF4J API user can select or change into using
+  any [ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-of-the-elf4j-spi)
+  at deploy time, without application code change or re-compile.
+- The recommended setup is to ensure that only one desired logging provider with its associated JAR(s) be present in the
+  classpath; or, if no-op is desired, then no external provider JAR. In this case, nothing further is needed for ELF4J
+  to work.
 - If multiple external providers are present, somehow, then the system property `elf4j.logger.factory.fqcn` has to be
   used to select the desired provider. No-op applies if the specified provider is absent from the classpath.
 
@@ -199,15 +199,15 @@ Note that ELF4J is a logging service facade and specification, rather than the i
   java -Delf4j.logger.factory.fqcn="elf4j.util.NoopLoggerFactory" MyApplication
   ```
 
-- It is considered a setup error to have multiple provider JARs in the classpath without a selection. The ELF4J facade
-  falls back to no-op on all errors related to logging service provider discovery.
+- It is considered a setup error to have multiple providers in the classpath without a selection. The ELF4J facade falls
+  back to no-op on all errors related to logging service provider discovery.
 
 ### For Logging Service Providers...
 
 As with the Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html),
 the logging _service provider_ implementation should be concrete and complete - including both the _provider class_ for
 the `LoggerFactory` [SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html) and the _service class_ for
-the `Logger` API - and packaged with the proper _provider-configuration_ file in the resource
+the `Logger` API. The implementation should be packaged with the proper _provider-configuration_ file in the resource
 directory `META-INF/services` as specified by `java.util.ServiceLoader`.
 
 ## Available Logging Service Providers of the ELF4J SPI
