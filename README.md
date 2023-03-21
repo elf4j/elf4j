@@ -90,9 +90,9 @@ Any `Logger` instance should be thread-safe.
 
 #### Severity Level
 
-If a Logger instance is obtained via the `Logger.instance()` method, then the default severity level of such instance is
-decided by the Service Provider implementation. If a Logger instance is obtained via one of the fluent-style `at<Level>`
-methods, then its severity level should be as requested.
+If a Logger instance is obtained via the `Logger.instance()` static factory method, then the default severity level of
+such instance is decided by the _service provider_ implementation. If a Logger instance is obtained via one of
+the `Logger.at<Level>` instance factory methods, then its severity level should be as requested.
 
 #### Lazy Arguments
 
@@ -212,7 +212,7 @@ directory `META-INF/services` as specified by `java.util.ServiceLoader`.
 
 ## Available Logging Service Providers of the ELF4J SPI
 
-- A native ELF4J provider implementation: [elf4j-impl](https://github.com/elf4j/elf4j-impl)
+- A native ELF4J provider implementation: [elf4j-provider](https://github.com/elf4j/elf4j-provider)
 - [tinylog provider](https://github.com/elf4j/elf4j-tinylog)
 - [LOG4J provider](https://github.com/elf4j/elf4j-log4j)
 - [LOGBACK provider](https://github.com/elf4j/elf4j-logback)
