@@ -77,7 +77,7 @@ public interface LoggerFactory {
 }
 ```
 
-### Conventions, Defaults, and Implementation Notes (a.k.a."the Spec")
+### Conventions, Defaults, and Implementation Notes (a.k.a. "the Spec")
 
 #### Placeholder Token
 
