@@ -213,7 +213,7 @@ and complete implementation should include
   and the _service class_ for the `Logger` API
 - the proper _provider-configuration_ file in the resource directory `META-INF/services`
 
-## Available Logging Service Providers of the ELF4J SPI
+## Available Logging Service Providers for ELF4J
 
 - A native ELF4J provider implementation: [elf4j-provider](https://github.com/elf4j/elf4j-provider)
 - [tinylog provider](https://github.com/elf4j/elf4j-tinylog)
