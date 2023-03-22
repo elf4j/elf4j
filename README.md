@@ -2,6 +2,8 @@
 
 API and SPI of a no-fluff Java logging facade - Easy Logging Facade for Java (ELF4J)
 
+* Sometimes, the wheel should be reinvented...
+
 ## User Stories
 
 1. As a Java application developer, I want to use a logging service API, so that I can choose or switch the actual
