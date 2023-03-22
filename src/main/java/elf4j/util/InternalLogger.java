@@ -2,7 +2,8 @@ package elf4j.util;
 
 import elf4j.Level;
 
-import java.util.Objects;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  *
@@ -44,9 +45,11 @@ public enum InternalLogger {
         if (level.compareTo(mininumLevel) < 0) {
             return;
         }
-        synchronized (INSTANCE) {
-            log(level, message);
-            Objects.requireNonNull(throwable).printStackTrace();
+        StringWriter stringWriter = new StringWriter();
+        stringWriter.append(message).append(System.lineSeparator());
+        try (PrintWriter printWriter = new PrintWriter(stringWriter)) {
+            throwable.printStackTrace(printWriter);
         }
+        log(level, stringWriter.toString());
     }
 }
