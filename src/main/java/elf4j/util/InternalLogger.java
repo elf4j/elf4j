@@ -44,7 +44,9 @@ public enum InternalLogger {
         if (level.compareTo(mininumLevel) < 0) {
             return;
         }
-        log(level, message);
-        Objects.requireNonNull(throwable).printStackTrace();
+        synchronized (INSTANCE) {
+            log(level, message);
+            Objects.requireNonNull(throwable).printStackTrace();
+        }
     }
 }
