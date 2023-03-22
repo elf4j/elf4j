@@ -23,7 +23,7 @@ Java 8 or better
 
 ## What It Is...
 
-### Service Interface and Access API
+### Logging Service Interface and Access API
 
 ```java
 public interface Logger {
@@ -69,7 +69,7 @@ public interface Logger {
 }
 ```
 
-### Service Provider Interface (SPI)
+### Logging Service Provider Interface (SPI)
 
 ```java
 public interface LoggerFactory {
