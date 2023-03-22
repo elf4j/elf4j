@@ -105,9 +105,9 @@ result is used to compute the final log message.
 The special handling of lazy arguments is by convention, and not syntactically enforced by the API or SPI. This allows
 for the API user to mix up lazy and eager arguments within the same logging method call.
 
-- Lambda expressions of `Supplier` arguments have to be explicitly downcast. That is mandated by lambda syntax
-  because the `Logger` API declares the lazy argument as an `Object` rather than a functional interface. No need of
-  downcast if the `Supplier` argument is passed in as a reference instead of a lambda expression.
+- While using the `Logger` API, lambda expressions of `Supplier` arguments have to be explicitly downcast. That is
+  mandated by lambda syntax because the API declares the lazy argument as an `Object` rather than a functional
+  interface. No need of downcast if the `Supplier` argument is passed in as a reference instead of a lambda expression.
 
 ## Use it - for Logging Service API Clients...
 
