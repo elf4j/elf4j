@@ -27,10 +27,9 @@ package elf4j;
 import java.util.function.Supplier;
 
 /**
- * Logging service interface and access API as in the <a
+ * <p> Logging service interface and access API as in the <a
  * href="https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html">Java Service Provider Framework</a>.
- * <p></p>
- * All {@link Logger} instances from this API should be thread-safe.
+ * <p> All {@link Logger} instances from this API should be thread-safe.
  */
 public interface Logger {
     /**
@@ -40,51 +39,6 @@ public interface Logger {
      */
     static Logger instance() {
         return ServiceProviderLocator.INSTANCE.loggerFactory().logger();
-    }
-
-    /**
-     * Service access API
-     *
-     * @return Logger instance with {@link Level#TRACE} severity level
-     */
-    default Logger atTrace() {
-        return this.atLevel(Level.TRACE);
-    }
-
-    /**
-     * Service access API
-     *
-     * @return Logger instance with {@link Level#DEBUG} severity level
-     */
-    default Logger atDebug() {
-        return this.atLevel(Level.DEBUG);
-    }
-
-    /**
-     * Service access API
-     *
-     * @return Logger instance with {@link Level#INFO} severity level
-     */
-    default Logger atInfo() {
-        return this.atLevel(Level.INFO);
-    }
-
-    /**
-     * Service access API
-     *
-     * @return Logger instance with {@link Level#WARN} severity level
-     */
-    default Logger atWarn() {
-        return this.atLevel(Level.WARN);
-    }
-
-    /**
-     * Service access API
-     *
-     * @return Logger instance with {@link Level#ERROR} severity level
-     */
-    default Logger atError() {
-        return this.atLevel(Level.ERROR);
     }
 
     /**
@@ -155,4 +109,49 @@ public interface Logger {
      *                itself, should be used to construct the final log message.
      */
     void log(Throwable t, String message, Object... args);
+
+    /**
+     * Service access API
+     *
+     * @return Logger instance with {@link Level#TRACE} severity level
+     */
+    default Logger atTrace() {
+        return this.atLevel(Level.TRACE);
+    }
+
+    /**
+     * Service access API
+     *
+     * @return Logger instance with {@link Level#DEBUG} severity level
+     */
+    default Logger atDebug() {
+        return this.atLevel(Level.DEBUG);
+    }
+
+    /**
+     * Service access API
+     *
+     * @return Logger instance with {@link Level#INFO} severity level
+     */
+    default Logger atInfo() {
+        return this.atLevel(Level.INFO);
+    }
+
+    /**
+     * Service access API
+     *
+     * @return Logger instance with {@link Level#WARN} severity level
+     */
+    default Logger atWarn() {
+        return this.atLevel(Level.WARN);
+    }
+
+    /**
+     * Service access API
+     *
+     * @return Logger instance with {@link Level#ERROR} severity level
+     */
+    default Logger atError() {
+        return this.atLevel(Level.ERROR);
+    }
 }

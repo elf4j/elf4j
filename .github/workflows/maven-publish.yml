@@ -20,6 +20,8 @@ jobs:
           server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
+      - name: Finalize POM version
+        run: mvn semver:finalize-current
       - name: Publish to OSSRH
         run: mvn --batch-mode deploy -Prelease
         env:

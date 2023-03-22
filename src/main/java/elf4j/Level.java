@@ -51,8 +51,7 @@ public enum Level {
     ERROR,
     /**
      * OFF
-     * <p></p>
-     * Highest ordinal so it can never be smaller than that of any configured minimum loggable Level
+     * <p> Highest ordinal, so it can never be smaller than that of any configured minimum loggable Level.
      */
     OFF
 }
