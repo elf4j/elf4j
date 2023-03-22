@@ -215,7 +215,7 @@ the implementation should include
 - the _provider class_ for the `LoggerFactory` [SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html), the
   _service class_ for the `Logger` API, and their associated classes as needed
 - the _provider-configuration_ file, named `elf4j.spi.LoggerFactory` in the resource directory `META-INF/services`,
-  whose content is the fully qualify class name of the SPI _provider class_
+  whose content is the fully qualified class name of the SPI _provider class_
 
 ## Available Logging Service Providers for ELF4J
 
