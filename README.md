@@ -107,7 +107,7 @@ for the API user to mix up lazy and eager arguments within the same logging meth
   because the `Logger` API declares the lazy argument as an `Object` rather than a functional interface. No need of
   downcast if the `Supplier` argument is passed in as a reference instead of a lambda expression.
 
-## Use it - for Logging Service API Clients
+## Use it - for Logging Service API Clients...
 
 ```java
 class SampleUsage {
