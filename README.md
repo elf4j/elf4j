@@ -2,7 +2,7 @@
 
 API and SPI of a no-fluff Java logging facade - Easy Logging Facade for Java (ELF4J)
 
-* Sometimes, the wheel should be reinvented...
+* ... because, sometimes, the wheel should be reinvented...
 
 ## User Stories
 
