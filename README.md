@@ -180,7 +180,7 @@ Note that ELF4J is a logging service facade and specification, rather than the i
 **Only One In-effect Logging Provider**
 
 - The ELF4J API user can select or change into using
-  any [ELF4J service provider](https://github.com/elf4j#for-logging-service-providers)
+  any [ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-for-elf4j)
   at deploy time, without application code change or re-compile.
 - The recommended setup is to ensure that only one desired logging provider with its associated JAR(s) be present in the
   classpath; or, if no-op is desired, then no external provider JAR. In this case, nothing further is needed for ELF4J
