@@ -178,8 +178,9 @@ Note that ELF4J is a logging service facade and specification, rather than the i
 
 **No-op by Default**
 
-- Nothing will be logging out (no-op) unless a properly configured external ELF4J service provider is discovered at the
-  application start time. The ELF4J facade itself only ships with a default no-op logging provider.
+- Nothing will be logging out (no-op) unless a properly configured 
+  external [ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-for-elf4j) 
+  is discovered at the application start time. The ELF4J facade itself only ships with a default no-op logging provider.
 
 **Only One In-effect Logging Provider**
 
