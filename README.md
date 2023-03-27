@@ -83,11 +83,6 @@ public interface LoggerFactory {
 
 ### Conventions, Defaults, and Implementation Notes (a.k.a. "the spec")
 
-#### Placeholder Token
-
-The empty curly braces token `{}` should be the placeholder for message arguments. This is by convention, and does
-not syntactically appear in the API or SPI. Both the API user and the Service Provider must honor such convention.
-
 #### Thread Safety
 
 Any `Logger` instance should be thread-safe.
@@ -98,17 +93,22 @@ If a Logger instance is obtained via the `Logger.instance()` static factory meth
 such instance is decided by the _service provider_ implementation. If a Logger instance is obtained via one of
 the `Logger.at<Level>` instance factory methods, then its severity level should be as requested.
 
+#### Placeholder Token
+
+The empty curly braces token `{}` should be the placeholder for message arguments. This is by convention, and does not
+syntactically appear in the API or SPI. Both the API user and the Service Provider must honor such convention.
+
 #### Lazy Arguments
 
-An `Object` type argument passed to any of the logging methods must be treated specially if the actual type at
-runtime is `java.util.function.Supplier`. That is, the Supplier function must be applied first before the function
-result is used to compute the final log message.
+Lazy arguments are those whose runtime type is `java.util.function.Supplier`. Compared to other types of arguments, lazy
+ones have to be treated specially in that the `Supplier` function must be applied first before the result is used as the
+substitution to the argument placeholder.
 
-The special handling of lazy arguments is by convention, and not syntactically enforced by the API or SPI. This allows
+This special handling of lazy arguments is by convention, and not syntactically enforced by the API or SPI. It allows
 for the API user to mix up lazy and eager arguments within the same logging method call.
 
-- While using the `Logger` API, lambda expressions of `Supplier` arguments have to be explicitly downcast. That is
-  mandated by lambda syntax because the API declares the lazy argument as an `Object` rather than a functional
+- While using the `Logger` API, lazy arguments from lambda expressions need to be explicitly downcast to `Supplier`. The
+  downcast is mandated by lambda syntax because the API declares all arguments as `Object` rather than functional
   interface. No need of downcast if the `Supplier` argument is passed in as a reference instead of a lambda expression.
 
 ## Use it - for Logging Service API Clients...
@@ -178,15 +178,15 @@ Note that ELF4J is a logging service facade and specification, rather than the i
 
 **No-op by Default**
 
-- Nothing will be logging out (no-op) unless a properly configured 
-  external [ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-for-elf4j) 
-  is discovered at the application start time. The ELF4J facade itself only ships with a default no-op logging provider.
+- Nothing will be logging out (no-op) unless a properly configured
+  external [ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-for-elf4j) is
+  discovered at the application start time. The ELF4J facade itself only ships with a default no-op logging provider.
 
 **Only One In-effect Logging Provider**
 
 - The ELF4J API user can select or change into using
-  any [ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-for-elf4j)
-  at deploy time, without application code change or re-compile.
+  any [ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-for-elf4j) at deploy
+  time, without application code change or re-compile.
 - The recommended setup is to ensure that only one desired logging provider with its associated JAR(s) be present in the
   classpath; or, if no-op is desired, then no external provider JAR. In this case, nothing further is needed for ELF4J
   to work.
