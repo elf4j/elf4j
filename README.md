@@ -102,14 +102,13 @@ syntactically appear in the API or SPI. Both the API user and the Service Provid
 
 Lazy arguments are those whose runtime type is `java.util.function.Supplier`. Compared to other types of arguments, lazy
 ones have to be treated specially in that the `Supplier` function must be applied first before the result is used as the
-substitution to the argument placeholder.
+substitution to the argument placeholder. This special handling of lazy arguments is by convention, and not
+syntactically enforced by the API or SPI. It allows for the API user to mix up lazy and eager arguments within the same
+logging method call.
 
-This special handling of lazy arguments is by convention, and not syntactically enforced by the API or SPI. It allows
-for the API user to mix up lazy and eager arguments within the same logging method call.
-
-- While using the `Logger` API, lazy arguments from lambda expressions need to be explicitly downcast to `Supplier`. The
-  downcast is mandated by lambda syntax because the API declares all arguments as `Object` rather than functional
-  interface. No need of downcast if the `Supplier` argument is passed in as a reference instead of a lambda expression.
+- Lazy arguments from lambda expressions need to be explicitly downcast to `Supplier`. The downcast is mandated by
+  lambda syntax because the `Logger` API declares all arguments as `Object` rather than functional interface. No need of
+  downcast if the `Supplier` argument is passed in as a reference instead of a lambda expression.
 
 ## Use it - for Logging Service API Clients...
 
