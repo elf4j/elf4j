@@ -110,7 +110,7 @@ logging method call.
   lambda syntax because the `Logger` API declares all arguments as `Object` rather than functional interface. No need of
   downcast if the `Supplier` argument is passed in as a reference instead of a lambda expression.
 
-## Use it - for Logging Service API Clients...
+## Use it - for Log Service API Clients...
 
 ```java
 class SampleUsage {
@@ -178,13 +178,13 @@ Note that ELF4J is a logging service facade and specification, rather than the i
 **No-op by Default**
 
 - Nothing will be logging out (no-op) unless a properly configured
-  external [ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-for-elf4j) is
+  external [ELF4J service provider](https://github.com/elf4j/elf4j#available-log-service-providers-for-elf4j) is
   discovered at the application start time. The ELF4J facade itself only ships with a default no-op logging provider.
 
 **Only One In-effect Logging Provider**
 
 - The ELF4J API user can select or change into using
-  any [ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-for-elf4j) at deploy
+  any [ELF4J service provider](https://github.com/elf4j/elf4j#available-log-service-providers-for-elf4j) at deploy
   time, without application code change or re-compile.
 - The recommended setup is to ensure that only one desired logging provider with its associated JAR(s) be present in the
   classpath; or, if no-op is desired, then no external provider JAR. In this case, nothing further is needed for ELF4J
@@ -206,7 +206,7 @@ Note that ELF4J is a logging service facade and specification, rather than the i
 - It is considered a setup error to have multiple providers in the classpath without a selection. The ELF4J facade falls
   back to no-op on all errors related to logging service provider discovery.
 
-## Use It - for Logging Service Providers...
+## Use It - for Log Service Providers...
 
 To enable an independent logging framework/engine via the ELF4J spec, the _service provider_ should follow instructions
 of Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html). Namely,
@@ -217,7 +217,7 @@ the implementation should include
 - the _provider-configuration_ file, named `elf4j.spi.LoggerFactory` in the resource directory `META-INF/services`,
   whose content is the Fully Qualified Name of the SPI _provider class_
 
-## Available Logging Service Providers for ELF4J
+## Available Log Service Providers for ELF4J
 
 - A native ELF4J provider implementation: [elf4j-provider](https://github.com/elf4j/elf4j-provider)
 - [tinylog provider](https://github.com/elf4j/elf4j-tinylog)
