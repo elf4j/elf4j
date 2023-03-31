@@ -175,13 +175,13 @@ class SampleUsage {
 
 Note that ELF4J is a logging service facade and specification, rather than the implementation. As such,
 
-**No-op by Default**
+### No-op by Default
 
 - Nothing will be logging out (no-op) unless a properly configured
   external [ELF4J service provider](https://github.com/elf4j/elf4j#available-log-service-providers-for-elf4j) is
   discovered at the application start time. The ELF4J facade itself only ships with a default no-op logging provider.
 
-**Only One In-effect Logging Provider**
+### Only One In-effect Logging Provider
 
 - The ELF4J API user can select or change into using
   any [ELF4J service provider](https://github.com/elf4j/elf4j#available-log-service-providers-for-elf4j) at deploy
