@@ -110,7 +110,7 @@ logging method call.
   lambda syntax because the `Logger` API declares all arguments as `Object` rather than functional interface. No need of
   downcast if the `Supplier` argument is passed in as a reference instead of a lambda expression.
 
-## Use it - for Log Service API Clients...
+## Use It - for Log Service API Clients...
 
 ```java
 class SampleUsage {
