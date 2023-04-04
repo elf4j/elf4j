@@ -19,7 +19,7 @@ API and SPI of a no-fluff Java logging facade - Easy Logging Facade for Java (EL
 
 ## Prerequisite
 
-Java 8 or better
+Java 8 or better, although individual logging service providers may have higher JDK version prerequisite.
 
 ## Get It...
 
