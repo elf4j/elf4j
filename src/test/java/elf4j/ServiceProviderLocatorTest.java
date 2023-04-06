@@ -21,12 +21,12 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ServiceProviderLocatorTest {
     ServiceProviderLocator.LoggerFactoryLocator loggerFactoryLocator;
-    @Mock ServiceProviderLocator.LoggingServiceConfiguration mockLoggingServiceConfiguration;
+    @Mock ServiceProviderLocator.LoggerFactoryLoader mockLoggerFactoryLoader;
     @Mock LoggerFactory mockLoggerFactory;
 
     @BeforeEach
     void setUp() {
-        loggerFactoryLocator = new ServiceProviderLocator.LoggerFactoryLocator(mockLoggingServiceConfiguration);
+        loggerFactoryLocator = new ServiceProviderLocator.LoggerFactoryLocator(mockLoggerFactoryLoader);
     }
 
     @Nested
@@ -36,25 +36,25 @@ class ServiceProviderLocatorTest {
             List<LoggerFactory> factories = new ArrayList<>();
             factories.add(mockLoggerFactory);
             factories.add(mockLoggerFactory);
-            when(mockLoggingServiceConfiguration.getProvisionedLoggerFactories()).thenReturn(factories);
+            when(mockLoggerFactoryLoader.loadAll()).thenReturn(factories);
 
             assertTrue(loggerFactoryLocator.getLoggerFactory() instanceof NoopLoggerFactory);
         }
 
         @Test
         void noProvider() {
-            when(mockLoggingServiceConfiguration.getProvisionedLoggerFactories()).thenReturn(Collections.emptyList());
-            when(mockLoggingServiceConfiguration.getSelectedLoggerFactoryName()).thenReturn(Optional.empty());
+            when(mockLoggerFactoryLoader.loadAll()).thenReturn(Collections.emptyList());
+            when(mockLoggerFactoryLoader.getSelectedLoggerFactoryName()).thenReturn(Optional.empty());
             assertTrue(loggerFactoryLocator.getLoggerFactory() instanceof NoopLoggerFactory);
         }
 
         @Test
         void selectedProviderNotFound() {
-            when(mockLoggingServiceConfiguration.getSelectedLoggerFactoryName()).thenReturn(Optional.of(
+            when(mockLoggerFactoryLoader.getSelectedLoggerFactoryName()).thenReturn(Optional.of(
                     "non.existing.logger.factory.class.Name"));
             List<LoggerFactory> factories = new ArrayList<>();
             factories.add(mockLoggerFactory);
-            when(mockLoggingServiceConfiguration.getProvisionedLoggerFactories()).thenReturn(factories);
+            when(mockLoggerFactoryLoader.loadAll()).thenReturn(factories);
 
             assertTrue(loggerFactoryLocator.getLoggerFactory() instanceof NoopLoggerFactory);
         }
@@ -66,19 +66,18 @@ class ServiceProviderLocatorTest {
         void onlyOneLoggerFactoryProvisioned() {
             List<LoggerFactory> factories = new ArrayList<>();
             factories.add(mockLoggerFactory);
-            when(mockLoggingServiceConfiguration.getProvisionedLoggerFactories()).thenReturn(factories);
+            when(mockLoggerFactoryLoader.loadAll()).thenReturn(factories);
 
             assertSame(mockLoggerFactory, loggerFactoryLocator.getLoggerFactory());
         }
 
         @Test
         void selectedLoggerFactoryFqcnAmongProvisionedFactories() {
-            when(mockLoggingServiceConfiguration.getSelectedLoggerFactoryName()).thenReturn(Optional.of(
-                    NoopLoggerFactory.class.getName()));
+            when(mockLoggerFactoryLoader.getSelectedLoggerFactoryName()).thenReturn(Optional.of(NoopLoggerFactory.class.getName()));
             List<LoggerFactory> factories = new ArrayList<>();
             factories.add(mockLoggerFactory);
             factories.add(new NoopLoggerFactory());
-            when(mockLoggingServiceConfiguration.getProvisionedLoggerFactories()).thenReturn(factories);
+            when(mockLoggerFactoryLoader.loadAll()).thenReturn(factories);
 
             assertTrue(loggerFactoryLocator.getLoggerFactory() instanceof NoopLoggerFactory);
         }

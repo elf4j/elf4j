@@ -63,13 +63,13 @@ public interface Logger {
 
     void log(Object message);
 
-    void log(String message, Object... args);
+    void log(String message, Object... arguments);
 
-    void log(Throwable t);
+    void log(Throwable throwable);
 
-    void log(Throwable t, Object message);
+    void log(Throwable throwable, Object message);
 
-    void log(Throwable t, String message, Object... args);
+    void log(Throwable throwable, String message, Object... arguments);
 }
 ```
 

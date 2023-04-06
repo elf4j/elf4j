@@ -13,21 +13,19 @@ public enum InternalLogger {
      *
      */
     INSTANCE;
-    /**
-     * System property to set minimum severity level of the internal logger's output
-     */
-    public static final String ELF4J_INTERNAL_LOG_LEVEL = "elf4j.internal.log.level";
     private final Level mininumLevel;
 
     InternalLogger() {
-        String minLevel = System.getProperty(ELF4J_INTERNAL_LOG_LEVEL);
+        String minLevel = System.getProperty("elf4j.internal.log.min.level");
         mininumLevel =
                 minLevel == null || minLevel.trim().isEmpty() ? Level.TRACE : Level.valueOf(minLevel.toUpperCase());
     }
 
     /**
-     * @param level   to log
-     * @param message to log
+     * @param level
+     *         to log
+     * @param message
+     *         to log
      */
     public void log(Level level, String message) {
         if (level.compareTo(mininumLevel) < 0) {
@@ -37,9 +35,12 @@ public enum InternalLogger {
     }
 
     /**
-     * @param level     to log
-     * @param throwable to log
-     * @param message   to log
+     * @param level
+     *         to log
+     * @param throwable
+     *         to log
+     * @param message
+     *         to log
      */
     public void log(Level level, Throwable throwable, String message) {
         if (level.compareTo(mininumLevel) < 0) {

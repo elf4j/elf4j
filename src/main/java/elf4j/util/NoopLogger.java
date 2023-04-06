@@ -98,22 +98,22 @@ public enum NoopLogger implements Logger {
     }
 
     @Override
-    public void log(String message, Object... args) {
+    public void log(String message, Object... arguments) {
         //noop
     }
 
     @Override
-    public void log(Throwable t) {
+    public void log(Throwable throwable) {
         //noop
     }
 
     @Override
-    public void log(Throwable t, Object message) {
+    public void log(Throwable throwable, Object message) {
         //noop
     }
 
     @Override
-    public void log(Throwable t, String message, Object... args) {
+    public void log(Throwable throwable, String message, Object... arguments) {
         //noop
     }
 }
