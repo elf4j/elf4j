@@ -106,11 +106,11 @@ logging method call.
   lambda syntax because the `Logger` API declares all arguments as `Object` rather than functional interface. No need of
   downcast if the `Supplier` argument is passed in as a reference instead of a lambda expression.
 
-## Get it...
+## Get it
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.elf4j/elf4j.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.elf4j%22%20AND%20a:%22elf4j%22)
 
-## Use it - for a logging Service API client...
+## Use it - for a logging Service API client
 
 ```java
 class SampleUsage {
@@ -206,7 +206,7 @@ Note that ELF4J is a logging service facade and specification, rather than the i
 - It is considered a setup error to have multiple providers in the classpath without a selection. The ELF4J facade falls
   back to no-op on all errors related to logging service provider discovery.
 
-## Use it - for a logging Service Provider...
+## Use it - for a logging Service Provider
 
 To enable an independent logging framework/engine via the ELF4J spec, the _service provider_ should follow instructions
 of Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html). Namely,
