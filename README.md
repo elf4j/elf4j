@@ -4,7 +4,7 @@ API and SPI of a no-fluff Java logging facade - Easy Logging Facade for Java (EL
 
 * ... because, sometimes, the wheel should be reinvented.
 
-## User Stories
+## User stories
 
 1. As a Java application developer, I want to use a log service API, so that I can choose or switch the actual
    log engine/framework among any compliant service providers, at the application deployment time without code
@@ -27,7 +27,7 @@ Java 8 or better, although individual logging service providers may have higher 
 
 ## What It Is...
 
-### A Logging Service Interface and Access API
+### A logging Service Interface and Access API
 
 ```java
 public interface Logger {
@@ -73,7 +73,7 @@ public interface Logger {
 }
 ```
 
-### A Logging Service Provider Interface (SPI)
+### A logging Service Provider Interface (SPI)
 
 ```java
 public interface LoggerFactory {
@@ -83,7 +83,7 @@ public interface LoggerFactory {
 
 ### Conventions, Defaults, and Implementation Notes (a.k.a. "the spec")
 
-#### Thread Safety
+#### Thread safety
 
 Any `Logger` instance should be thread-safe.
 
@@ -93,12 +93,12 @@ If a Logger instance is obtained via the `Logger.instance()` static factory meth
 such instance is decided by the _service provider_ implementation. If a Logger instance is obtained via one of
 the `Logger.at<Level>` instance factory methods, then its severity level should be as requested.
 
-#### Placeholder Token
+#### Placeholder token
 
 The empty curly braces token `{}` should be the placeholder for message arguments. This is by convention, and does not
 syntactically appear in the API or SPI. Both the API user and the Service Provider must honor such convention.
 
-#### Lazy Arguments
+#### Lazy arguments
 
 Lazy arguments are those whose runtime type is `java.util.function.Supplier`. Compared to other types of arguments, lazy
 ones have to be treated specially in that the `Supplier` function must be applied first before the result is used as the
@@ -110,7 +110,7 @@ logging method call.
   lambda syntax because the `Logger` API declares all arguments as `Object` rather than functional interface. No need of
   downcast if the `Supplier` argument is passed in as a reference instead of a lambda expression.
 
-## How to Use It - for Log Service API Clients...
+## Use it - for a logging Service API client...
 
 ```java
 class SampleUsage {
@@ -175,16 +175,16 @@ class SampleUsage {
 
 Note that ELF4J is a logging service facade and specification, rather than the implementation. As such,
 
-### No-op by Default
+### No-op by default
 
 - Nothing will be logging out (no-op) unless a properly configured
-  external [ELF4J service provider](https://github.com/elf4j/elf4j#available-log-service-providers-for-elf4j) is
+  external [ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-of-elf4j) is
   discovered at the application start time. The ELF4J facade itself only ships with a default no-op logging provider.
 
-### Only One In-effect Logging Provider
+### Only one in-effect logging provider
 
 - The ELF4J API user can select or change into using
-  any [ELF4J service provider](https://github.com/elf4j/elf4j#available-log-service-providers-for-elf4j) at deploy
+  any [ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-of-elf4j) at deploy
   time, without application code change or re-compile.
 - The recommended setup is to ensure that only one desired logging provider with its associated JAR(s) be present in the
   classpath; or, if no-op is desired, then no external provider JAR. In this case, nothing further is needed for ELF4J
@@ -206,7 +206,7 @@ Note that ELF4J is a logging service facade and specification, rather than the i
 - It is considered a setup error to have multiple providers in the classpath without a selection. The ELF4J facade falls
   back to no-op on all errors related to logging service provider discovery.
 
-## How to Use It - for Log Service Providers...
+## Use it - for a logging Service Provider...
 
 To enable an independent logging framework/engine via the ELF4J spec, the _service provider_ should follow instructions
 of Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html). Namely,
@@ -217,7 +217,7 @@ the implementation should include
 - the _provider-configuration_ file, named `elf4j.spi.LoggerFactory` in the resource directory `META-INF/services`,
   whose content is the Fully Qualified Name of the SPI _provider class_
 
-## Available Log Service Providers for ELF4J
+## Available logging Service Providers of ELF4J
 
 - A native ELF4J provider implementation: [elf4j-provider](https://github.com/elf4j/elf4j-provider)
 - [tinylog provider](https://github.com/elf4j/elf4j-tinylog)
