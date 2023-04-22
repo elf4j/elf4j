@@ -21,10 +21,6 @@ API and SPI of a no-fluff Java logging facade - Easy Logging Facade for Java (EL
 
 Java 8 or better, although individual logging service providers may have higher JDK version prerequisite.
 
-## Get it...
-
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.elf4j/elf4j.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.elf4j%22%20AND%20a:%22elf4j%22)
-
 ## What it is...
 
 ### A logging Service Interface and Access API
@@ -109,6 +105,10 @@ logging method call.
 - Lazy arguments from lambda expressions need to be explicitly downcast to `Supplier`. The downcast is mandated by
   lambda syntax because the `Logger` API declares all arguments as `Object` rather than functional interface. No need of
   downcast if the `Supplier` argument is passed in as a reference instead of a lambda expression.
+
+## Get it...
+
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.elf4j/elf4j.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.elf4j%22%20AND%20a:%22elf4j%22)
 
 ## Use it - for a logging Service API client...
 
