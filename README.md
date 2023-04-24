@@ -98,10 +98,6 @@ substitution to the argument placeholder. This special handling of lazy argument
 syntactically enforced by the API or SPI. It allows for the API user to mix up lazy and eager arguments within the same
 logging method call.
 
-- Lazy arguments from lambda expressions need to be explicitly downcast to `Supplier`. The downcast is mandated by
-  lambda syntax because the `Logger` API declares all arguments as `Object` rather than functional interface. No need of
-  downcast if the `Supplier` argument is passed in as a reference instead of a lambda expression.
-
 ## Get it
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.elf4j/elf4j.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.elf4j%22%20AND%20a:%22elf4j%22)
