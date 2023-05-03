@@ -31,7 +31,7 @@ public enum InternalLogger {
         if (level.compareTo(mininumLevel) < 0) {
             return;
         }
-        System.err.printf("ELF4J status %s: %s%n", level, message);
+        System.err.printf("elf4j %s: %s%n", level, message);
     }
 
     /**
