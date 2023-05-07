@@ -131,7 +131,7 @@ enum ServiceProviderLocator {
                 InternalLogger.INSTANCE.log(ERROR,
                         "Expected one and only one ELF4J logger factory but loaded " + provisionedFactories.size()
                                 + ": " + provisionedFactories
-                                + ": Please either re-provision to have only one logging provider, or select the desired factory by its fully qualified class name using the system property '"
+                                + ", please either re-provision to have only one logging provider, or select the desired factory from all provisioned by its fully qualified class name using the system property '"
                                 + LoggerFactoryLoader.ELF4J_LOGGER_FACTORY_FQCN
                                 + "', falling back to NO-OP logging...");
                 return true;

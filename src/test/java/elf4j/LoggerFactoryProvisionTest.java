@@ -40,7 +40,8 @@ class LoggerFactoryProvisionTest {
             List<LoggerFactory> loggerFactories = new ArrayList<>();
             loggerFactories.add(new NoopLoggerFactory());
             ServiceProviderLocator.LoggerFactoryProvision loggerFactoryProvision =
-                    new ServiceProviderLocator.LoggerFactoryProvision(loggerFactories, "testNonExistingSelection");
+                    new ServiceProviderLocator.LoggerFactoryProvision(loggerFactories,
+                            "testSelectionNotAmongProvisioned");
 
             assertTrue(loggerFactoryProvision.isNoop());
         }
@@ -50,7 +51,7 @@ class LoggerFactoryProvisionTest {
             ArrayList<LoggerFactory> emptyProvisionedFactories = new ArrayList<>();
             ServiceProviderLocator.LoggerFactoryProvision loggerFactoryProvision =
                     new ServiceProviderLocator.LoggerFactoryProvision(emptyProvisionedFactories,
-                            "testNonNullSelection");
+                            "testSelectionWhenNoneProvisioned");
 
             assertTrue(loggerFactoryProvision.isNoop());
         }
