@@ -204,10 +204,11 @@ To enable an independent logging framework/engine via the ELF4J spec, the _servi
 of Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html). Namely,
 the implementation should include
 
-- the _provider class_ for the `LoggerFactory` [SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html), the
-  _service class_ for the `Logger` API, and their associated classes as needed
+- the _provider class_ implementing
+  the `LoggerFactory` [SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html), the _service class_
+  implementing the `Logger` API, and their associated classes as needed
 - the _provider-configuration_ file, named `elf4j.spi.LoggerFactory` in the resource directory `META-INF/services`,
-  whose content is the Fully Qualified Name of the SPI _provider class_
+  whose content is the Fully Qualified Name of the SPI _provider class_ implementing the `LoggerFactory` SPI interface
 
 ## Available logging Service Providers of ELF4J
 
