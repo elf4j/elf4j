@@ -27,25 +27,30 @@ class LoggerFactoryProvisionTest {
         }
 
         @Test
-        void noLogFactoryProvisioned() {
+        void noLoggerFactoryProvisionedAndNoSelection() {
             ArrayList<LoggerFactory> emptyProvisionedFactories = new ArrayList<>();
             ServiceProviderLocator.LoggerFactoryProvision loggerFactoryProvision =
                     new ServiceProviderLocator.LoggerFactoryProvision(emptyProvisionedFactories, null);
 
             assertTrue(loggerFactoryProvision.isNoop());
+        }
 
-            loggerFactoryProvision = new ServiceProviderLocator.LoggerFactoryProvision(emptyProvisionedFactories,
-                    "testNonNullSelection");
+        @Test
+        void selectedLoggerFactoryNotFoundInProvisioned() {
+            List<LoggerFactory> loggerFactories = new ArrayList<>();
+            loggerFactories.add(new NoopLoggerFactory());
+            ServiceProviderLocator.LoggerFactoryProvision loggerFactoryProvision =
+                    new ServiceProviderLocator.LoggerFactoryProvision(loggerFactories, "testNonExistingSelection");
 
             assertTrue(loggerFactoryProvision.isNoop());
         }
 
         @Test
-        void selectedProviderNotFound() {
-            List<LoggerFactory> loggerFactories = new ArrayList<>();
-            loggerFactories.add(new NoopLoggerFactory());
+        void selectedLoggerFactoryButNoneProvisioned() {
+            ArrayList<LoggerFactory> emptyProvisionedFactories = new ArrayList<>();
             ServiceProviderLocator.LoggerFactoryProvision loggerFactoryProvision =
-                    new ServiceProviderLocator.LoggerFactoryProvision(loggerFactories, "testNonExistingSelection");
+                    new ServiceProviderLocator.LoggerFactoryProvision(emptyProvisionedFactories,
+                            "testNonNullSelection");
 
             assertTrue(loggerFactoryProvision.isNoop());
         }

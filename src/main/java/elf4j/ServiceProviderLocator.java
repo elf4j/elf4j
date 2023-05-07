@@ -110,11 +110,6 @@ enum ServiceProviderLocator {
         }
 
         boolean isNoop() {
-            if (provisionedFactories.isEmpty()) {
-                InternalLogger.INSTANCE.log(WARN,
-                        "No ELF4J logger factory discovered, this is OK only if no logging is expected via ELF4J, falling back to NO-OP logging...");
-                return true;
-            }
             if (selectedLoggerFactoryName != null) {
                 long selectedCount = provisionedFactories.stream()
                         .filter(loggerFactory -> loggerFactory.getClass().getName().equals(selectedLoggerFactoryName))
@@ -126,6 +121,11 @@ enum ServiceProviderLocator {
                                     + provisionedFactories + ", falling back to NO-OP logging...");
                     return true;
                 }
+            }
+            if (provisionedFactories.isEmpty()) {
+                InternalLogger.INSTANCE.log(WARN,
+                        "No ELF4J logger factory discovered, this is OK only if no logging is expected via ELF4J, falling back to NO-OP logging...");
+                return true;
             }
             if (provisionedFactories.size() != 1) {
                 InternalLogger.INSTANCE.log(ERROR,
