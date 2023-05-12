@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.ServiceLoader;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -22,12 +23,11 @@ class LoggerFactoryLoaderTest {
     class noop {
 
         @Test
-        void noopFactoryNotNull() {
-            NoopLoggerFactory noopLoggerFactory = new NoopLoggerFactory();
+        void noopTrue() {
             ServiceProviderLocator.LoggerFactoryLoader loggerFactoryLoader =
-                    new ServiceProviderLocator.LoggerFactoryLoader(null, noopLoggerFactory);
+                    new ServiceProviderLocator.LoggerFactoryLoader(null, true);
 
-            assertSame(noopLoggerFactory, loggerFactoryLoader.getLoggerFactory());
+            assertTrue(loggerFactoryLoader.getLoggerFactory() instanceof NoopLoggerFactory);
         }
     }
 
@@ -39,9 +39,9 @@ class LoggerFactoryLoaderTest {
         @Mock LoggerFactory mockLoggerFactory;
 
         @Test
-        void noopFactoryNull() {
+        void noopFalse() {
             ServiceProviderLocator.LoggerFactoryLoader loggerFactoryLoader =
-                    new ServiceProviderLocator.LoggerFactoryLoader(mockLoggerFactoryServiceLoader, null);
+                    new ServiceProviderLocator.LoggerFactoryLoader(mockLoggerFactoryServiceLoader, false);
             given(mockLoggerFactoryServiceLoader.iterator()).willReturn(mockLoggerFactoryIterator);
             given(mockLoggerFactoryIterator.next()).willReturn(mockLoggerFactory);
 

@@ -52,7 +52,7 @@ class SampleUsage {
     class throwable {
         @Test
         void asTheFirstArgument() {
-            Exception exception = new Exception("Exception message");
+            Exception exception = new Exception("Test exception message");
             logger.atError().log(exception);
             logger.atError().log(exception, "Optional log message");
             logger.atInfo()

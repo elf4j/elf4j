@@ -78,7 +78,7 @@ public enum NoopLogger implements Logger {
             case OFF:
                 return NoopLogger.OFF;
             default:
-                throw new UnsupportedOperationException();
+                throw new IllegalArgumentException(level.toString());
         }
     }
 
