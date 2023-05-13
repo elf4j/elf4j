@@ -9,8 +9,8 @@ API and SPI of a no-fluff Java logging facade - Easy Logging Facade for Java (EL
 ## User stories
 
 1. As a Java application developer, I want to use a log service API, so that I can choose or switch the actual
-   logging engine/framework among any compliant service providers, at the application deployment time without code
-   change or re-compile.
+   logging engine/framework of any compliant service provider, at the application deployment time without code change or
+   re-compile.
 2. As an independent logging engine/framework provider, I want to implement a Service Provider
    Interface [(SPI)](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html), so that compliant service clients can
    opt to use my engine/framework, at the application deployment time without code change or re-compile.
@@ -106,7 +106,7 @@ logging method call.
 
 Install as a compile-scope dependency in Maven or other build tools alike.
 
-## Use it - for a logging Service API client
+## Use it - for a client using the logging Service API
 
 ```java
 class SampleUsage {
@@ -202,7 +202,7 @@ Note that ELF4J is a logging service facade and specification, rather than the i
 - It is considered a setup error to have multiple providers in the classpath without a selection. The ELF4J facade falls
   back to no-op on all errors related to logging service provider discovery.
 
-## Use it - for a logging Service Provider
+## Use it - for a logging Service Provider implementing the SPI
 
 To enable an independent logging framework/engine via the ELF4J spec, the _service provider_ should follow instructions
 of Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html). Namely,
