@@ -31,6 +31,7 @@ import elf4j.util.NoopLoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
+import java.util.stream.Collectors;
 
 /**
  * Locates a concrete elf4j logging service provider for the client application at launch time - either the properly
@@ -109,10 +110,10 @@ enum ServiceProviderLocator {
 
         boolean isNoop() {
             if (selectedLoggerFactoryName != null) {
-                long selectedCount = provisionedFactories.stream()
+                List<LoggerFactory> selected = provisionedFactories.stream()
                         .filter(loggerFactory -> loggerFactory.getClass().getName().equals(selectedLoggerFactoryName))
-                        .count();
-                if (selectedCount != 1) {
+                        .collect(Collectors.toList());
+                if (selected.size() != 1) {
                     IeLogger.ERROR.log(
                             "Expected one and only one selected elf4j logger factory '{}' but not so in the {} provisioned {}, falling back to NO-OP logging...",
                             selectedLoggerFactoryName,
@@ -120,7 +121,7 @@ enum ServiceProviderLocator {
                             provisionedFactories);
                     return true;
                 }
-                IeLogger.INFO.log("As selected, using elf4j logger factory: {}", selectedLoggerFactoryName);
+                IeLogger.INFO.log("As selected, using elf4j logger factory: {}", selected.get(0));
                 return false;
             }
             if (provisionedFactories.isEmpty()) {
