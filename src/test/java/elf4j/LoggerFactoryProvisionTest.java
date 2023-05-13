@@ -61,9 +61,20 @@ class LoggerFactoryProvisionTest {
     class notNoop {
 
         @Test
-        void selectedLogFactoryAmongProvisionedOnes() {
+        void selectedLogFactoryIsTheOnlyOneProvisioned() {
             List<LoggerFactory> loggerFactories = new ArrayList<>();
             loggerFactories.add(new NoopLoggerFactory());
+            ServiceProviderLocator.LoggerFactoryProvision loggerFactoryProvision =
+                    new ServiceProviderLocator.LoggerFactoryProvision(loggerFactories, "elf4j.util.NoopLoggerFactory");
+
+            assertFalse(loggerFactoryProvision.isNoop());
+        }
+
+        @Test
+        void selectedLogFactoryIsInProvisionedOnes() {
+            List<LoggerFactory> loggerFactories = new ArrayList<>();
+            loggerFactories.add(new NoopLoggerFactory());
+            loggerFactories.add(new IeLoggerFactory());
             ServiceProviderLocator.LoggerFactoryProvision loggerFactoryProvision =
                     new ServiceProviderLocator.LoggerFactoryProvision(loggerFactories, "elf4j.util.NoopLoggerFactory");
 

@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.ServiceLoader;
 
 /**
- * Locates a concrete ELF4J logging service provider for the client application at launch time - either the properly
+ * Locates a concrete elf4j logging service provider for the client application at launch time - either the properly
  * configured or the default no-op logging provider.
  */
 enum ServiceProviderLocator {
@@ -49,7 +49,7 @@ enum ServiceProviderLocator {
     }
 
     /**
-     * @return the provisioned ELF4J logger factory for the client application
+     * @return the provisioned elf4j logger factory for the client application
      */
     LoggerFactory loggerFactory() {
         return this.loggerFactoryLoader.getLoggerFactory();
@@ -114,27 +114,29 @@ enum ServiceProviderLocator {
                         .count();
                 if (selectedCount != 1) {
                     IeLogger.ERROR.log(
-                            "Expected one and only one selected ELF4J logger factory '{}' but not so in the {} provisioned {}, falling back to NO-OP logging...",
+                            "Expected one and only one selected elf4j logger factory '{}' but not so in the {} provisioned {}, falling back to NO-OP logging...",
                             selectedLoggerFactoryName,
                             provisionedFactories.size(),
                             provisionedFactories);
                     return true;
                 }
+                IeLogger.INFO.log("As selected, using elf4j logger factory: {}", selectedLoggerFactoryName);
+                return false;
             }
             if (provisionedFactories.isEmpty()) {
                 IeLogger.WARN.log(
-                        "No ELF4J logger factory discovered, this is OK only when no logging is expected via ELF4J, falling back to NO-OP logging...");
+                        "No elf4j logger factory discovered, this is OK only when no logging is expected via elf4j, falling back to NO-OP logging...");
                 return true;
             }
             if (provisionedFactories.size() != 1) {
                 IeLogger.ERROR.log(
-                        "Expected one and only one ELF4J logger factory but loaded {}: {}, please either re-provision to have only one logging provider, or select the desired factory in the provisioned ones by its fully qualified class name using system property '{}', falling back to NO-OP logging...",
+                        "Expected one and only one elf4j logger factory but loaded {}: {}, please either re-provision to have only one logging provider, or select the desired factory in the provisioned ones by its fully qualified class name using system property '{}', falling back to NO-OP logging...",
                         provisionedFactories.size(),
                         provisionedFactories,
                         LoggerFactoryLoader.ELF4J_LOGGER_FACTORY_FQCN);
                 return true;
             }
-            IeLogger.INFO.log("As provisioned, using ELF4J logger factory: {}", provisionedFactories.get(0));
+            IeLogger.INFO.log("As provisioned, using elf4j logger factory: {}", provisionedFactories.get(0));
             return false;
         }
     }
