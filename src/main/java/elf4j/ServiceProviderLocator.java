@@ -131,7 +131,7 @@ enum ServiceProviderLocator {
             }
             if (provisionedFactories.size() != 1) {
                 IeLogger.ERROR.log(
-                        "Expected one and only one elf4j logger factory but loaded {}: {}, please either re-provision to have only one logging provider, or select the desired factory in the provisioned ones by its fully qualified class name using system property '{}', falling back to NO-OP logging...",
+                        "Expected one and only one provisioned elf4j logger factory but loaded {}: {}, please either re-provision to have only one logging provider, or select the desired factory in the provisioned ones by its fully qualified class name using system property '{}', falling back to NO-OP logging...",
                         provisionedFactories.size(),
                         provisionedFactories,
                         LoggerFactoryLoader.ELF4J_LOGGER_FACTORY_FQCN);
