@@ -106,7 +106,7 @@ logging method call.
 
 Install as a compile-scope dependency in Maven or other build tools alike.
 
-## Use it - for a client using the logging Service API
+## Use it - for a client of the logging Service API
 
 ```java
 class SampleUsage {
@@ -202,7 +202,7 @@ Note that ELF4J is a logging service facade and specification, rather than the i
 - It is considered a setup error to have multiple providers in the classpath without a selection. The ELF4J facade falls
   back to no-op on all errors related to logging service provider discovery.
 
-## Use it - for a logging Service Provider implementing the SPI
+## Use it - for a _service provider_ implementing the logging service SPI
 
 To enable an independent logging framework/engine via the ELF4J spec, the _service provider_ should follow instructions
 of Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html). Namely,
@@ -214,7 +214,7 @@ the implementation should include
 - the _provider-configuration_ file, named `elf4j.spi.LoggerFactory` in the resource directory `META-INF/services`,
   whose content is the Fully Qualified Name of the SPI _provider class_ implementing the `LoggerFactory` SPI interface
 
-## Available logging Service Providers of ELF4J
+## Available logging _service providers_ of ELF4J
 
 - A native ELF4J provider implementation: [elf4j-provider](https://github.com/elf4j/elf4j-provider)
 - [tinylog provider](https://github.com/elf4j/elf4j-tinylog)
