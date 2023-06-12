@@ -106,7 +106,7 @@ logging method call.
 
 Install as a compile-scope dependency in Maven or other build tools alike.
 
-## Use it - for a client of the logging Service API
+## Use it - for a client of the logging service API
 
 ```java
 class SampleUsage {
