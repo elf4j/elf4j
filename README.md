@@ -4,7 +4,7 @@
 
 API and SPI of a no-fluff Java logging facade
 
-* ... because, sometimes, the wheel should be reinvented.
+* ... because sometimes the wheel should be reinvented.
 
 ## User stories
 
