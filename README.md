@@ -1,8 +1,8 @@
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.elf4j/elf4j.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.elf4j%22%20AND%20a:%22elf4j%22)
 
-# elf4j
+# elf4j - Easy Logging Facade for Java
 
-API and SPI of a no-fluff Java logging facade - Easy Logging Facade for Java (ELF4J)
+API and SPI of a no-fluff Java logging facade
 
 * ... because, sometimes, the wheel should be reinvented.
 
@@ -169,21 +169,21 @@ class SampleUsage {
 }
 ```
 
-Note that ELF4J is a logging service facade and specification, rather than the implementation. As such,
+Note that elf4j is a logging service facade and specification, rather than the implementation. As such,
 
 ### No-op by default
 
 - Nothing will be logging out (no-op) unless a properly configured
-  external [ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-of-elf4j) is
-  discovered at the application start time. The ELF4J facade itself only ships with a default no-op logging provider.
+  external [elf4j service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-of-elf4j) is
+  discovered at the application start time. The elf4j facade itself only ships with a default no-op logging provider.
 
 ### Only one in-effect logging provider
 
-- The ELF4J API user can select or change into using
-  any [ELF4J service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-of-elf4j) at deploy
+- The elf4j API user can select or change into using
+  any [elf4j service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-of-elf4j) at deploy
   time, without application code change or re-compile.
 - The recommended setup is to ensure that only one desired logging provider with its associated JAR(s) be present in the
-  classpath; or, if no-op is desired, then no external provider JAR. In this case, nothing further is needed for ELF4J
+  classpath; or, if no-op is desired, then no external provider JAR. In this case, nothing further is needed for elf4j
   to work.
 - If multiple external providers are present, somehow, then the system property `elf4j.logger.factory.fqcn` has to be
   used to select the desired provider. No-op applies if the specified provider is absent from the classpath.
@@ -193,18 +193,18 @@ Note that ELF4J is a logging service facade and specification, rather than the i
   ```
 
   With the default no-op logging provider, this system property can also be used to turn OFF all logging services
-  discovered by the ELF4J facade:
+  discovered by the elf4j facade:
 
   ```
   java -Delf4j.logger.factory.fqcn="elf4j.util.NoopLoggerFactory" MyApplication
   ```
 
-- It is considered a setup error to have multiple providers in the classpath without a selection. The ELF4J facade falls
+- It is considered a setup error to have multiple providers in the classpath without a selection. The elf4j facade falls
   back to no-op on all errors related to logging service provider discovery.
 
 ## Use it - for a _service provider_ implementing the logging service SPI
 
-To enable an independent logging framework/engine via the ELF4J spec, the _service provider_ should follow instructions
+To enable an independent logging framework/engine via the elf4j spec, the _service provider_ should follow instructions
 of Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html). Namely,
 the implementation should include
 
@@ -214,9 +214,9 @@ the implementation should include
 - the _provider-configuration_ file, named `elf4j.spi.LoggerFactory` in the resource directory `META-INF/services`,
   whose content is the Fully Qualified Name of the SPI _provider class_ implementing the `LoggerFactory` SPI interface
 
-## Available logging _service providers_ of ELF4J
+## Available logging _service providers_ of elf4j
 
-- A native ELF4J provider implementation: [elf4j-provider](https://github.com/elf4j/elf4j-provider)
+- A native elf4j provider implementation: [elf4j-provider](https://github.com/elf4j/elf4j-provider)
 - [tinylog provider](https://github.com/elf4j/elf4j-tinylog)
 - [LOG4J provider](https://github.com/elf4j/elf4j-log4j)
 - [LOGBACK provider](https://github.com/elf4j/elf4j-logback)
