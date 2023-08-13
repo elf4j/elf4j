@@ -121,7 +121,7 @@ enum ServiceProviderLocator {
                             provisionedFactories);
                     return true;
                 }
-                IeLogger.INFO.log("As selected, using elf4j logger factory: {}", selected.get(0));
+                IeLogger.TRACE.log("As selected, using elf4j logger factory: {}", selected.get(0));
                 return false;
             }
             if (provisionedFactories.isEmpty()) {
@@ -137,7 +137,7 @@ enum ServiceProviderLocator {
                         LoggerFactoryLoader.ELF4J_LOGGER_FACTORY_FQCN);
                 return true;
             }
-            IeLogger.INFO.log("As provisioned, using elf4j logger factory: {}", provisionedFactories.get(0));
+            IeLogger.TRACE.log("As provisioned, using elf4j logger factory: {}", provisionedFactories.get(0));
             return false;
         }
     }
