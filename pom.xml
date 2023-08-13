@@ -30,7 +30,7 @@
 
     <groupId>io.github.elf4j</groupId>
     <artifactId>elf4j</artifactId>
-    <version>3.0.3</version>
+    <version>3.1.0</version>
     <packaging>jar</packaging>
     <name>elf4j</name>
     <description>API and SPI of Easy Logging Facade for Java (ELF4J)</description>
@@ -106,7 +106,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.1.2</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -116,7 +116,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>3.4.3</version>
+                <version>3.4.5</version>
             </plugin>
             <plugin>
                 <groupId>io.github.q3769</groupId>
@@ -147,7 +147,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.2.1</version>
+                        <version>3.3.0</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
