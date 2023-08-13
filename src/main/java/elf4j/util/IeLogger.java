@@ -53,7 +53,7 @@ public enum IeLogger implements Logger {
         }
         String minLevel = System.getProperty("elf4j.internal.log.min.level");
         this.mininumLevel =
-                minLevel == null || minLevel.trim().isEmpty() ? Level.TRACE : Level.valueOf(minLevel.toUpperCase());
+                minLevel == null || minLevel.trim().isEmpty() ? Level.INFO : Level.valueOf(minLevel.toUpperCase());
     }
 
     private static Object supply(Object o) {
@@ -95,29 +95,39 @@ public enum IeLogger implements Logger {
 
     @Override
     public void log(Object message) {
-        printStream.println(resolve(message));
+        if (isEnabled()) {
+            printStream.println(resolve(message));
+        }
     }
 
     @Override
     public void log(String message, Object... arguments) {
-        printStream.println(resolve(message, arguments));
+        if (isEnabled()) {
+            printStream.println(resolve(message, arguments));
+        }
     }
 
     @Override
     public void log(Throwable throwable) {
-        this.log(throwable, null);
+        if (isEnabled()) {
+            this.log(throwable, null);
+        }
     }
 
     @Override
     public void log(Throwable throwable, Object message) {
-        this.log(throwable, (String) supply(message), (Object) null);
+        if (isEnabled()) {
+            this.log(throwable, (String) supply(message), (Object) null);
+        }
     }
 
     @Override
     public void log(Throwable throwable, String message, Object... arguments) {
-        synchronized (printStream) {
-            printStream.println(resolve(message, arguments));
-            throwable.printStackTrace(printStream);
+        if (isEnabled()) {
+            synchronized (printStream) {
+                printStream.println(resolve(message, arguments));
+                throwable.printStackTrace(printStream);
+            }
         }
     }
 
