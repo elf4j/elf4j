@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
- *
+ * Util logger for internal usage of the elf4j API. Not meant for any external client applications.
  */
 public enum IeLogger implements Logger {
     /**
