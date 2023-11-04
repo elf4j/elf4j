@@ -26,7 +26,7 @@ Java 8 or better, although individual logging service providers may have higher 
 ```java
 public interface Logger {
     static Logger instance() {
-        return ServiceProviderLocator.INSTANCE.logServiceProvider().logger();
+        return LogServiceProviderLocator.INSTANCE.logServiceProvider().logger();
     }
 
     default Logger atTrace() {
