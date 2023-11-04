@@ -23,5 +23,4 @@
 #
 #
 
-elf4j.IeLoggerFactory
-#elf4j.util.NoopLoggerFactory
+elf4j.IeInfoLogServiceProvider

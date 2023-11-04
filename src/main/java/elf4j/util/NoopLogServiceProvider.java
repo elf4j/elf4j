@@ -25,16 +25,16 @@
 package elf4j.util;
 
 import elf4j.Logger;
-import elf4j.spi.LoggerFactory;
+import elf4j.spi.LogServiceProvider;
 
 /**
- * Default implementation of {@link LoggerFactory} SPI. Produces the default {@link NoopLogger} instance.
+ * Default implementation of {@link LogServiceProvider} SPI. Produces the default {@link NoopLogger} instance.
  */
-public final class NoopLoggerFactory implements LoggerFactory {
+public final class NoopLogServiceProvider implements LogServiceProvider {
     /**
      * Default constructor required by {@link java.util.ServiceLoader}
      */
-    public NoopLoggerFactory() {
+    public NoopLogServiceProvider() {
         // required by service loader
     }
 

@@ -30,10 +30,9 @@ import elf4j.Logger;
  * Service Provider Interface for the ELF4J logging provider. A provider implementation class of this SPI needs to be
  * loadable by {@link java.util.ServiceLoader}.
  *
- * @see <a href="https://docs.oracle.com/javase/7/docs/api/java/util/ServiceLoader.html">Javadoc of
- *         ServiceLoader</a>
+ * @see <a href="https://docs.oracle.com/javase/7/docs/api/java/util/ServiceLoader.html">Javadoc of ServiceLoader</a>
  */
-public interface LoggerFactory {
+public interface LogServiceProvider {
     /**
      * @return a concrete Logger instance
      */

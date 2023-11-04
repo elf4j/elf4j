@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class SampleUsage {
-    static Logger logger = Logger.instance();
+    static final Logger logger = Logger.instance();
 
     @Nested
     class plainText {

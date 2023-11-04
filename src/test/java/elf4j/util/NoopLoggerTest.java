@@ -35,7 +35,7 @@ class NoopLoggerTest {
 
     @Test
     void levels() {
-        Logger defaultInstance = new NoopLoggerFactory().logger();
+        Logger defaultInstance = new NoopLogServiceProvider().logger();
         assertEquals(Level.OFF, defaultInstance.getLevel());
         assertEquals(Level.TRACE, defaultInstance.atTrace().getLevel());
         assertEquals(Level.DEBUG, defaultInstance.atDebug().getLevel());

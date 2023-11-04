@@ -39,14 +39,13 @@ public interface Logger {
      * @return Logger instance with default name and Level
      */
     static Logger instance() {
-        return ServiceProviderLocator.INSTANCE.loggerFactory().logger();
+        return LogServiceProviderLocator.INSTANCE.logServiceProvider().logger();
     }
 
     /**
      * Service access API
      *
-     * @param level
-     *         of the requested Logger instance
+     * @param level of the requested Logger instance
      * @return Logger instance of the specified level
      */
     Logger atLevel(Level level);
@@ -68,56 +67,46 @@ public interface Logger {
     /**
      * Service interface API
      *
-     * @param message
-     *         to be logged. If the actual type is {@link java.util.function.Supplier}, the result of
-     *         {@link Supplier#get()}, instead of the {@code message} itself, should be used to construct the final log
-     *         message.
+     * @param message to be logged. If the actual type is {@link java.util.function.Supplier}, the result of
+     * {@link Supplier#get()}, instead of the {@code message} itself, should be used to construct the final log
+     * message.
      */
     void log(Object message);
 
     /**
      * Service interface API
      *
-     * @param message
-     *         to be logged, may contain argument placeholders, denoted as `{}` tokens, to be replaced by the values of
-     *         the specified arguments. Placeholders are positional - the order they appear in the message should match
-     *         the same order in which their corresponding replacement values appear in the specified arguments array.
-     * @param arguments
-     *         whose values will replace the corresponding placeholders in the specified message, in the same matching
-     *         order. If any of the argument's actual type is {@link java.util.function.Supplier}, then the result of
-     *         {@link Supplier#get()}, instead of the argument itself, should be used to compute the final log message.
+     * @param message to be logged, may contain argument placeholders, denoted as `{}` tokens, to be replaced by the
+     * values of the specified arguments. Placeholders are positional - the order they appear in the message should
+     * match the same order in which their corresponding replacement values appear in the specified arguments array.
+     * @param arguments whose values will replace the corresponding placeholders in the specified message, in the same
+     * matching order. If any of the argument's actual type is {@link java.util.function.Supplier}, then the result of
+     * {@link Supplier#get()}, instead of the argument itself, should be used to compute the final log message.
      */
     void log(String message, Object... arguments);
 
     /**
      * Service interface API
      *
-     * @param throwable
-     *         the Throwable to be logged
+     * @param throwable the Throwable to be logged
      */
     void log(Throwable throwable);
 
     /**
      * Service interface API
      *
-     * @param throwable
-     *         the Throwable to be logged
-     * @param message
-     *         the message to be logged. If the actual type is {@link java.util.function.Supplier}, the result of
-     *         {@link Supplier#get()}, instead of the {@code message} itself, should be used to compute the final log
-     *         message.
+     * @param throwable the Throwable to be logged
+     * @param message the message to be logged. If the actual type is {@link java.util.function.Supplier}, the result of
+     * {@link Supplier#get()}, instead of the {@code message} itself, should be used to compute the final log message.
      */
     void log(Throwable throwable, Object message);
 
     /**
      * Service interface API
      *
-     * @param throwable
-     *         the Throwable to be logged
-     * @param message
-     *         See Javadoc of {@link #log(String, Object...)}
-     * @param arguments
-     *         See Javadoc of {@link #log(String, Object...)}
+     * @param throwable the Throwable to be logged
+     * @param message See Javadoc of {@link #log(String, Object...)}
+     * @param arguments See Javadoc of {@link #log(String, Object...)}
      */
     void log(Throwable throwable, String message, Object... arguments);
 
