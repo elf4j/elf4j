@@ -94,26 +94,26 @@ public enum NoopLogger implements Logger {
 
     @Override
     public void log(Object message) {
-        //noop
+        // noop
     }
 
     @Override
     public void log(String message, Object... arguments) {
-        //noop
+        // noop
     }
 
     @Override
     public void log(Throwable throwable) {
-        //noop
+        // noop
     }
 
     @Override
     public void log(Throwable throwable, Object message) {
-        //noop
+        // noop
     }
 
     @Override
     public void log(Throwable throwable, String message, Object... arguments) {
-        //noop
+        // noop
     }
 }

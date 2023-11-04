@@ -2,7 +2,6 @@ package elf4j.util;
 
 import elf4j.Level;
 import elf4j.Logger;
-
 import java.io.PrintStream;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -41,7 +40,7 @@ public enum IeLogger implements Logger {
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
     private final PrintStream printStream;
     private final Level level;
-    private final Level mininumLevel;
+    private final Level thresholdOutputLevel;
 
     IeLogger(Level level) {
         this.level = level;
@@ -52,7 +51,7 @@ public enum IeLogger implements Logger {
             this.printStream = System.err;
         }
         String minLevel = System.getProperty("elf4j.internal.log.min.level");
-        this.mininumLevel =
+        this.thresholdOutputLevel =
                 minLevel == null || minLevel.trim().isEmpty() ? Level.INFO : Level.valueOf(minLevel.toUpperCase());
     }
 
@@ -90,7 +89,7 @@ public enum IeLogger implements Logger {
 
     @Override
     public boolean isEnabled() {
-        return this.level.compareTo(mininumLevel) >= 0;
+        return this.level.compareTo(thresholdOutputLevel) >= 0;
     }
 
     @Override
@@ -148,7 +147,8 @@ public enum IeLogger implements Logger {
         int j = 0;
         while (i < messageLength) {
             char character = suppliedMessage.charAt(i);
-            if (character == '{' && ((i + 1) < messageLength && suppliedMessage.charAt(i + 1) == '}')
+            if (character == '{'
+                    && ((i + 1) < messageLength && suppliedMessage.charAt(i + 1) == '}')
                     && j < arguments.length) {
                 resolved.append(supply(arguments[j++]));
                 i += 2;

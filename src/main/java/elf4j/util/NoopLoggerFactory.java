@@ -35,7 +35,7 @@ public final class NoopLoggerFactory implements LoggerFactory {
      * Default constructor required by {@link java.util.ServiceLoader}
      */
     public NoopLoggerFactory() {
-        //required by service loader
+        // required by service loader
     }
 
     @Override

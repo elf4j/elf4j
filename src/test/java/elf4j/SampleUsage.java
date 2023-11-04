@@ -1,9 +1,8 @@
 package elf4j;
 
+import java.util.function.Supplier;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import java.util.function.Supplier;
 
 class SampleUsage {
     static Logger logger = Logger.instance();
@@ -44,7 +43,8 @@ class SampleUsage {
                     Supplier.class.getTypeName(),
                     (Supplier) () -> "expensive to compute");
             info.atWarn()
-                    .log("The Supplier downcast is mandatory per lambda syntax because arguments are declared as generic Object rather than functional interface");
+                    .log(
+                            "The Supplier downcast is mandatory per lambda syntax because arguments are declared as generic Object rather than functional interface");
         }
     }
 
@@ -55,11 +55,11 @@ class SampleUsage {
             Exception exception = new Exception("Test exception message");
             logger.atError().log(exception);
             logger.atError().log(exception, "Optional log message");
-            logger.atInfo()
-                    .log(exception,
-                            "Exception is always the first argument to a logging method. The {} log message and following arguments work the same way {}.",
-                            "optional",
-                            (Supplier) () -> "as usual");
+            logger.atInfo().log(
+                    exception,
+                    "Exception is always the first argument to a logging method. The {} log message and following arguments work the same way {}.",
+                    "optional",
+                    (Supplier) () -> "as usual");
         }
     }
 }
