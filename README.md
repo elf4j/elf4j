@@ -198,7 +198,7 @@ Note that elf4j is a logging service facade and specification, rather than the i
   ```
 
 - It is considered a setup error to have multiple providers in the classpath without a selection. The elf4j facade falls
-  back to no-op on all errors related to logging service provider discovery.
+  back to no-op on any setup errors.
 
 ## Use it - for a _service provider_ implementing the logging service SPI
 
