@@ -49,7 +49,7 @@ class SampleUsage {
     }
 
     @Nested
-    class supplierArguments {
+    class supplierMessageAndArguments {
         Logger logger = Logger.instance();
 
         @Test
