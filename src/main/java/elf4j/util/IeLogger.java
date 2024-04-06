@@ -8,33 +8,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-/**
- * Util logger for internal usage of the elf4j API. Not meant for any external client applications.
- */
+/** Util logger for internal usage of the elf4j API. Not meant for any external client applications. */
 public enum IeLogger implements Logger {
-    /**
-     *
-     */
+    /** */
     TRACE(Level.TRACE),
-    /**
-     *
-     */
+    /** */
     DEBUG(Level.DEBUG),
-    /**
-     *
-     */
+    /** */
     INFO(Level.INFO),
-    /**
-     *
-     */
+    /** */
     WARN(Level.WARN),
-    /**
-     *
-     */
+    /** */
     ERROR(Level.ERROR),
-    /**
-     *
-     */
+    /** */
     OFF(Level.OFF);
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");

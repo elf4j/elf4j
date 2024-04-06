@@ -33,8 +33,6 @@ import elf4j.Logger;
  * @see <a href="https://docs.oracle.com/javase/7/docs/api/java/util/ServiceLoader.html">Javadoc of ServiceLoader</a>
  */
 public interface LogServiceProvider {
-    /**
-     * @return a concrete Logger instance
-     */
+    /** @return a concrete Logger instance */
     Logger logger();
 }

@@ -49,17 +49,34 @@ class SampleUsage {
     }
 
     @Nested
+    class supplierArguments {
+        Logger logger = Logger.instance();
+
+        @Test
+        void noDowncastNeededWhenAllMessageOrArgumentsAreSuppliers() {
+            logger.log(
+                    () ->
+                            "No downcast needed when message or arguments are all of Supplier type, rather than mixed with Object types");
+            logger.log("Message can have any number of {} type arguments", Supplier.class::getTypeName);
+            logger.log(
+                    "Lazy arguments of {} type can be used to supply values that may be {}",
+                    Supplier.class::getTypeName,
+                    () -> "expensive to compute");
+            Exception ex = new Exception("test ex for Suppliers");
+            logger.log(ex, () -> "Exception log message can be a Supplier");
+            logger.log(ex, "So can the {}'s {}", () -> "message", () -> "arguments");
+        }
+    }
+
+    @Nested
     class throwable {
         @Test
         void asTheFirstArgument() {
             Exception exception = new Exception("Test exception message");
             logger.atError().log(exception);
-            logger.atError().log(exception, "Optional log message");
-            logger.atInfo().log(
-                    exception,
-                    "Exception is always the first argument to a logging method. The {} log message and following arguments work the same way {}.",
-                    "optional",
-                    (Supplier) () -> "as usual");
+            logger.atError().log(exception, "Exception is always the first argument to a log method");
+            logger.atInfo().log(exception, "The {} log {} and {} work the same way as usual", "optional", (Supplier)
+                    () -> "as usual");
         }
     }
 }

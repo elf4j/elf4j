@@ -27,33 +27,19 @@ package elf4j.util;
 import elf4j.Level;
 import elf4j.Logger;
 
-/**
- * No-op implementation of {@link Logger} API
- */
+/** No-op implementation of {@link Logger} API */
 public enum NoopLogger implements Logger {
-    /**
-     *
-     */
+    /** */
     TRACE(Level.TRACE),
-    /**
-     *
-     */
+    /** */
     DEBUG(Level.DEBUG),
-    /**
-     *
-     */
+    /** */
     INFO(Level.INFO),
-    /**
-     *
-     */
+    /** */
     WARN(Level.WARN),
-    /**
-     *
-     */
+    /** */
     ERROR(Level.ERROR),
-    /**
-     *
-     */
+    /** */
     OFF(Level.OFF);
 
     private final Level level;

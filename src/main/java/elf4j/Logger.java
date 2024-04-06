@@ -29,8 +29,8 @@ import java.util.function.Supplier;
 /**
  * Logging service interface and access API as in the <a
  * href="https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html">Java Service Provider Framework</a>.
- * <p>
- * All {@link Logger} instances from this API should be thread-safe.
+ *
+ * <p>All {@link Logger} instances from this API should be thread-safe.
  */
 public interface Logger {
     /**
@@ -68,22 +68,35 @@ public interface Logger {
      * Service interface API
      *
      * @param message to be logged. If the actual type is {@link java.util.function.Supplier}, the result of
-     * {@link Supplier#get()}, instead of the {@code message} itself, should be used to construct the final log
-     * message.
+     *     {@link Supplier#get()}, instead of the {@code message} itself, should be used to construct the final log
+     *     message.
      */
     void log(Object message);
+
+    /** @param message Supplier of the message to be logged */
+    default void log(Supplier<?> message) {
+        log((Object) message);
+    }
 
     /**
      * Service interface API
      *
      * @param message to be logged, may contain argument placeholders, denoted as `{}` tokens, to be replaced by the
-     * values of the specified arguments. Placeholders are positional - the order they appear in the message should
-     * match the same order in which their corresponding replacement values appear in the specified arguments array.
+     *     values of the specified arguments. Placeholders are positional - the order they appear in the message should
+     *     match the same order in which their corresponding replacement values appear in the specified arguments array.
      * @param arguments whose values will replace the corresponding placeholders in the specified message, in the same
-     * matching order. If any of the argument's actual type is {@link java.util.function.Supplier}, then the result of
-     * {@link Supplier#get()}, instead of the argument itself, should be used to compute the final log message.
+     *     matching order. If any of the argument's actual type is {@link java.util.function.Supplier}, then the result
+     *     of {@link Supplier#get()}, instead of the argument itself, should be used to compute the final log message.
      */
     void log(String message, Object... arguments);
+
+    /**
+     * @param message to be logged
+     * @param arguments Suppliers of the arguments
+     */
+    default void log(String message, Supplier<?>... arguments) {
+        log(message, (Object[]) arguments);
+    }
 
     /**
      * Service interface API
@@ -97,9 +110,18 @@ public interface Logger {
      *
      * @param throwable the Throwable to be logged
      * @param message the message to be logged. If the actual type is {@link java.util.function.Supplier}, the result of
-     * {@link Supplier#get()}, instead of the {@code message} itself, should be used to compute the final log message.
+     *     {@link Supplier#get()}, instead of the {@code message} itself, should be used to compute the final log
+     *     message.
      */
     void log(Throwable throwable, Object message);
+
+    /**
+     * @param throwable to be logged
+     * @param message to be logged
+     */
+    default void log(Throwable throwable, Supplier<?> message) {
+        log(throwable, (Object) message);
+    }
 
     /**
      * Service interface API
@@ -109,6 +131,16 @@ public interface Logger {
      * @param arguments See Javadoc of {@link #log(String, Object...)}
      */
     void log(Throwable throwable, String message, Object... arguments);
+
+    /**
+     * @param throwable to be logged
+     * @param message to be logged
+     * @param arguments When all arguments are of type Supplier, instead of mixed with other Object types, the lambda
+     *     expressions do not need downcast
+     */
+    default void log(Throwable throwable, String message, Supplier<?>... arguments) {
+        log(throwable, message, (Object[]) arguments);
+    }
 
     /**
      * Service access API

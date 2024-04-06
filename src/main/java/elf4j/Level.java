@@ -29,29 +29,20 @@ package elf4j;
  * configuration, it determines the actual loggability at runtime.
  */
 public enum Level {
-    /**
-     * TRACE
-     */
+    /** TRACE */
     TRACE,
-    /**
-     * DEBUG
-     */
+    /** DEBUG */
     DEBUG,
-    /**
-     * INFO
-     */
+    /** INFO */
     INFO,
-    /**
-     * WARN
-     */
+    /** WARN */
     WARN,
-    /**
-     * ERROR
-     */
+    /** ERROR */
     ERROR,
     /**
      * OFF
-     * <p> Highest ordinal, so it can never be smaller than that of any configured minimum loggable Level.
+     *
+     * <p>Highest ordinal, so it can never be smaller than that of any configured minimum loggable Level.
      */
     OFF
 }

@@ -39,9 +39,7 @@ import javax.annotation.Nullable;
  * configured or the default no-op logging provider.
  */
 enum LogServiceProviderLocator {
-    /**
-     * Sole instance
-     */
+    /** Sole instance */
     INSTANCE;
 
     final LogServiceProviderLoader logServiceProviderLoader;
@@ -50,9 +48,7 @@ enum LogServiceProviderLocator {
         this.logServiceProviderLoader = new LogServiceProviderLoader();
     }
 
-    /**
-     * @return the provisioned elf4j service provider for the client application
-     */
+    /** @return the provisioned elf4j service provider for the client application */
     LogServiceProvider logServiceProvider() {
         return this.logServiceProviderLoader.getLogServiceProvider();
     }
