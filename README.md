@@ -8,8 +8,8 @@ API and SPI of a no-fluff Java logging facade
 
 ## User stories
 
-1. As a Java application developer, I want to use a log service API, so that I can choose or switch to use any compliant log service provider, at application deployment time without code change or
-   re-compile.
+1. As a Java application developer, I want to use a log service API, so that I can choose or switch to use any compliant
+   log service provider, at application deployment time without code change or re-compile.
 2. As a log service/engine/framework provider, I want to implement a Service Provider
    Interface [(SPI)](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html), so that the log service client can
    opt to use my service implementation, at application deployment time without code change or re-compile.
@@ -56,13 +56,29 @@ public interface Logger {
 
     void log(Object message);
 
+    default void log(Supplier<?> message) {
+        log((Object) message);
+    }
+
     void log(String message, Object... arguments);
+
+    default void log(String message, Supplier<?>... arguments) {
+        log(message, (Object[]) arguments);
+    }
 
     void log(Throwable throwable);
 
     void log(Throwable throwable, Object message);
 
+    default void log(Throwable throwable, Supplier<?> message) {
+        log(throwable, (Object) message);
+    }
+
     void log(Throwable throwable, String message, Object... arguments);
+
+    default void log(Throwable throwable, String message, Supplier<?>... arguments) {
+        log(throwable, message, (Object[]) arguments);
+    }
 }
 ```
 
@@ -152,6 +168,26 @@ class SampleUsage {
     }
 
     @Nested
+    class supplierArguments {
+        Logger logger = Logger.instance();
+
+        @Test
+        void noDowncastNeededWhenAllMessageOrArgumentsAreSuppliers() {
+            logger.log(
+                    () ->
+                            "No downcast needed when message or arguments are all of Supplier type, rather than mixed with Object types");
+            logger.log("Message can have any number of {} type arguments", Supplier.class::getTypeName);
+            logger.log(
+                    "Lazy arguments of {} type can be used to supply values that may be {}",
+                    Supplier.class::getTypeName,
+                    () -> "expensive to compute");
+            Exception ex = new Exception("test ex for Suppliers");
+            logger.log(ex, () -> "Exception log message can be a Supplier");
+            logger.log(ex, "So can the {}'s {}", () -> "message", () -> "arguments");
+        }
+    }
+
+    @Nested
     class throwable {
         @Test
         void asTheFirstArgument() {
@@ -172,8 +208,9 @@ Note that elf4j is a logging service facade and specification, rather than the i
 
 ### No-op by default
 
-- Nothing will be logging out (no-op) unless a properly configured [elf4j service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-of-elf4j) JAR is
-  discovered at the application start time. The elf4j facade itself only ships with a default no-op logging provider.
+- Nothing will be logging out (no-op) unless a properly
+  configured [elf4j service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-of-elf4j) JAR
+  is discovered at the application start time. The elf4j facade itself only ships with a default no-op logging provider.
 
 ### Only one in-effect logging provider
 
@@ -183,8 +220,9 @@ Note that elf4j is a logging service facade and specification, rather than the i
 - The recommended setup is to ensure that only one desired logging provider with its associated JAR(s) be present in the
   classpath; or, no provider JAR when no-op is desired. In this case, nothing further is needed for elf4j
   to work.
-- If multiple eligible providers are present in classpath, somehow, then the system property `elf4j.service.provider.fqcn` has to be
-  used to select the desired provider. No-op applies if the specified provider is absent.
+- If multiple eligible providers are present in classpath, somehow, then the system
+  property `elf4j.service.provider.fqcn` has to be used to select the desired provider. No-op applies if the specified
+  provider is absent.
 
   ```
   java -Delf4j.service.provider.fqcn="elf4j.log4j.Log4jLoggerFactory" MyApplication
