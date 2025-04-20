@@ -34,7 +34,7 @@ import java.util.function.Supplier;
  */
 public interface Logger {
     /**
-     * Service access API
+     * Provides a default Logger instance.
      *
      * @return Logger instance with default name and Level
      */
@@ -43,107 +43,110 @@ public interface Logger {
     }
 
     /**
-     * Service access API
+     * Provides a Logger instance for the specified logging level.
      *
-     * @param level of the requested Logger instance
+     * @param level the logging level of the requested Logger instance
      * @return Logger instance of the specified level
      */
     Logger atLevel(Level level);
 
     /**
-     * Service interface API
+     * Retrieves the severity level of the Logger instance.
      *
-     * @return Severity level of the logger instance
+     * @return the severity level of the logger instance
      */
     Level getLevel();
 
     /**
-     * Service interface API
+     * Checks if logging is enabled for this Logger instance.
      *
-     * @return true if the active logging of this instance enabled per configuration, false otherwise
+     * @return true if logging is enabled, false otherwise
      */
     boolean isEnabled();
 
     /**
-     * Service interface API
+     * Logs a message.
      *
-     * @param message to be logged. If the actual type is {@link java.util.function.Supplier}, the result of
-     *     {@link Supplier#get()}, instead of the {@code message} itself, should be used to construct the final log
-     *     message.
+     * @param message the message to be logged. If the actual type is {@link java.util.function.Supplier}, the result of
+     *     {@link Supplier#get()} is used to construct the final log message.
      */
     void log(Object message);
 
-    /** @param message Supplier of the message to be logged */
+    /**
+     * Logs a message provided by a Supplier.
+     *
+     * @param message Supplier of the message to be logged
+     */
     default void log(Supplier<?> message) {
         log((Object) message);
     }
 
     /**
-     * Service interface API
+     * Logs a formatted message with arguments.
      *
-     * @param message to be logged, may contain argument placeholders, denoted as `{}` tokens, to be replaced by the
-     *     values of the specified arguments. Placeholders are positional - the order they appear in the message should
-     *     match the same order in which their corresponding replacement values appear in the specified arguments array.
-     * @param arguments whose values will replace the corresponding placeholders in the specified message, in the same
-     *     matching order. If any of the argument's actual type is {@link java.util.function.Supplier}, then the result
-     *     of {@link Supplier#get()}, instead of the argument itself, should be used to compute the final log message.
+     * @param message the message to be logged, which may contain argument placeholders denoted as `{}` tokens
+     * @param arguments the arguments whose values will replace the placeholders in the message
      */
     void log(String message, Object... arguments);
 
     /**
-     * @param message to be logged
-     * @param arguments Suppliers of the arguments
+     * Logs a formatted message with arguments provided by Suppliers.
+     *
+     * @param message the message to be logged
+     * @param arguments Suppliers of the arguments to replace placeholders in the message
      */
     default void log(String message, Supplier<?>... arguments) {
         log(message, (Object[]) arguments);
     }
 
     /**
-     * Service interface API
+     * Logs a Throwable.
      *
      * @param throwable the Throwable to be logged
      */
     void log(Throwable throwable);
 
     /**
-     * Service interface API
+     * Logs a Throwable with an accompanying message.
      *
      * @param throwable the Throwable to be logged
-     * @param message the message to be logged. If the actual type is {@link java.util.function.Supplier}, the result of
-     *     {@link Supplier#get()}, instead of the {@code message} itself, should be used to compute the final log
-     *     message.
+     * @param message the accompanying message to be logged. If the actual type is {@link java.util.function.Supplier},
+     *     the result of {@link Supplier#get()} is used to compute the final log message.
      */
     void log(Throwable throwable, Object message);
 
     /**
-     * @param throwable to be logged
-     * @param message to be logged
+     * Logs a Throwable with an accompanying message provided by a Supplier.
+     *
+     * @param throwable the Throwable to be logged
+     * @param message Supplier of the accompanying message to be logged
      */
     default void log(Throwable throwable, Supplier<?> message) {
         log(throwable, (Object) message);
     }
 
     /**
-     * Service interface API
+     * Logs a Throwable with a formatted message and arguments.
      *
      * @param throwable the Throwable to be logged
-     * @param message See Javadoc of {@link #log(String, Object...)}
-     * @param arguments See Javadoc of {@link #log(String, Object...)}
+     * @param message the message to be logged, which may contain argument placeholders
+     * @param arguments the arguments whose values will replace the placeholders in the message
      */
     void log(Throwable throwable, String message, Object... arguments);
 
     /**
-     * @param throwable to be logged
-     * @param message to be logged
-     * @param arguments When all arguments are of type Supplier, instead of mixed with other Object types, the lambda
-     *     expressions do not need downcast
+     * Logs a Throwable with a formatted message and arguments provided by Suppliers.
+     *
+     * @param throwable the Throwable to be logged
+     * @param message the message to be logged
+     * @param arguments Suppliers of the arguments to replace placeholders in the message
      */
     default void log(Throwable throwable, String message, Supplier<?>... arguments) {
         log(throwable, message, (Object[]) arguments);
     }
 
     /**
-     * Service access API
+     * Provides a Logger instance with TRACE severity level.
      *
      * @return Logger instance with {@link Level#TRACE} severity level
      */
@@ -152,7 +155,7 @@ public interface Logger {
     }
 
     /**
-     * Service access API
+     * Provides a Logger instance with DEBUG severity level.
      *
      * @return Logger instance with {@link Level#DEBUG} severity level
      */
@@ -161,7 +164,7 @@ public interface Logger {
     }
 
     /**
-     * Service access API
+     * Provides a Logger instance with INFO severity level.
      *
      * @return Logger instance with {@link Level#INFO} severity level
      */
@@ -170,7 +173,7 @@ public interface Logger {
     }
 
     /**
-     * Service access API
+     * Provides a Logger instance with WARN severity level.
      *
      * @return Logger instance with {@link Level#WARN} severity level
      */
@@ -179,7 +182,7 @@ public interface Logger {
     }
 
     /**
-     * Service access API
+     * Provides a Logger instance with ERROR severity level.
      *
      * @return Logger instance with {@link Level#ERROR} severity level
      */
