@@ -22,6 +22,19 @@ Java 8 or better, although individual logging service providers may have higher 
 
 ### A logging Service Interface and Access API
 
+If you are familiar with other logging APIs such as SLF4J/LOGBACK/LOG4J, you will find most counterpart logging methods
+in ELF4J, with some noticeable differences:
+
+* When logging a Throwable/Exception, the Throwable always goes as the very first argument in the logging method's
+  multi-argument signature (as opposed to the last as in the other APIs).
+* As the logging service access API, the static factory method `Logger.instance()` does not take any argument. If
+  needed, it is up to the logging service provider to detect the declaring/caller class and decide the default name and
+  severity level of the logger instance to be returned.
+* The severity level of a `Logger` instance is immutable. Although the `Logger` instance can log at any level via the
+  convenience `Logger.<level>()` methods, the `Logger.log()` methods always log at the level of the current `Logger`
+  instance. The instance factory methods `Logger.at<Level>()` return a different `Logger` instance if the specified
+  level is different from the current instance's.
+
 ```java
 public interface Logger {
     static Logger instance() {
@@ -68,6 +81,7 @@ public interface Logger {
 
     void log(Throwable throwable);
 
+    // Unlike other logging APIs e.g. SLF4J, the throwable is always the first argument in ELF4J
     void log(Throwable throwable, Object message);
 
     default void log(Throwable throwable, Supplier<?> message) {
@@ -79,14 +93,31 @@ public interface Logger {
     default void log(Throwable throwable, String message, Supplier<?>... arguments) {
         log(throwable, message, (Object[]) arguments);
     }
+
+    // Convenience shorthand methods for logging at different levels, similar to other logging APIs like SLF4J
+
+    default boolean isTraceEnabled() {
+        return atTrace().isEnabled();
+    }
+
+    default void trace(Object message) {
+        atTrace().log(message);
+    }
+
+    default void trace(Throwable throwable, String message, Object... arguments) { // again, the throwable goes first
+        atTrace().log(throwable, message, arguments);
+    }
+
+    // More convenience shorthand methods...
 }
+
 ```
 
 ### A logging Service Provider Interface (SPI)
 
 ```java
 public interface LogServiceProvider {
-    Logger logger();
+  Logger logger();
 }
 ```
 
@@ -94,7 +125,7 @@ public interface LogServiceProvider {
 
 #### Thread safety
 
-Any `Logger` instance should be thread-safe.
+A `Logger` instance should be thread-safe.
 
 #### Severity Level
 
@@ -125,82 +156,82 @@ Install as a compile-scope dependency in Maven or other build tools alike.
 
 ```java
 class SampleUsage {
-    static Logger logger = Logger.instance();
+  static Logger logger = Logger.instance();
 
-    @Nested
-    class plainText {
-        @Test
-        void declarationsAndLevels() {
-            logger.log(
-                    "Logger instance is thread-safe so it can be declared and used as a local, instance, or static variable");
-            logger.log("Default severity level is decided by the logging provider implementation");
-            Logger trace = logger.atTrace();
-            trace.log("Explicit severity level is specified by user i.e. TRACE");
-            Logger.instance().atTrace().log("Same explicit level TRACE");
-            logger.atDebug().log("Severity level is DEBUG");
-            logger.atInfo().log("Severity level is INFO");
-            trace.atWarn().log("Severity level is WARN, not TRACE");
-            logger.atError().log("Severity level is ERROR");
-            Logger.instance()
-                    .atDebug()
-                    .atError()
-                    .atTrace()
-                    .atWarn()
-                    .atInfo()
-                    .log("Not a practical example but the severity level is INFO");
-        }
+  @Nested
+  class plainText {
+    @Test
+    void declarationsAndLevels() {
+      logger.log(
+          "Logger instance is thread-safe so it can be declared and used as a local, instance, or static variable");
+      logger.log("Default severity level is decided by the logging provider implementation");
+      Logger trace = logger.atTrace();
+      trace.log("Explicit severity level is specified by user i.e. TRACE");
+      Logger.instance().atTrace().log("Same explicit level TRACE");
+      logger.atDebug().log("Severity level is DEBUG");
+      logger.atInfo().log("Severity level is INFO");
+      trace.atWarn().log("Severity level is WARN, not TRACE");
+      logger.atError().log("Severity level is ERROR");
+      Logger.instance()
+          .atDebug()
+          .atError()
+          .atTrace()
+          .atWarn()
+          .atInfo()
+          .log("Not a practical example but the severity level is INFO");
     }
+  }
 
-    @Nested
-    class textWithArguments {
-        Logger info = logger.atInfo();
+  @Nested
+  class textWithArguments {
+    Logger info = logger.atInfo();
 
-        @Test
-        void lazyAndEagerArgumentsCanBeMixed() {
-            info.log("Message can have any number of arguments of {} type", Object.class.getTypeName());
-            info.log(
-                    "Lazy arguments, of {} type, whose values may be {} can be mixed with eager arguments of non-Supplier types",
-                    Supplier.class.getTypeName(),
-                    (Supplier) () -> "expensive to compute");
-            info.atWarn()
-                    .log("The Supplier downcast is mandatory per lambda syntax because arguments are declared as generic Object rather than functional interface");
-        }
+    @Test
+    void lazyAndEagerArgumentsCanBeMixed() {
+      info.log("Message can have any number of arguments of {} type", Object.class.getTypeName());
+      info.log(
+          "Lazy arguments, of {} type, whose values may be {} can be mixed with eager arguments of non-Supplier types",
+          Supplier.class.getTypeName(),
+          (Supplier) () -> "expensive to compute");
+      info.atWarn()
+          .log("The Supplier downcast is mandatory per lambda syntax because arguments are declared as generic Object rather than functional interface");
     }
+  }
 
-    @Nested
-    class supplierMessageAndArguments {
-        Logger logger = Logger.instance();
+  @Nested
+  class supplierMessageAndArguments {
+    Logger logger = Logger.instance();
 
-        @Test
-        void noDowncastNeededWhenAllMessageOrArgumentsAreSuppliers() {
-            logger.log(
-                    () ->
-                            "No downcast needed when message or arguments are all of Supplier type, rather than mixed with Object types");
-            logger.log("Message can have any number of {} type arguments", Supplier.class::getTypeName);
-            logger.log(
-                    "Lazy arguments of {} type can be used to supply values that may be {}",
-                    Supplier.class::getTypeName,
-                    () -> "expensive to compute");
-            Exception ex = new Exception("test ex for Suppliers");
-            logger.log(ex, () -> "Exception log message can be a Supplier");
-            logger.log(ex, "So can the {}'s {}", () -> "message", () -> "arguments");
-        }
+    @Test
+    void noDowncastNeededWhenAllMessageOrArgumentsAreSuppliers() {
+      logger.log(
+          () ->
+              "No downcast needed when message or arguments are all of Supplier type, rather than mixed with Object types");
+      logger.log("Message can have any number of {} type arguments", Supplier.class::getTypeName);
+      logger.log(
+          "Lazy arguments of {} type can be used to supply values that may be {}",
+          Supplier.class::getTypeName,
+          () -> "expensive to compute");
+      Exception ex = new Exception("test ex for Suppliers");
+      logger.log(ex, () -> "Exception log message can be a Supplier");
+      logger.log(ex, "So can the {}'s {}", () -> "message", () -> "arguments");
     }
+  }
 
-    @Nested
-    class throwable {
-        @Test
-        void asTheFirstArgument() {
-            Exception exception = new Exception("Exception message");
-            logger.atError().log(exception);
-            logger.atError().log(exception, "Optional log message");
-            logger.atInfo()
-                    .log(exception,
-                            "Exception is always the first argument to a logging method. The {} log message and following arguments work the same way {}.",
-                            "optional",
-                            (Supplier) () -> "as usual");
-        }
+  @Nested
+  class throwable {
+    @Test
+    void asTheFirstArgument() {
+      Exception exception = new Exception("Exception message");
+      logger.atError().log(exception);
+      logger.atError().log(exception, "Optional log message");
+      logger.atInfo()
+          .log(exception,
+              "Exception is always the first argument to a logging method. The {} log message and following arguments work the same way {}.",
+              "optional",
+              (Supplier) () -> "as usual");
     }
+  }
 }
 ```
 

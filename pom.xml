@@ -30,7 +30,7 @@
 
     <groupId>io.github.elf4j</groupId>
     <artifactId>elf4j</artifactId>
-    <version>4.1.1</version>
+    <version>4.2.0</version>
     <packaging>jar</packaging>
     <name>elf4j</name>
     <description>API and SPI of Easy Logging Facade for Java (ELF4J)</description>
@@ -130,10 +130,9 @@
                 <configuration>
                     <java>
                         <palantirJavaFormat>
-                            <version>2.63.0</version>                     <!-- optional -->
-                            <style>PALANTIR</style>                       <!-- or AOSP/GOOGLE (optional) -->
-                            <formatJavadoc>true
-                            </formatJavadoc>          <!-- defaults to false (optional, requires at least Palantir 2.39.0) -->
+                            <version>2.63.0</version>
+                            <style>PALANTIR</style>
+                            <formatJavadoc>true</formatJavadoc>
                         </palantirJavaFormat>
                         <formatAnnotations/>
                     </java>
@@ -158,6 +157,12 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.11.2</version>
+                <configuration>
+                    <additionalJOptions>
+                        <additionalJOption>-Xdoclint:none</additionalJOption>
+                    </additionalJOptions>
+                    <failOnError>false</failOnError>
+                </configuration>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>

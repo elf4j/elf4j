@@ -34,19 +34,24 @@ import java.util.function.Supplier;
  */
 public interface Logger {
     /**
-     * Provides a default Logger instance.
+     * Static factory method and service access point that provides a default Logger instance.
      *
      * @return Logger instance with default name and Level
+     * @implNote It is up to the logging service provider to determine the default name and level of the logger instance
+     *     to be returned.
      */
     static Logger instance() {
         return LogServiceProviderLocator.INSTANCE.logServiceProvider().logger();
     }
 
     /**
-     * Provides a Logger instance for the specified logging level.
+     * Instance factory method that provides a Logger instance for the specified logging level.
      *
      * @param level the logging level of the requested Logger instance
      * @return Logger instance of the specified level
+     * @implNote A Logger instance's severity level is immutable and cannot be changed after creation. Therefore, this
+     *     method can return the current instance itself only if the specified level is the same as the current
+     *     instance's; otherwise, it will have to be a different Logger instance to be returned.
      */
     Logger atLevel(Level level);
 
@@ -63,6 +68,61 @@ public interface Logger {
      * @return true if logging is enabled, false otherwise
      */
     boolean isEnabled();
+
+    /**
+     * Checks if logging is enabled at the specified Level.
+     *
+     * @param level the logging level to check
+     * @return true if logging is enabled for the specified level, false otherwise
+     */
+    default boolean isEnabled(Level level) {
+        return atLevel(level).isEnabled();
+    }
+
+    /**
+     * Checks if TRACE level logging is enabled at the TRACE level.
+     *
+     * @return true if TRACE level logging is enabled, false otherwise
+     */
+    default boolean isTraceEnabled() {
+        return atTrace().isEnabled();
+    }
+
+    /**
+     * Checks if DEBUG level logging is enabled at the DEBUG level.
+     *
+     * @return true if DEBUG level logging is enabled, false otherwise
+     */
+    default boolean isDebugEnabled() {
+        return atDebug().isEnabled();
+    }
+
+    /**
+     * Checks if INFO level logging is enabled at the INFO level.
+     *
+     * @return true if INFO level logging is enabled, false otherwise
+     */
+    default boolean isInfoEnabled() {
+        return atInfo().isEnabled();
+    }
+
+    /**
+     * Checks if WARN level logging is enabled at the WARN level.
+     *
+     * @return true if WARN level logging is enabled, false otherwise
+     */
+    default boolean isWarnEnabled() {
+        return atWarn().isEnabled();
+    }
+
+    /**
+     * Checks if ERROR level logging is enabled at the ERROR level.
+     *
+     * @return true if ERROR level logging is enabled, false otherwise
+     */
+    default boolean isErrorEnabled() {
+        return atError().isEnabled();
+    }
 
     /**
      * Logs a message.
@@ -151,7 +211,7 @@ public interface Logger {
      * @return Logger instance with {@link Level#TRACE} severity level
      */
     default Logger atTrace() {
-        return this.atLevel(Level.TRACE);
+        return atLevel(Level.TRACE);
     }
 
     /**
@@ -160,7 +220,7 @@ public interface Logger {
      * @return Logger instance with {@link Level#DEBUG} severity level
      */
     default Logger atDebug() {
-        return this.atLevel(Level.DEBUG);
+        return atLevel(Level.DEBUG);
     }
 
     /**
@@ -169,7 +229,7 @@ public interface Logger {
      * @return Logger instance with {@link Level#INFO} severity level
      */
     default Logger atInfo() {
-        return this.atLevel(Level.INFO);
+        return atLevel(Level.INFO);
     }
 
     /**
@@ -178,7 +238,7 @@ public interface Logger {
      * @return Logger instance with {@link Level#WARN} severity level
      */
     default Logger atWarn() {
-        return this.atLevel(Level.WARN);
+        return atLevel(Level.WARN);
     }
 
     /**
@@ -187,6 +247,451 @@ public interface Logger {
      * @return Logger instance with {@link Level#ERROR} severity level
      */
     default Logger atError() {
-        return this.atLevel(Level.ERROR);
+        return atLevel(Level.ERROR);
+    }
+
+    /**
+     * Creates a logger instance at TRACE level and uses the created instance to log.
+     *
+     * @param message the message to be logged
+     */
+    default void trace(Object message) {
+        atTrace().log(message);
+    }
+
+    /**
+     * Logs a formatted message at TRACE level with arguments.
+     *
+     * @param message the message to be logged
+     * @param arguments the arguments whose values will replace the placeholders in the message
+     */
+    default void trace(String message, Object... arguments) {
+        atTrace().log(message, arguments);
+    }
+
+    /**
+     * Logs a message provided by a Supplier at TRACE level.
+     *
+     * @param message Supplier of the message to be logged
+     */
+    default void trace(Supplier<?> message) {
+        atTrace().log(message);
+    }
+
+    /**
+     * Logs a formatted message at TRACE level with arguments provided by Suppliers.
+     *
+     * @param message the message to be logged
+     * @param arguments Suppliers of the arguments to replace placeholders in the message
+     */
+    default void trace(String message, Supplier<?>... arguments) {
+        atTrace().log(message, arguments);
+    }
+
+    /**
+     * Logs a Throwable at TRACE level.
+     *
+     * @param throwable the Throwable to be logged
+     */
+    default void trace(Throwable throwable) {
+        atTrace().log(throwable);
+    }
+
+    /**
+     * Logs a Throwable with an accompanying message at TRACE level.
+     *
+     * @param throwable the Throwable to be logged
+     * @param message the accompanying message to be logged
+     */
+    default void trace(Throwable throwable, Object message) {
+        atTrace().log(throwable, message);
+    }
+
+    /**
+     * Logs a Throwable with a formatted message and arguments at TRACE level.
+     *
+     * @param throwable the Throwable to be logged
+     * @param message the message to be logged
+     * @param arguments the arguments whose values will replace the placeholders in the message
+     */
+    default void trace(Throwable throwable, String message, Object... arguments) {
+        atTrace().log(throwable, message, arguments);
+    }
+
+    /**
+     * Logs a Throwable with an accompanying message provided by a Supplier at TRACE level.
+     *
+     * @param throwable the Throwable to be logged
+     * @param message Supplier of the accompanying message to be logged
+     */
+    default void trace(Throwable throwable, Supplier<?> message) {
+        atTrace().log(throwable, message);
+    }
+
+    /**
+     * Logs a Throwable with a formatted message and arguments provided by Suppliers at TRACE level.
+     *
+     * @param throwable the Throwable to be logged
+     * @param message the message to be logged
+     * @param arguments Suppliers of the arguments to replace placeholders in the message
+     */
+    default void trace(Throwable throwable, String message, Supplier<?>... arguments) {
+        atTrace().log(throwable, message, arguments);
+    }
+
+    /**
+     * Logs a message at DEBUG level.
+     *
+     * @param message the message to be logged
+     */
+    default void debug(Object message) {
+        atDebug().log(message);
+    }
+
+    /**
+     * Logs a formatted message at DEBUG level with arguments.
+     *
+     * @param message the message to be logged
+     * @param arguments the arguments whose values will replace the placeholders in the message
+     */
+    default void debug(String message, Object... arguments) {
+        atDebug().log(message, arguments);
+    }
+
+    /**
+     * Logs a message provided by a Supplier at DEBUG level.
+     *
+     * @param message Supplier of the message to be logged
+     */
+    default void debug(Supplier<?> message) {
+        atDebug().log(message);
+    }
+
+    /**
+     * Logs a formatted message at DEBUG level with arguments provided by Suppliers.
+     *
+     * @param message the message to be logged
+     * @param arguments Suppliers of the arguments to replace placeholders in the message
+     */
+    default void debug(String message, Supplier<?>... arguments) {
+        atDebug().log(message, arguments);
+    }
+
+    /**
+     * Logs a Throwable at DEBUG level.
+     *
+     * @param throwable the Throwable to be logged
+     */
+    default void debug(Throwable throwable) {
+        atDebug().log(throwable);
+    }
+
+    /**
+     * Logs a Throwable with an accompanying message at DEBUG level.
+     *
+     * @param throwable the Throwable to be logged
+     * @param message the accompanying message to be logged
+     */
+    default void debug(Throwable throwable, Object message) {
+        atDebug().log(throwable, message);
+    }
+
+    /**
+     * Logs a Throwable with a formatted message and arguments at DEBUG level.
+     *
+     * @param throwable the Throwable to be logged
+     * @param message the message to be logged
+     * @param arguments the arguments whose values will replace the placeholders in the message
+     */
+    default void debug(Throwable throwable, String message, Object... arguments) {
+        atDebug().log(throwable, message, arguments);
+    }
+
+    /**
+     * Logs a Throwable with an accompanying message provided by a Supplier at DEBUG level.
+     *
+     * @param throwable the Throwable to be logged
+     * @param message Supplier of the accompanying message to be logged
+     */
+    default void debug(Throwable throwable, Supplier<?> message) {
+        atDebug().log(throwable, message);
+    }
+
+    /**
+     * Logs a Throwable with a formatted message and arguments provided by Suppliers at DEBUG level.
+     *
+     * @param throwable the Throwable to be logged
+     * @param message the message to be logged
+     * @param arguments Suppliers of the arguments to replace placeholders in the message
+     */
+    default void debug(Throwable throwable, String message, Supplier<?>... arguments) {
+        atDebug().log(throwable, message, arguments);
+    }
+
+    /**
+     * Logs a message at INFO level.
+     *
+     * @param message the message to be logged
+     */
+    default void info(Object message) {
+        atInfo().log(message);
+    }
+
+    /**
+     * Logs a formatted message at INFO level with arguments.
+     *
+     * @param message the message to be logged
+     * @param arguments the arguments whose values will replace the placeholders in the message
+     */
+    default void info(String message, Object... arguments) {
+        atInfo().log(message, arguments);
+    }
+
+    /**
+     * Logs a message provided by a Supplier at INFO level.
+     *
+     * @param message Supplier of the message to be logged
+     */
+    default void info(Supplier<?> message) {
+        atInfo().log(message);
+    }
+
+    /**
+     * Logs a formatted message at INFO level with arguments provided by Suppliers.
+     *
+     * @param message the message to be logged
+     * @param arguments Suppliers of the arguments to replace placeholders in the message
+     */
+    default void info(String message, Supplier<?>... arguments) {
+        atInfo().log(message, arguments);
+    }
+
+    /**
+     * Logs a Throwable at INFO level.
+     *
+     * @param throwable the Throwable to be logged
+     */
+    default void info(Throwable throwable) {
+        atInfo().log(throwable);
+    }
+
+    /**
+     * Logs a Throwable with an accompanying message at INFO level.
+     *
+     * @param throwable the Throwable to be logged
+     * @param message the accompanying message to be logged
+     */
+    default void info(Throwable throwable, Object message) {
+        atInfo().log(throwable, message);
+    }
+
+    /**
+     * Logs a Throwable with a formatted message and arguments at INFO level.
+     *
+     * @param throwable the Throwable to be logged
+     * @param message the message to be logged
+     * @param arguments the arguments whose values will replace the placeholders in the message
+     */
+    default void info(Throwable throwable, String message, Object... arguments) {
+        atInfo().log(throwable, message, arguments);
+    }
+
+    /**
+     * Logs a Throwable with an accompanying message provided by a Supplier at INFO level.
+     *
+     * @param throwable the Throwable to be logged
+     * @param message Supplier of the accompanying message to be logged
+     */
+    default void info(Throwable throwable, Supplier<?> message) {
+        atInfo().log(throwable, message);
+    }
+
+    /**
+     * Logs a Throwable with a formatted message and arguments provided by Suppliers at INFO level.
+     *
+     * @param throwable the Throwable to be logged
+     * @param message the message to be logged
+     * @param arguments Suppliers of the arguments to replace placeholders in the message
+     */
+    default void info(Throwable throwable, String message, Supplier<?>... arguments) {
+        atInfo().log(throwable, message, arguments);
+    }
+
+    /**
+     * Logs a message at WARN level.
+     *
+     * @param message the message to be logged
+     */
+    default void warn(Object message) {
+        atWarn().log(message);
+    }
+
+    /**
+     * Logs a formatted message at WARN level with arguments.
+     *
+     * @param message the message to be logged
+     * @param arguments the arguments whose values will replace the placeholders in the message
+     */
+    default void warn(String message, Object... arguments) {
+        atWarn().log(message, arguments);
+    }
+
+    /**
+     * Logs a message provided by a Supplier at WARN level.
+     *
+     * @param message Supplier of the message to be logged
+     */
+    default void warn(Supplier<?> message) {
+        atWarn().log(message);
+    }
+
+    /**
+     * Logs a formatted message at WARN level with arguments provided by Suppliers.
+     *
+     * @param message the message to be logged
+     * @param arguments Suppliers of the arguments to replace placeholders in the message
+     */
+    default void warn(String message, Supplier<?>... arguments) {
+        atWarn().log(message, arguments);
+    }
+
+    /**
+     * Logs a Throwable at WARN level.
+     *
+     * @param throwable the Throwable to be logged
+     */
+    default void warn(Throwable throwable) {
+        atWarn().log(throwable);
+    }
+
+    /**
+     * Logs a Throwable with an accompanying message at WARN level.
+     *
+     * @param throwable the Throwable to be logged
+     * @param message the accompanying message to be logged
+     */
+    default void warn(Throwable throwable, Object message) {
+        atWarn().log(throwable, message);
+    }
+
+    /**
+     * Logs a Throwable with a formatted message and arguments at WARN level.
+     *
+     * @param throwable the Throwable to be logged
+     * @param message the message to be logged
+     * @param arguments the arguments whose values will replace the placeholders in the message
+     */
+    default void warn(Throwable throwable, String message, Object... arguments) {
+        atWarn().log(throwable, message, arguments);
+    }
+
+    /**
+     * Logs a Throwable with an accompanying message provided by a Supplier at WARN level.
+     *
+     * @param throwable the Throwable to be logged
+     * @param message Supplier of the accompanying message to be logged
+     */
+    default void warn(Throwable throwable, Supplier<?> message) {
+        atWarn().log(throwable, message);
+    }
+
+    /**
+     * Logs a Throwable with a formatted message and arguments provided by Suppliers at WARN level.
+     *
+     * @param throwable the Throwable to be logged
+     * @param message the message to be logged
+     * @param arguments Suppliers of the arguments to replace placeholders in the message
+     */
+    default void warn(Throwable throwable, String message, Supplier<?>... arguments) {
+        atWarn().log(throwable, message, arguments);
+    }
+
+    /**
+     * Logs a message at ERROR level.
+     *
+     * @param message the message to be logged
+     */
+    default void error(Object message) {
+        atError().log(message);
+    }
+
+    /**
+     * Logs a formatted message at ERROR level with arguments.
+     *
+     * @param message the message to be logged
+     * @param arguments the arguments whose values will replace the placeholders in the message
+     */
+    default void error(String message, Object... arguments) {
+        atError().log(message, arguments);
+    }
+
+    /**
+     * Logs a message provided by a Supplier at ERROR level.
+     *
+     * @param message Supplier of the message to be logged
+     */
+    default void error(Supplier<?> message) {
+        atError().log(message);
+    }
+
+    /**
+     * Logs a formatted message at ERROR level with arguments provided by Suppliers.
+     *
+     * @param message the message to be logged
+     * @param arguments Suppliers of the arguments to replace placeholders in the message
+     */
+    default void error(String message, Supplier<?>... arguments) {
+        atError().log(message, arguments);
+    }
+
+    /**
+     * Logs a Throwable at ERROR level.
+     *
+     * @param throwable the Throwable to be logged
+     */
+    default void error(Throwable throwable) {
+        atError().log(throwable);
+    }
+
+    /**
+     * Logs a Throwable with an accompanying message at ERROR level.
+     *
+     * @param throwable the Throwable to be logged
+     * @param message the accompanying message to be logged
+     */
+    default void error(Throwable throwable, Object message) {
+        atError().log(throwable, message);
+    }
+
+    /**
+     * Logs a Throwable with a formatted message and arguments at ERROR level.
+     *
+     * @param throwable the Throwable to be logged
+     * @param message the message to be logged
+     * @param arguments the arguments whose values will replace the placeholders in the message
+     */
+    default void error(Throwable throwable, String message, Object... arguments) {
+        atError().log(throwable, message, arguments);
+    }
+
+    /**
+     * Logs a Throwable with an accompanying message provided by a Supplier at ERROR level.
+     *
+     * @param throwable the Throwable to be logged
+     * @param message Supplier of the accompanying message to be logged
+     */
+    default void error(Throwable throwable, Supplier<?> message) {
+        atError().log(throwable, message);
+    }
+
+    /**
+     * Logs a Throwable with a formatted message and arguments provided by Suppliers at ERROR level.
+     *
+     * @param throwable the Throwable to be logged
+     * @param message the message to be logged
+     * @param arguments Suppliers of the arguments to replace placeholders in the message
+     */
+    default void error(Throwable throwable, String message, Supplier<?>... arguments) {
+        atError().log(throwable, message, arguments);
     }
 }
