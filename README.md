@@ -183,7 +183,7 @@ logging method call.
 
 Install as a compile-scope dependency in Maven or other build tools alike.
 
-## Use it - as the log Service Interface (facade) in the logging client
+## Use it... as the logging Service (facade) API in the logging client
 
 ```java
 class SampleUsage {
@@ -300,7 +300,7 @@ Note that elf4j is a logging service facade and specification, rather than the i
 - It is considered a setup error to have multiple providers in the classpath without a selection. The elf4j facade falls
   back to no-op on any setup errors.
 
-## Use it - as the _service provider interface_ (SPI) to provide the logging service
+## Use it... as the _service provider interface_ (SPI) to provide the logging service
 
 To enable an independent logging framework/engine via the elf4j spec, the _service provider_ should follow instructions
 of Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html). Namely,
