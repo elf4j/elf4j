@@ -37,109 +37,109 @@ in ELF4J, with some noticeable differences:
 
 ```java
 public interface Logger {
-    /**
-     * Static factory method as service access API that provides a default Logger instance
-     *
-     * @return Logger instance with default name and Level
-     * @implNote It is up to the logging service provider to determine the default name and level of the logger instance
-     *     to be returned.
-     */
-    static Logger instance() {
-        return LogServiceProviderLocator.INSTANCE.logServiceProvider().logger();
-    }
+  /**
+   * Static factory method as service access API that provides a default Logger instance
+   *
+   * @return Logger instance with default name and Level
+   * @implNote It is up to the logging service provider to determine the default name and level of the logger instance
+   *     to be returned.
+   */
+  static Logger instance() {
+    return LogServiceProviderLocator.INSTANCE.logServiceProvider().logger();
+  }
 
-    /**
-     * Instance factory method that provides a Logger instance for the specified logging level
-     *
-     * @param level the logging level of the requested Logger instance
-     * @return Logger instance of the specified level
-     * @implNote A Logger instance's severity level is immutable and cannot be changed after creation. Therefore, this
-     *     method can return the current instance itself only if the specified level is the same as the current
-     *     instance's; otherwise, it will have to be a different Logger instance to be returned.
-     */
-    Logger atLevel(Level level);
+  /**
+   * Instance factory method that provides a Logger instance for the specified logging level
+   *
+   * @param level the logging level of the requested Logger instance
+   * @return Logger instance of the specified level
+   * @implNote A Logger instance's severity level is immutable and cannot be changed after creation. Therefore, this
+   *     method can return the current instance itself only if the specified level is the same as the current
+   *     instance's; otherwise, it will have to be a different Logger instance to be returned.
+   */
+  Logger atLevel(Level level);
 
-    default Logger atTrace() {
-        return this.atLevel(Level.TRACE);
-    }
+  default Logger atTrace() {
+    return this.atLevel(Level.TRACE);
+  }
 
-    default Logger atDebug() {
-        return this.atLevel(Level.DEBUG);
-    }
+  default Logger atDebug() {
+    return this.atLevel(Level.DEBUG);
+  }
 
-    default Logger atInfo() {
-        return this.atLevel(Level.INFO);
-    }
+  default Logger atInfo() {
+    return this.atLevel(Level.INFO);
+  }
 
-    default Logger atWarn() {
-        return this.atLevel(Level.WARN);
-    }
+  default Logger atWarn() {
+    return this.atLevel(Level.WARN);
+  }
 
-    default Logger atError() {
-        return this.atLevel(Level.ERROR);
-    }
+  default Logger atError() {
+    return this.atLevel(Level.ERROR);
+  }
 
-    Level getLevel();
+  Level getLevel();
 
-    boolean isEnabled();
+  boolean isEnabled();
 
-    void log(Object message);
+  void log(Object message);
 
-    default void log(Supplier<?> message) {
-        log((Object) message);
-    }
+  default void log(Supplier<?> message) {
+    log((Object) message);
+  }
 
-    /**
-     * Logs a formatted message with arguments.
-     *
-     * @param message the message to be logged, which may contain argument placeholders denoted as `{}` tokens
-     * @param arguments the arguments whose values will replace the placeholders in the message. The arguments can be a
-     *     mixture of both eager {@code Object} and lazy {@code Supplier<?>} types, where {@code Supplier<?>} type
-     *     arguments need to be downcast per lambda expression syntax requirement.
-     */
-    void log(String message, Object... arguments);
+  /**
+   * Logs a formatted message with arguments.
+   *
+   * @param message the message to be logged, which may contain argument placeholders denoted as `{}` tokens
+   * @param arguments the arguments whose values will replace the placeholders in the message. The arguments can be a
+   *     mixture of both eager {@code Object} and lazy {@code Supplier<?>} types, where {@code Supplier<?>} type
+   *     arguments need to be downcast per lambda expression syntax requirement.
+   */
+  void log(String message, Object... arguments);
 
-    /**
-     * Logs a formatted message with arguments provided by Suppliers.
-     *
-     * @param message the message to be logged
-     * @param arguments Suppliers of the arguments to replace placeholders in the message; no downcast needed as all
-     *     arguments are of {@code Supplier<?>} type.
-     */
-    default void log(String message, Supplier<?>... arguments) {
-        log(message, (Object[]) arguments);
-    }
+  /**
+   * Logs a formatted message with arguments provided by Suppliers.
+   *
+   * @param message the message to be logged
+   * @param arguments Suppliers of the arguments to replace placeholders in the message; no downcast needed as all
+   *     arguments are of {@code Supplier<?>} type.
+   */
+  default void log(String message, Supplier<?>... arguments) {
+    log(message, (Object[]) arguments);
+  }
 
-    void log(Throwable throwable);
+  void log(Throwable throwable);
 
-    // Unlike other logging APIs e.g. SLF4J, the throwable is always the first argument in ELF4J
-    void log(Throwable throwable, Object message);
+  // Unlike other logging APIs e.g. SLF4J, the throwable is always the first argument in ELF4J
+  void log(Throwable throwable, Object message);
 
-    default void log(Throwable throwable, Supplier<?> message) {
-        log(throwable, (Object) message);
-    }
+  default void log(Throwable throwable, Supplier<?> message) {
+    log(throwable, (Object) message);
+  }
 
-    void log(Throwable throwable, String message, Object... arguments);
+  void log(Throwable throwable, String message, Object... arguments);
 
-    default void log(Throwable throwable, String message, Supplier<?>... arguments) {
-        log(throwable, message, (Object[]) arguments);
-    }
+  default void log(Throwable throwable, String message, Supplier<?>... arguments) {
+    log(throwable, message, (Object[]) arguments);
+  }
 
-    // Following methods are convenience shorthands added to resemble other logging APIs
+  // Following methods are convenience shorthands added to resemble other logging APIs
 
-    default boolean isTraceEnabled() {
-        return atTrace().isEnabled();
-    }
+  default boolean isTraceEnabled() {
+    return atTrace().isEnabled();
+  }
 
-    default void trace(Object message) {
-        atTrace().log(message);
-    }
+  default void trace(Object message) {
+    atTrace().log(message);
+  }
 
-    default void trace(Throwable throwable, String message, Object... arguments) { // again, the throwable goes first
-        atTrace().log(throwable, message, arguments);
-    }
+  default void trace(Throwable throwable, String message, Object... arguments) { // again, the throwable goes first
+    atTrace().log(throwable, message, arguments);
+  }
 
-    // More resembling convenience methods...
+  // More resembling convenience methods...
 }
 
 ```
@@ -183,7 +183,7 @@ logging method call.
 
 Install as a compile-scope dependency in Maven or other build tools alike.
 
-## Use it - for a client of the logging service API
+## Use it - as the log Service Interface (facade) in the logging client
 
 ```java
 class SampleUsage {
@@ -300,7 +300,7 @@ Note that elf4j is a logging service facade and specification, rather than the i
 - It is considered a setup error to have multiple providers in the classpath without a selection. The elf4j facade falls
   back to no-op on any setup errors.
 
-## Use it - for a _service provider_ implementing the logging service SPI
+## Use it - as the _service provider interface_ (SPI) to provide the logging service
 
 To enable an independent logging framework/engine via the elf4j spec, the _service provider_ should follow instructions
 of Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html). Namely,
