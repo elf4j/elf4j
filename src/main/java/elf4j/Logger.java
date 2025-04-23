@@ -34,7 +34,7 @@ import java.util.function.Supplier;
  */
 public interface Logger {
     /**
-     * Static factory method and service access point that provides a default Logger instance.
+     * Static factory method as service access API that provides a default Logger instance
      *
      * @return Logger instance with default name and Level
      * @implNote It is up to the logging service provider to determine the default name and level of the logger instance
@@ -45,7 +45,7 @@ public interface Logger {
     }
 
     /**
-     * Instance factory method that provides a Logger instance for the specified logging level.
+     * Instance factory method that provides a Logger instance for the specified logging level
      *
      * @param level the logging level of the requested Logger instance
      * @return Logger instance of the specified level

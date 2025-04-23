@@ -37,10 +37,28 @@ in ELF4J, with some noticeable differences:
 
 ```java
 public interface Logger {
+    /**
+     * Static factory method as service access API that provides a default Logger instance
+     *
+     * @return Logger instance with default name and Level
+     * @implNote It is up to the logging service provider to determine the default name and level of the logger instance
+     *     to be returned.
+     */
     static Logger instance() {
         return LogServiceProviderLocator.INSTANCE.logServiceProvider().logger();
     }
 
+    /**
+     * Instance factory method that provides a Logger instance for the specified logging level
+     *
+     * @param level the logging level of the requested Logger instance
+     * @return Logger instance of the specified level
+     * @implNote A Logger instance's severity level is immutable and cannot be changed after creation. Therefore, this
+     *     method can return the current instance itself only if the specified level is the same as the current
+     *     instance's; otherwise, it will have to be a different Logger instance to be returned.
+     */
+    Logger atLevel(Level level);
+    
     default Logger atTrace() {
         return this.atLevel(Level.TRACE);
     }
@@ -60,8 +78,6 @@ public interface Logger {
     default Logger atError() {
         return this.atLevel(Level.ERROR);
     }
-
-    Logger atLevel(Level level);
 
     Level getLevel();
 
@@ -94,7 +110,7 @@ public interface Logger {
         log(throwable, message, (Object[]) arguments);
     }
 
-    // Convenience shorthand methods for logging at different levels, similar to other logging APIs like SLF4J
+    // Convenience shorthand methods added to resemble other logging APIs like SLF4J
 
     default boolean isTraceEnabled() {
         return atTrace().isEnabled();
@@ -108,7 +124,7 @@ public interface Logger {
         atTrace().log(throwable, message, arguments);
     }
 
-    // More convenience shorthand methods...
+    // More resembling convenience methods...
 }
 
 ```
