@@ -58,7 +58,7 @@ public interface Logger {
      *     instance's; otherwise, it will have to be a different Logger instance to be returned.
      */
     Logger atLevel(Level level);
-    
+
     default Logger atTrace() {
         return this.atLevel(Level.TRACE);
     }
@@ -89,8 +89,23 @@ public interface Logger {
         log((Object) message);
     }
 
+    /**
+     * Logs a formatted message with arguments.
+     *
+     * @param message the message to be logged, which may contain argument placeholders denoted as `{}` tokens
+     * @param arguments the arguments whose values will replace the placeholders in the message. The arguments can be a
+     *     mixture of both eager {@code Object} and lazy {@code Supplier<?>} types, where {@code Supplier<?>} type
+     *     arguments need to be downcast per lambda expression syntax requirement.
+     */
     void log(String message, Object... arguments);
 
+    /**
+     * Logs a formatted message with arguments provided by Suppliers.
+     *
+     * @param message the message to be logged
+     * @param arguments Suppliers of the arguments to replace placeholders in the message; no downcast needed as all
+     *     arguments are of {@code Supplier<?>} type.
+     */
     default void log(String message, Supplier<?>... arguments) {
         log(message, (Object[]) arguments);
     }
@@ -110,7 +125,7 @@ public interface Logger {
         log(throwable, message, (Object[]) arguments);
     }
 
-    // Convenience shorthand methods added to resemble other logging APIs like SLF4J
+    // Following methods are convenience shorthands added to resemble other logging APIs
 
     default boolean isTraceEnabled() {
         return atTrace().isEnabled();

@@ -80,51 +80,6 @@ public interface Logger {
     }
 
     /**
-     * Checks if TRACE level logging is enabled at the TRACE level.
-     *
-     * @return true if TRACE level logging is enabled, false otherwise
-     */
-    default boolean isTraceEnabled() {
-        return atTrace().isEnabled();
-    }
-
-    /**
-     * Checks if DEBUG level logging is enabled at the DEBUG level.
-     *
-     * @return true if DEBUG level logging is enabled, false otherwise
-     */
-    default boolean isDebugEnabled() {
-        return atDebug().isEnabled();
-    }
-
-    /**
-     * Checks if INFO level logging is enabled at the INFO level.
-     *
-     * @return true if INFO level logging is enabled, false otherwise
-     */
-    default boolean isInfoEnabled() {
-        return atInfo().isEnabled();
-    }
-
-    /**
-     * Checks if WARN level logging is enabled at the WARN level.
-     *
-     * @return true if WARN level logging is enabled, false otherwise
-     */
-    default boolean isWarnEnabled() {
-        return atWarn().isEnabled();
-    }
-
-    /**
-     * Checks if ERROR level logging is enabled at the ERROR level.
-     *
-     * @return true if ERROR level logging is enabled, false otherwise
-     */
-    default boolean isErrorEnabled() {
-        return atError().isEnabled();
-    }
-
-    /**
      * Logs a message.
      *
      * @param message the message to be logged. If the actual type is {@link java.util.function.Supplier}, the result of
@@ -145,7 +100,9 @@ public interface Logger {
      * Logs a formatted message with arguments.
      *
      * @param message the message to be logged, which may contain argument placeholders denoted as `{}` tokens
-     * @param arguments the arguments whose values will replace the placeholders in the message
+     * @param arguments the arguments whose values will replace the placeholders in the message. The arguments can be a
+     *     mixture of both eager {@code Object} and lazy {@code Supplier<?>} types, where {@code Supplier<?>} type
+     *     arguments need to be downcast per lambda expression syntax requirement.
      */
     void log(String message, Object... arguments);
 
@@ -153,7 +110,8 @@ public interface Logger {
      * Logs a formatted message with arguments provided by Suppliers.
      *
      * @param message the message to be logged
-     * @param arguments Suppliers of the arguments to replace placeholders in the message
+     * @param arguments Suppliers of the arguments to replace placeholders in the message; no downcast needed as all
+     *     arguments are of {@code Supplier<?>} type.
      */
     default void log(String message, Supplier<?>... arguments) {
         log(message, (Object[]) arguments);
@@ -248,6 +206,53 @@ public interface Logger {
      */
     default Logger atError() {
         return atLevel(Level.ERROR);
+    }
+
+    // The following methods are convenience shorthands added to resemble other logging APIs.
+
+    /**
+     * Checks if TRACE level logging is enabled at the TRACE level.
+     *
+     * @return true if TRACE level logging is enabled, false otherwise
+     */
+    default boolean isTraceEnabled() {
+        return atTrace().isEnabled();
+    }
+
+    /**
+     * Checks if DEBUG level logging is enabled at the DEBUG level.
+     *
+     * @return true if DEBUG level logging is enabled, false otherwise
+     */
+    default boolean isDebugEnabled() {
+        return atDebug().isEnabled();
+    }
+
+    /**
+     * Checks if INFO level logging is enabled at the INFO level.
+     *
+     * @return true if INFO level logging is enabled, false otherwise
+     */
+    default boolean isInfoEnabled() {
+        return atInfo().isEnabled();
+    }
+
+    /**
+     * Checks if WARN level logging is enabled at the WARN level.
+     *
+     * @return true if WARN level logging is enabled, false otherwise
+     */
+    default boolean isWarnEnabled() {
+        return atWarn().isEnabled();
+    }
+
+    /**
+     * Checks if ERROR level logging is enabled at the ERROR level.
+     *
+     * @return true if ERROR level logging is enabled, false otherwise
+     */
+    default boolean isErrorEnabled() {
+        return atError().isEnabled();
     }
 
     /**
