@@ -1,7 +1,5 @@
-package elf4j.util;
+package elf4j;
 
-import elf4j.Level;
-import elf4j.Logger;
 import java.io.PrintStream;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,7 +7,7 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 /** Util logger for internal usage of the elf4j API. Not meant for any external client applications. */
-public enum IeLogger implements Logger {
+public enum TestLogger implements Logger {
     /** Logger instance for TRACE level logging. */
     TRACE(Level.TRACE),
     /** Logger instance for DEBUG level logging. */
@@ -30,11 +28,11 @@ public enum IeLogger implements Logger {
     private final Level thresholdOutputLevel;
 
     /**
-     * Constructor for the IeLogger enum.
+     * Constructor for the TestLogger enum.
      *
      * @param level the logging level associated with this logger
      */
-    IeLogger(Level level) {
+    TestLogger(Level level) {
         this.level = level;
         String outStreamType = System.getProperty("elf4j.internal.log.out.stream");
         if (outStreamType != null && outStreamType.trim().equalsIgnoreCase("stdout")) {

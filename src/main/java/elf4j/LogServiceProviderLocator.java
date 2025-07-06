@@ -25,11 +25,11 @@
 package elf4j;
 
 import elf4j.spi.LogServiceProvider;
-import elf4j.util.IeLogger;
 import elf4j.util.NoopLogServiceProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -102,6 +102,7 @@ enum LogServiceProviderLocator {
     }
 
     static final class LogServiceProviderSetupStatus {
+        private static final Logger log = Logger.getLogger(LogServiceProviderLocator.class.getName());
         final List<LogServiceProvider> loadedProviders;
         final String selectedProviderFqcn;
 
@@ -117,29 +118,26 @@ enum LogServiceProviderLocator {
                                 LogServiceProvider.getClass().getName().equals(selectedProviderFqcn))
                         .collect(Collectors.toList());
                 if (selected.size() != 1) {
-                    IeLogger.ERROR.log(
-                            "Expected one and only one selected elf4j log service provider '{}' but not so in the provisioned {}, falling back to NO-OP logging...",
-                            selectedProviderFqcn,
-                            loadedProviders);
+                    log.info(String.format(
+                            "Expected one and only one selected elf4j log service provider '%s' but not so in the provisioned %s, falling back to NO-OP logging...",
+                            selectedProviderFqcn, loadedProviders));
                     return false;
                 }
-                IeLogger.INFO.log("As selected, using elf4j log service provider: {}", selected.get(0));
+                log.info(String.format("As selected, using elf4j log service provider: %s", selected.get(0)));
                 return true;
             }
             if (loadedProviders.isEmpty()) {
-                IeLogger.INFO.log(
+                log.info(
                         "No elf4j log service provider discovered, this is OK only when no logging is expected via elf4j, falling back to NO-OP logging...");
                 return false;
             }
             if (loadedProviders.size() != 1) {
-                IeLogger.ERROR.log(
-                        "Expected one and only one provisioned elf4j log service provider but loaded {}: {}, please either re-provision to have only one logging provider, or select the desired provider in the loaded ones by its fully qualified class name using system property '{}', falling back to NO-OP logging...",
-                        loadedProviders.size(),
-                        loadedProviders,
-                        LogServiceProviderLoader.ELF4J_SERVICE_PROVIDER_FQCN);
+                log.severe(String.format(
+                        "Expected one and only one provisioned elf4j log service provider but loaded %s: %s, please either re-provision to have only one logging provider, or select the desired provider in the loaded ones by its fully qualified class name using system property '%s', falling back to NO-OP logging...",
+                        loadedProviders.size(), loadedProviders, LogServiceProviderLoader.ELF4J_SERVICE_PROVIDER_FQCN));
                 return false;
             }
-            IeLogger.INFO.log("As set up, using elf4j log service provider: {}", loadedProviders.get(0));
+            log.info(String.format("As set up, using elf4j log service provider: %s", loadedProviders.get(0)));
             return true;
         }
     }

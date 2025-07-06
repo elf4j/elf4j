@@ -74,7 +74,7 @@ class LogServiceProviderProvisionStatusTest {
         void selectedLogServiceProviderIsInSetupOnes() {
             List<LogServiceProvider> loggerFactories = new ArrayList<>();
             loggerFactories.add(new NoopLogServiceProvider());
-            loggerFactories.add(new IeInfoLogServiceProvider());
+            loggerFactories.add(new TestLogServiceProvider());
             LogServiceProviderLocator.LogServiceProviderSetupStatus logServiceProviderSetupStatus =
                     new LogServiceProviderLocator.LogServiceProviderSetupStatus(
                             loggerFactories, "elf4j.util.NoopLogServiceProvider");
