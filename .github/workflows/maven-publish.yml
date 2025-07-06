@@ -22,7 +22,7 @@ jobs:
           settings-path: ${{ github.workspace }}
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
           gpg-passphrase: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
-      - name: Publish to OSSRH
+      - name: Publish to Central 
         run: |
           chmod +x ./mvnw
           ./mvnw --batch-mode deploy -Prelease
