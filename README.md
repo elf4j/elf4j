@@ -181,7 +181,16 @@ logging method call.
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.elf4j/elf4j.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.elf4j%22%20AND%20a:%22elf4j%22)
 
-Install as a compile-scope dependency in Maven or other build tools alike.
+Include it as a compile-scope dependency in a build tool compatible with Maven Dependency Management. e.g.
+
+```xml
+
+<dependency>
+    <groupId>io.github.elf4j</groupId>
+    <artifactId>elf4j</artifactId>
+    <version>${version}</version>
+</dependency>
+```
 
 ## Use it... as the logging Service (facade) API in the logging client
 
