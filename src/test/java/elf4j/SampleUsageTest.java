@@ -84,7 +84,7 @@ class SampleUsageTest {
             logger.atError().log(exception);
             logger.atError().log(exception, "Exception is always the first argument to a log method");
             logger.atInfo().log(
-                    exception, "The {} log {} and {} work the same way as usual", "Optional", "Message", (Supplier)
+                    exception, "The {} log {} and {} work the same way as usual", "Optional", "Message", (Supplier<?>)
                             () -> "Arguments");
         }
     }
