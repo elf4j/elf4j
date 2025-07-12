@@ -138,7 +138,7 @@ public enum TestLogger implements Logger {
     @Override
     public void log(Throwable throwable) {
         if (isEnabled()) {
-            this.log(throwable, null);
+            this.log(throwable, (Object) null);
         }
     }
 

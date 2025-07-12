@@ -15,7 +15,8 @@ class SampleUsageTest {
         @Test
         void declarationsAndLevels() {
             logger.log(
-                    "Logger instance is thread-safe so it can be declared and used as a local, instance, or static variable");
+                    () ->
+                            "Logger instance is thread-safe so it can be declared and used as a local, instance, or static variable");
             logger.log(
                     "Default severity level is decided by the logging provider implementation: {}", logger.getLevel());
             assertEquals(Level.INFO, logger.getLevel());
