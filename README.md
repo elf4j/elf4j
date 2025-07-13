@@ -85,8 +85,8 @@ public interface Logger {
 
   void log(Object message);
 
-  default void log(Supplier<?> message) {
-    log((Object) message);
+  default void log(@NonNull Supplier<?> message) {
+    log(message.get());
   }
 
   /**
@@ -107,7 +107,11 @@ public interface Logger {
    *     arguments are of {@code Supplier<?>} type.
    */
   default void log(String message, Supplier<?>... arguments) {
-    log(message, (Object[]) arguments);
+    log(message, supply(arguments));
+  }
+
+  static Object @NonNull [] supply(Supplier<?>[] arguments) {
+    return Arrays.stream(arguments).map(Supplier::get).toArray(Object[]::new);
   }
 
   void log(Throwable throwable);
@@ -115,14 +119,14 @@ public interface Logger {
   // Unlike other logging APIs e.g. SLF4J, the throwable is always the first argument in ELF4J
   void log(Throwable throwable, Object message);
 
-  default void log(Throwable throwable, Supplier<?> message) {
-    log(throwable, (Object) message);
+  default void log(Throwable throwable, @NonNull Supplier<?> message) {
+    log(throwable, message.get());
   }
 
   void log(Throwable throwable, String message, Object... arguments);
 
   default void log(Throwable throwable, String message, Supplier<?>... arguments) {
-    log(throwable, message, (Object[]) arguments);
+    log(throwable, message, supply(arguments));
   }
 
   // Following methods are convenience shorthands added to resemble other logging APIs
