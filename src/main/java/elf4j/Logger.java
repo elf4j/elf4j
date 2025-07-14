@@ -29,14 +29,14 @@ import java.util.function.Supplier;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Logging service interface and access API as in the <a
+ * The Logger serves as both the "service interface" and "access API" as in the <a
  * href="https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html">Java Service Provider Framework</a>.
  *
  * <p>All {@link Logger} instances from this API should be thread-safe.
  */
 public interface Logger {
     /**
-     * Static factory method as service access API that provides a default Logger instance
+     * Static factory method as the "service access API" that provides a default Logger instance
      *
      * @return Logger instance with default name and Level
      * @implNote It is up to the logging service provider to determine the default name and level of the logger instance
@@ -47,7 +47,8 @@ public interface Logger {
     }
 
     /**
-     * Instance factory method that provides a Logger instance for the specified logging level
+     * Instance factory method that provides a Logger instance for the specified log level with the same name as this
+     * Logger instance
      *
      * @param level the logging level of the requested Logger instance
      * @return Logger instance of the specified level
@@ -90,11 +91,15 @@ public interface Logger {
     void log(Object message);
 
     /**
-     * Logs a message provided by a Supplier.
+     * Logs a message provided by a Supplier. Convenience overloading method of {@link #log(Object)}, such that no need
+     * to downcast to {@link Supplier} when the message argument is provided with a lambda express.
      *
      * @param message Supplier of the message to be logged
      */
     default void log(@NonNull Supplier<?> message) {
+        if (!isEnabled()) {
+            return;
+        }
         log(message.get());
     }
 
@@ -116,6 +121,9 @@ public interface Logger {
      *     arguments are of {@code Supplier<?>} type.
      */
     default void log(String message, Supplier<?>... arguments) {
+        if (!isEnabled()) {
+            return;
+        }
         log(message, supply(arguments));
     }
 
@@ -146,6 +154,9 @@ public interface Logger {
      * @param message Supplier of the accompanying message to be logged
      */
     default void log(Throwable throwable, @NonNull Supplier<?> message) {
+        if (!isEnabled()) {
+            return;
+        }
         log(throwable, message.get());
     }
 
@@ -166,6 +177,9 @@ public interface Logger {
      * @param arguments Suppliers of the arguments to replace placeholders in the message
      */
     default void log(Throwable throwable, String message, Supplier<?>... arguments) {
+        if (!isEnabled()) {
+            return;
+        }
         log(throwable, message, supply(arguments));
     }
 
@@ -286,7 +300,14 @@ public interface Logger {
      * @param message Supplier of the message to be logged
      */
     default void trace(@NonNull Supplier<?> message) {
-        atTrace().log(message.get());
+        logSuppliedAtLevel(Level.TRACE, message);
+    }
+
+    default void logSuppliedAtLevel(Level level, @NonNull Supplier<?> message) {
+        if (!isEnabled(level)) {
+            return;
+        }
+        atLevel(level).log(message.get());
     }
 
     /**
@@ -296,7 +317,14 @@ public interface Logger {
      * @param arguments Suppliers of the arguments to replace placeholders in the message
      */
     default void trace(String message, Supplier<?>... arguments) {
-        atTrace().log(message, supply(arguments));
+        logSuppliedAtLevel(Level.TRACE, message, arguments);
+    }
+
+    default void logSuppliedAtLevel(Level level, String message, Supplier<?>[] arguments) {
+        if (!isEnabled(level)) {
+            return;
+        }
+        atLevel(level).log(message, supply(arguments));
     }
 
     /**
@@ -336,7 +364,14 @@ public interface Logger {
      * @param message Supplier of the accompanying message to be logged
      */
     default void trace(Throwable throwable, @NonNull Supplier<?> message) {
-        atTrace().log(throwable, message.get());
+        logSuppliedAtLevel(Level.TRACE, throwable, message);
+    }
+
+    default void logSuppliedAtLevel(Level level, Throwable throwable, @NonNull Supplier<?> message) {
+        if (!isEnabled(level)) {
+            return;
+        }
+        atLevel(level).log(throwable, message.get());
     }
 
     /**
@@ -347,7 +382,14 @@ public interface Logger {
      * @param arguments Suppliers of the arguments to replace placeholders in the message
      */
     default void trace(Throwable throwable, String message, Supplier<?>... arguments) {
-        atTrace().log(throwable, message, supply(arguments));
+        logSuppliedAtLevel(Level.TRACE, throwable, message, arguments);
+    }
+
+    default void logSuppliedAtLevel(Level level, Throwable throwable, String message, Supplier<?>[] arguments) {
+        if (!isEnabled(level)) {
+            return;
+        }
+        atLevel(level).log(throwable, message, supply(arguments));
     }
 
     /**
@@ -375,7 +417,7 @@ public interface Logger {
      * @param message Supplier of the message to be logged
      */
     default void debug(@NonNull Supplier<?> message) {
-        atDebug().log(message.get());
+        logSuppliedAtLevel(Level.DEBUG, message);
     }
 
     /**
@@ -385,7 +427,7 @@ public interface Logger {
      * @param arguments Suppliers of the arguments to replace placeholders in the message
      */
     default void debug(String message, Supplier<?>... arguments) {
-        atDebug().log(message, supply(arguments));
+        logSuppliedAtLevel(Level.DEBUG, message, arguments);
     }
 
     /**
@@ -425,7 +467,7 @@ public interface Logger {
      * @param message Supplier of the accompanying message to be logged
      */
     default void debug(Throwable throwable, @NonNull Supplier<?> message) {
-        atDebug().log(throwable, message.get());
+        logSuppliedAtLevel(Level.DEBUG, throwable, message);
     }
 
     /**
@@ -436,7 +478,7 @@ public interface Logger {
      * @param arguments Suppliers of the arguments to replace placeholders in the message
      */
     default void debug(Throwable throwable, String message, Supplier<?>... arguments) {
-        atDebug().log(throwable, message, supply(arguments));
+        logSuppliedAtLevel(Level.DEBUG, throwable, message, arguments);
     }
 
     /**
@@ -464,7 +506,7 @@ public interface Logger {
      * @param message Supplier of the message to be logged
      */
     default void info(@NonNull Supplier<?> message) {
-        atInfo().log(message.get());
+        logSuppliedAtLevel(Level.INFO, message);
     }
 
     /**
@@ -474,7 +516,7 @@ public interface Logger {
      * @param arguments Suppliers of the arguments to replace placeholders in the message
      */
     default void info(String message, Supplier<?>... arguments) {
-        atInfo().log(message, supply(arguments));
+        logSuppliedAtLevel(Level.INFO, message, arguments);
     }
 
     /**
@@ -514,7 +556,7 @@ public interface Logger {
      * @param message Supplier of the accompanying message to be logged
      */
     default void info(Throwable throwable, @NonNull Supplier<?> message) {
-        atInfo().log(throwable, message.get());
+        logSuppliedAtLevel(Level.INFO, throwable, message);
     }
 
     /**
@@ -525,7 +567,7 @@ public interface Logger {
      * @param arguments Suppliers of the arguments to replace placeholders in the message
      */
     default void info(Throwable throwable, String message, Supplier<?>... arguments) {
-        atInfo().log(throwable, message, supply(arguments));
+        logSuppliedAtLevel(Level.INFO, throwable, message, arguments);
     }
 
     /**
@@ -553,7 +595,7 @@ public interface Logger {
      * @param message Supplier of the message to be logged
      */
     default void warn(@NonNull Supplier<?> message) {
-        atWarn().log(message.get());
+        logSuppliedAtLevel(Level.WARN, message);
     }
 
     /**
@@ -563,7 +605,7 @@ public interface Logger {
      * @param arguments Suppliers of the arguments to replace placeholders in the message
      */
     default void warn(String message, Supplier<?>... arguments) {
-        atWarn().log(message, supply(arguments));
+        logSuppliedAtLevel(Level.WARN, message, arguments);
     }
 
     /**
@@ -603,7 +645,7 @@ public interface Logger {
      * @param message Supplier of the accompanying message to be logged
      */
     default void warn(Throwable throwable, @NonNull Supplier<?> message) {
-        atWarn().log(throwable, message.get());
+        logSuppliedAtLevel(Level.WARN, throwable, message);
     }
 
     /**
@@ -614,7 +656,7 @@ public interface Logger {
      * @param arguments Suppliers of the arguments to replace placeholders in the message
      */
     default void warn(Throwable throwable, String message, Supplier<?>... arguments) {
-        atWarn().log(throwable, message, supply(arguments));
+        logSuppliedAtLevel(Level.WARN, throwable, message, arguments);
     }
 
     /**
@@ -642,7 +684,7 @@ public interface Logger {
      * @param message Supplier of the message to be logged
      */
     default void error(@NonNull Supplier<?> message) {
-        atError().log(message.get());
+        logSuppliedAtLevel(Level.ERROR, message);
     }
 
     /**
@@ -652,7 +694,7 @@ public interface Logger {
      * @param arguments Suppliers of the arguments to replace placeholders in the message
      */
     default void error(String message, Supplier<?>... arguments) {
-        atError().log(message, supply(arguments));
+        logSuppliedAtLevel(Level.ERROR, message, arguments);
     }
 
     /**
@@ -692,7 +734,7 @@ public interface Logger {
      * @param message Supplier of the accompanying message to be logged
      */
     default void error(Throwable throwable, @NonNull Supplier<?> message) {
-        atError().log(throwable, message.get());
+        logSuppliedAtLevel(Level.ERROR, throwable, message);
     }
 
     /**
@@ -703,6 +745,6 @@ public interface Logger {
      * @param arguments Suppliers of the arguments to replace placeholders in the message
      */
     default void error(Throwable throwable, String message, Supplier<?>... arguments) {
-        atError().log(throwable, message, supply(arguments));
+        logSuppliedAtLevel(Level.ERROR, throwable, message, arguments);
     }
 }
