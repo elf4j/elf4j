@@ -91,8 +91,8 @@ public interface Logger {
     void log(Object message);
 
     /**
-     * Logs a message provided by a Supplier. Convenience overloading method of {@link #log(Object)}, such that no need
-     * to downcast to {@link Supplier} when the message argument is provided with a lambda express.
+     * Logs a message provided by a Supplier. Convenience overloading method of {@link #log(Object)}, so no need of
+     * downcast to {@link Supplier} when the message argument is provided as a lambda expression.
      *
      * @param message Supplier of the message to be logged
      */
@@ -108,8 +108,8 @@ public interface Logger {
      *
      * @param message the message to be logged, which may contain argument placeholders denoted as `{}` tokens
      * @param arguments the arguments whose values will replace the placeholders in the message. The arguments can be a
-     *     mixture of both eager {@code Object} and lazy {@code Supplier<?>} types, where {@code Supplier<?>} type
-     *     arguments need to be downcast per lambda expression syntax requirement.
+     *     mixture of both eager {@code Object} and lazy {@code Supplier<?>} types. When both types are present, lambda
+     *     expression arguments need to be downcast to {@code Supplier<?>} per the lambda syntax requirement.
      */
     void log(String message, Object... arguments);
 
