@@ -242,7 +242,7 @@ Include it as a compile-scope dependency in a build tool compatible with Maven D
 
 ## Use it... 
 
-### Use it as the logging Service (facade) API
+### Use it as the logging Service (facade) API (while hiding the concrete log service provider API from your application code)
 
 ```java
 class SampleUsage {
@@ -349,7 +349,7 @@ Note that elf4j is a logging service facade and specification, rather than the i
 
   - It is considered a setup error to have multiple providers in the classpath without a selection. The elf4j facade falls back to no-op on any setup errors.
 
-### Use it as the _service provider interface_ (SPI) to provide the logging service
+### Use it as the _service provider interface_ (SPI) to provide concrete log service
 
 To enable an independent logging framework/engine via the elf4j spec, the _service provider_ should follow instructions of Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html). Namely, the implementation should include
 
