@@ -73,7 +73,7 @@ public interface Logger {
     boolean isEnabled();
 
     /**
-     * Checks if logging is enabled at the specified Level.
+     * Checks if logging is enabled at the specified Level, regardless the level of this logger instance
      *
      * @param level the logging level to check
      * @return true if logging is enabled for the specified level, false otherwise
