@@ -9,7 +9,7 @@ API and SPI of a no-fluff Java logging facade
 ## User stories
 
 1. As a Java application developer, I want to use a log service API, so that I can choose or switch to use any compliant log service provider, at application deployment time without code change or re-compile.
-2. As a log service/engine/framework provider, I want to implement a Service Provider Interface [(SPI)](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html), so that the log service client application can opt (either in or out) to use my service implementation, without code change.
+2. As a log service/engine/framework provider, I want to implement a Service Provider Interface [(SPI)](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html), so that the log service client application can opt (either in or out) to use my log service implementation, without code change.
 
 ## Prerequisite
 
