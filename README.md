@@ -22,8 +22,8 @@ Java 8 or better, although individual logging service providers may have higher 
 If you are familiar with other logging APIs such as SLF4J/LOGBACK/LOG4J, you will find most counterpart logging methods in ELF4J, with some noticeable differences:
 
 * When logging a Throwable/Exception, the Throwable always goes as the very first argument in the logging method's multi-argument signature (as opposed to the last as in the other APIs).
-* As the logging service access API, the static factory method `Logger.instance()` does not take any argument. If needed, it is up to the logging service provider to detect the declaring/caller class and decide the default name and severity level of the logger instance to be returned.
-* The severity level of a `Logger` instance is immutable. Although the `Logger` instance can log at any level via the convenience `Logger.<level>()` methods, the `Logger.log()` methods always log at the level of the current `Logger` instance. The instance factory methods `Logger.at<Level>()` return a different `Logger` instance if the specified level is different from the current instance's.
+* As the logging service access API, the static factory method `Logger.instance()` does not take any argument. When needed, it is up to the log service provider to detect the access API caller class and decide the default Name and severity Level of the logger instance to be returned. As with a value-based Object, although the Logger instance's name may be important in the log service provider implementation, the logger name is insignificant to the service caller/client and not part of the {@code Logger} interface.
+* The severity Level of a `Logger` instance is immutable. Although the `Logger` instance can log at any level via the convenience `Logger.<level>()` methods, the `Logger.log()` methods are always logging at the level of the current `Logger` instance. The instance factory methods `Logger.at<Level>()` must return a different {@code Logger} instance if the requested \<Level\> is different from the current instance's.
 
 ```java
 /**
