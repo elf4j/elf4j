@@ -73,10 +73,11 @@ public interface Logger {
     boolean isEnabled();
 
     /**
-     * Checks if logging is enabled at the specified Level, regardless the level of this logger instance
+     * Checks if logging is enabled for the Logger instance obtained by calling one of the instance factory methods of
+     * this Logger instance at the specified level
      *
      * @param level the logging level to check
-     * @return true if logging is enabled for the specified level, false otherwise
+     * @return true if logging is enabled at the specified level, false otherwise
      */
     default boolean isEnabled(Level level) {
         return atLevel(level).isEnabled();
