@@ -115,7 +115,9 @@ public interface Logger {
     void log(String message, Object... arguments);
 
     /**
-     * Logs a formatted message with arguments provided by Suppliers.
+     * Logs a formatted message with arguments provided by Suppliers (lambda expressions). Convenience overloading
+     * method of {@link Logger#log(String, Object...)}, so that no need to downcast to {@link Supplier} when all
+     * arguments are lazy lambda expressions.
      *
      * @param message the message to be logged
      * @param arguments Suppliers of the arguments to replace placeholders in the message; no downcast needed as all
