@@ -41,7 +41,7 @@ public interface Logger {
    *     to be returned.
    */
   static Logger instance() {
-    return LogServiceProviderLocator.INSTANCE.logServiceProvider().logger();
+    return LogServiceProviderLocator.INSTANCE.loggerFactory().logger();
   }
 
   /**
@@ -346,7 +346,7 @@ Note that elf4j is a logging service facade and specification, rather than the i
     With the default no-op logging provider, this system property can also be used to turn OFF all logging services discovered by the elf4j facade:
 
     ```bash
-    java -Delf4j.service.provider.fqcn="elf4j.util.NoopLogServiceProvider" MyApplication
+    java -Delf4j.service.provider.fqcn="elf4j.util.NoopLoggerFactory" MyApplication
     ```
 
   - It is considered a setup error to have multiple providers in the classpath without a selection. The elf4j facade falls back to no-op on any setup errors.
@@ -356,7 +356,7 @@ Note that elf4j is a logging service facade and specification, rather than the i
 To enable an independent logging framework/engine via the elf4j spec, the _service provider_ should follow instructions of Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html). Namely, the implementation should include
 
 * the _provider class_ implementing the `LogServiceProvider` [SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html), the _service class_ implementing the `Logger` API, and their associated classes as needed
-* the _provider-configuration_ file, named `elf4j.spi.LogServiceProvider` in the resource directory `META-INF/services`, whose content is the Fully Qualified Name of the SPI _provider class_ implementing the `LogServiceProvider` SPI interface
+* the _provider-configuration_ file, named `elf4j.spi.LoggerFactory` in the resource directory `META-INF/services`, whose content is the Fully Qualified Name of the SPI _provider class_ implementing the `LogServiceProvider` SPI interface
 
 ### Available logging _service providers_ of elf4j
 * A native elf4j service provider: [elf4j-provider](https://github.com/elf4j/elf4j-provider)

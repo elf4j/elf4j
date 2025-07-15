@@ -2,13 +2,12 @@ package elf4j;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.lang.invoke.MethodHandles;
 import java.util.function.Supplier;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class SampleUsageTest {
-    static final Logger logger = Logger.instance();
+    static Logger logger = Logger.instance();
 
     @Nested
     class plainText {
@@ -65,14 +64,17 @@ class SampleUsageTest {
                     Object.class.getTypeName());
             info.atWarn()
                     .log(
-                            "When eager {} and lazy {} types of arguments are mixed, Supplier downcast is required per lambda syntax because arguments are declared as generic Object rather than functional interface",
+                            "Downcast to {} is required on each lambda argument per {} when the lazy argument is mixed with eager {} arguments, because in the mixture case, the log invocation is dispatched to the method with all generic {} type arguments rather than the one with all {} type",
+                            (Supplier<?>) Supplier.class::getTypeName,
+                            (Supplier<?>) () -> "the Java lambda expression syntax spec",
                             Object.class.getTypeName(),
-                            (Supplier<String>) Supplier.class::getTypeName);
-            info.atWarn()
-                    .log(
-                            "No downcast is required when all arguments are of lazy Supplier type e.g. via lambda expressions. In this log, the 1st lambda expression evaluates to {}, the 2nd to {}",
-                            Supplier.class::getTypeName,
-                            MethodHandles.lookup().lookupClass()::getTypeName);
+                            Object.class.getTypeName(),
+                            (Supplier<?>) Supplier.class::getTypeName);
+            info.log(
+                    "No downcast is required when all arguments are lazy lambda expressions, because in that case, the log invocation is dispatched to the method with all {} type arguments. E.g. in this log, the 1st lambda argument evaluates (lazily) to '{}', the 2nd to '{}'",
+                    Supplier.class::getTypeName,
+                    () -> "I'm the first :)",
+                    () -> "I'm the second :(");
         }
     }
 

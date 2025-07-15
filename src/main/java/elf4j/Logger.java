@@ -29,29 +29,49 @@ import java.util.function.Supplier;
 import org.jspecify.annotations.NonNull;
 
 /**
- * The Logger serves as both the "service interface" and "access API" as in the <a
- * href="https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html">Java Service Provider Framework</a>.
+ * Per the "Effective Java" book, <q>There are three essential components in a service provider framework: a service
+ * interface, which represents an implementation; a provider registration API, which providers use to register
+ * implementations; and a service access API, which clients use to obtain instances of the service.... An optional
+ * fourth component of a service provider framework is a service provider interface, which describes a factory object
+ * that produce instances of the service interface.</q>
+ *
+ * <p>In case of this ELF4J Service Provider Framework,
+ *
+ * <ul>
+ *   <li>The {@link Logger} serves as both the "service interface" and "service access API".
+ *   <li>The Java standard "provider registration API" is used. See the Javadoc of the <a
+ *       href="https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html">{@link java.util.ServiceLoader}</a>.
+ *   <li>The {@link elf4j.spi.LoggerFactory} is the "service provider interface" (SPI).
+ * </ul>
+ *
+ * <p>
+ *
+ * <p>
  *
  * <p>All {@link Logger} instances from this API should be thread-safe.
  */
 public interface Logger {
     /**
-     * Static factory method as the "service access API" that provides a default Logger instance
+     * Static factory method as the "service access API" that provides a default Logger instance.
      *
      * @return Logger instance with default name and Level
+     * @apiNote Calling this method can performance-wise expensive. It is highly recommended using it only when
+     *     assigning the value to a static or instance class field.
      * @implNote It is up to the logging service provider to determine the default name and level of the logger instance
      *     to be returned.
      */
     static Logger instance() {
-        return LogServiceProviderLocator.INSTANCE.logServiceProvider().logger();
+        return LoggerFactoryLocator.INSTANCE.getLoggerFactory().getLogger();
     }
 
     /**
      * Instance factory method that provides a Logger instance for the specified log level with the same name as this
      * Logger instance
      *
-     * @param level the logging level of the requested Logger instance
+     * @param level the level of the requested Logger instance
      * @return Logger instance of the specified level
+     * @apiNote Unlike the static factory method {@link Logger#instance()}, this and all other instance factory methods
+     *     should be performance-wise inexpensive to call; they can be used anywhere convenient for the caller.
      * @implNote A Logger instance's severity level is immutable and cannot be changed after creation. Therefore, this
      *     method can return the current instance itself only if the specified level is the same as the current
      *     instance's; otherwise, it will have to be a different Logger instance to be returned.
@@ -66,7 +86,7 @@ public interface Logger {
     Level getLevel();
 
     /**
-     * Checks if logging is enabled for this Logger instance.
+     * Checks if logging is enabled for this Logger instance at its own severity level.
      *
      * @return true if logging is enabled, false otherwise
      */
@@ -76,6 +96,8 @@ public interface Logger {
      * Checks if logging is enabled for the Logger instance obtained by calling one of the instance factory methods of
      * this Logger instance at the specified level
      *
+     * @apiNote This returns the same value as {@link Logger#isEnabled()} only when the specified level is the same as
+     *     that of the current Logger instance.
      * @param level the logging level to check
      * @return true if logging is enabled at the specified level, false otherwise
      */
@@ -108,20 +130,21 @@ public interface Logger {
      * Logs a formatted message with arguments.
      *
      * @param message the message to be logged, which may contain argument placeholders denoted as `{}` tokens
-     * @param arguments the arguments whose values will replace the placeholders in the message. The arguments can be a
-     *     mixture of both eager {@code Object} and lazy {@code Supplier<?>} types. When both types are present, lambda
-     *     expression arguments need to be downcast to {@code Supplier<?>} per the lambda syntax requirement.
+     * @param arguments The argument values will replace the `{}` placeholders in the message. The arguments can be a
+     *     mixture of both eager {@code Object} and lazy lambda expression {@code Supplier<?>} types. When both types
+     *     are present, lambda arguments need to be downcast to {@code Supplier<?>} per the Java lambda expression
+     *     syntax requirement.
      */
     void log(String message, Object... arguments);
 
     /**
-     * Logs a formatted message with arguments provided by Suppliers (lambda expressions). Convenience overloading
-     * method of {@link Logger#log(String, Object...)}, so that no need to downcast to {@link Supplier} when all
-     * arguments are lazy lambda expressions.
+     * Logs a formatted message with arguments provided by lambda expressions (of the {@link Supplier} type).
      *
      * @param message the message to be logged
      * @param arguments Suppliers of the arguments to replace placeholders in the message; no downcast needed as all
      *     arguments are of {@code Supplier<?>} type.
+     * @apiNote Convenience overloading method of {@link Logger#log(String, Object...)}, so that no downcast to
+     *     {@link Supplier} is required when all arguments are lazy lambda expressions.
      */
     default void log(String message, Supplier<?>... arguments) {
         if (!isEnabled()) {

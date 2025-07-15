@@ -23,4 +23,5 @@
 #
 #
 
-elf4j.TestLogServiceProvider
+elf4j.TestLoggerFactory
+#elf4j.util.NoopLoggerFactory
