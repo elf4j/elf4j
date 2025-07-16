@@ -41,7 +41,7 @@ public interface Logger {
    *     to be returned.
    */
   static Logger instance() {
-    return LogServiceProviderLocator.INSTANCE.logServiceProvider().logger();
+    return LoggerFactoryLocator.INSTANCE.getLoggerFactory().getLogger();
   }
 
   /**
@@ -226,7 +226,7 @@ The empty curly braces token `{}` should be the placeholder for message argument
 
 #### Lazy arguments
 
-Lazy arguments are those whose runtime type is `java.util.function.Supplier`. Compared to other types of arguments, lazy ones have to be treated specially in that the `Supplier` function must be applied first before the result is used as the substitution to the argument placeholder. This special handling of lazy arguments is by convention, and not syntactically enforced by the API or SPI. It allows for the API user to mix up lazy and eager arguments within the same logging method call.
+Lazy arguments are those whose runtime type is `java.util.function.Supplier`, often provided via lambda expressions. Unlike other/eager types of arguments, lazy ones have to be treated specially in that the `Supplier` function must be applied first before the result is used as the substitution to the argument placeholder `{}`. This special handling of lazy arguments is by convention, and not syntactically enforced by the API or SPI. It allows for the API user to mix up lazy and eager arguments within the same logging method call.
 
 ## Get it
 
@@ -335,7 +335,7 @@ Note that elf4j is a logging service facade and specification, rather than the i
 
 * **Only one in-effect logging provider**
 
-  - The elf4j API user can select or change into using any [elf4j service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-of-elf4j) at deploy time, without application code change or re-compile.
+  - The elf4j API user can select or change into using any [elf4j service provider](https://github.com/elf4j/elf4j#available-logging-service-providers-of-elf4j) without client application code change.
   - The recommended setup is to ensure that only one desired logging provider with its associated JAR(s) be present in the classpath; or, no provider JAR when no-op is desired. In this case, nothing further is needed for elf4j to work.
   - If multiple eligible providers are present in classpath, somehow, then the system property `elf4j.service.provider.fqcn` has to be used to select the desired provider. No-op applies if the specified provider is absent.
 
@@ -346,17 +346,17 @@ Note that elf4j is a logging service facade and specification, rather than the i
     With the default no-op logging provider, this system property can also be used to turn OFF all logging services discovered by the elf4j facade:
 
     ```bash
-    java -Delf4j.service.provider.fqcn="elf4j.util.NoopLogServiceProvider" MyApplication
+    java -Delf4j.service.provider.fqcn="elf4j.util.NoopLoggerFactory" MyApplication
     ```
 
-  - It is considered a setup error to have multiple providers in the classpath without a selection. The elf4j facade falls back to no-op on any setup errors.
+  - It is considered a setup error to have multiple logger factory SPI implementations in the classpath without a selection. The elf4j facade falls back to no-op on any setup errors.
 
 ### Use it as the _service provider interface_ (SPI) to provide concrete log service
 
 To enable an independent logging framework/engine via the elf4j spec, the _service provider_ should follow instructions of Java [Service Provider Framework](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html). Namely, the implementation should include
 
-* the _provider class_ implementing the `LogServiceProvider` [SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html), the _service class_ implementing the `Logger` API, and their associated classes as needed
-* the _provider-configuration_ file, named `elf4j.spi.LogServiceProvider` in the resource directory `META-INF/services`, whose content is the Fully Qualified Name of the SPI _provider class_ implementing the `LogServiceProvider` SPI interface
+* the _provider class_ implementing the `elf4j.spi.LoggerFactory` [SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html), including the _service class_ implementing the `Logger` API, and their associated classes as needed
+* the _provider-configuration_ file, named `elf4j.spi.LoggerFactory` in the resource directory `META-INF/services`, whose content is the Fully Qualified Name of the implementing class for the `elf4j.spi.LoggerFactory` SPI interface
 
 ### Available logging _service providers_ of elf4j
 * A native elf4j service provider: [elf4j-provider](https://github.com/elf4j/elf4j-provider)

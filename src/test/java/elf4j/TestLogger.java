@@ -4,7 +4,10 @@ import java.io.PrintStream;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
+import org.jspecify.annotations.Nullable;
 
 /** Util logger for internal usage of the elf4j API. Not meant for any external client applications. */
 public enum TestLogger implements Logger {
@@ -23,9 +26,11 @@ public enum TestLogger implements Logger {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+    public static final Object[] EMPTY_OBJECT_ARRAY = {};
     private final PrintStream printStream;
     private final Level level;
     private final Level thresholdOutputLevel;
+    private final Lock printStreamLock = new ReentrantLock(true);
 
     /**
      * Constructor for the TestLogger enum.
@@ -51,8 +56,8 @@ public enum TestLogger implements Logger {
      * @param o the object or Supplier to resolve
      * @return the resolved object
      */
-    private static Object supply(Object o) {
-        return o instanceof Supplier<?> ? ((Supplier<?>) o).get() : o;
+    private static String supply(@Nullable Object o) {
+        return Objects.toString(o instanceof Supplier<?> ? ((Supplier<?>) o).get() : o);
     }
 
     /**
@@ -113,7 +118,7 @@ public enum TestLogger implements Logger {
     @Override
     public void log(Object message) {
         if (isEnabled()) {
-            printStream.println(resolve(message));
+            printStream.println(resolve(supply(message)));
         }
     }
 
@@ -137,9 +142,7 @@ public enum TestLogger implements Logger {
      */
     @Override
     public void log(Throwable throwable) {
-        if (isEnabled()) {
-            this.log(throwable, (Object) null);
-        }
+        this.log(throwable, Objects.toString(throwable));
     }
 
     /**
@@ -149,10 +152,12 @@ public enum TestLogger implements Logger {
      * @param message the accompanying message
      */
     @Override
-    public void log(Throwable throwable, Object message) {
-        if (isEnabled()) {
-            this.log(throwable, (String) supply(message), (Object) null);
-        }
+    public void log(Throwable throwable, @Nullable Object message) {
+        log(throwable, supply(message), EMPTY_OBJECT_ARRAY);
+    }
+
+    private String resolveThrowableMessage(@Nullable String message, Object... arguments) {
+        return resolve(message, arguments) + System.lineSeparator() + '\t';
     }
 
     /**
@@ -165,9 +170,12 @@ public enum TestLogger implements Logger {
     @Override
     public void log(Throwable throwable, String message, Object... arguments) {
         if (isEnabled()) {
-            synchronized (printStream) {
-                printStream.println(resolve(message, arguments));
+            printStreamLock.lock();
+            try {
+                printStream.print(resolveThrowableMessage(message, arguments));
                 throwable.printStackTrace(printStream);
+            } finally {
+                printStreamLock.unlock();
             }
         }
     }
@@ -179,8 +187,9 @@ public enum TestLogger implements Logger {
      */
     private String prefix() {
         Thread thread = Thread.currentThread();
-        return DATE_TIME_FORMATTER.format(OffsetDateTime.now()) + " " + this.level + " [" + thread.getName() + ","
-                + thread.getId() + "] elf4j - ";
+        return String.format(
+                "%s %s [%s,%d] %s - ",
+                DATE_TIME_FORMATTER.format(OffsetDateTime.now()), level, thread.getName(), thread.getId(), name());
     }
 
     /**
@@ -190,9 +199,9 @@ public enum TestLogger implements Logger {
      * @param arguments the arguments to replace placeholders
      * @return the resolved message
      */
-    private CharSequence resolve(Object message, Object... arguments) {
-        String suppliedMessage = prefix() + Objects.toString(supply(message), "");
-        if (arguments == null || arguments.length == 0) {
+    private CharSequence resolve(@Nullable String message, Object... arguments) {
+        String suppliedMessage = prefix() + message;
+        if (arguments.length == 0) {
             return suppliedMessage;
         }
         int messageLength = suppliedMessage.length();

@@ -1,0 +1,41 @@
+package elf4j;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import elf4j.util.NoopLoggerFactory;
+import org.jspecify.annotations.Nullable;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class LoggerFactoryLoaderTest {
+    @Nullable String clearedLoggerFactorySpiFqcn;
+
+    @BeforeEach
+    void beforeEach() {
+        clearedLoggerFactorySpiFqcn = System.clearProperty(LoggerFactoryLocator.ELF4J_SERVICE_PROVIDER_FQCN);
+    }
+
+    @Test
+    void givenUnknownSpiFqcnSpecifiedAndTestProviderLoaded_thenNop() {
+        System.setProperty(LoggerFactoryLocator.ELF4J_SERVICE_PROVIDER_FQCN, "testUnknownSpiImplClassName");
+
+        assertInstanceOf(NoopLoggerFactory.class, LoggerFactoryLocator.INSTANCE.getLoggerFactory());
+
+        System.clearProperty(LoggerFactoryLocator.ELF4J_SERVICE_PROVIDER_FQCN);
+    }
+
+    @Test
+    void givenNoSpiFqcnSpecifiedAndOnlyTestProviderLoaded_thenTestProvider() {
+        assert clearedLoggerFactorySpiFqcn == null;
+
+        assertInstanceOf(TestLoggerFactory.class, LoggerFactoryLocator.INSTANCE.getLoggerFactory());
+    }
+
+    @AfterEach
+    void afterEach() {
+        if (clearedLoggerFactorySpiFqcn != null) {
+            System.setProperty(LoggerFactoryLocator.ELF4J_SERVICE_PROVIDER_FQCN, clearedLoggerFactorySpiFqcn);
+        }
+    }
+}

@@ -27,18 +27,20 @@ package elf4j.spi;
 import elf4j.Logger;
 
 /**
- * Service Provider Interface (SPI) for the ELF4J logging provider.
+ * The "service provider interface" (SPI) of the ELF4J Service Provider Framework, describing a factory object that
+ * produces instances of the ELF4J "service interface"
  *
- * <p>This interface defines the contract for a logging service provider implementation. A provider implementation class
- * of this SPI must be loadable by {@link java.util.ServiceLoader}.
+ * <p>This SPI defines the contract for a logging service provider implementation. A provider implementation class of
+ * this SPI must be loadable by {@link java.util.ServiceLoader}, which is the standard "provider registration API"
+ * included in Java.
  *
  * @see <a href="https://docs.oracle.com/javase/7/docs/api/java/util/ServiceLoader.html">Javadoc of ServiceLoader</a>
  */
-public interface LogServiceProvider {
+public interface LoggerFactory {
     /**
      * Provides a concrete instance of the {@link Logger}.
      *
-     * @return a {@link Logger} instance for logging operations
+     * @return a {@link Logger} instance for log service operations
      */
-    Logger logger();
+    Logger getLogger();
 }
