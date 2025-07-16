@@ -25,7 +25,7 @@ public enum TestLogger implements Logger {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-    private final Lock lock = new java.util.concurrent.locks.ReentrantLock();
+    private static final Lock lock = new java.util.concurrent.locks.ReentrantLock();
     private final PrintStream printStream;
     private final Level level;
     private final Level thresholdOutputLevel;
@@ -197,7 +197,7 @@ public enum TestLogger implements Logger {
                 this.level,
                 thread.getName(),
                 thread.getId(),
-                TestLogger.class.getName());
+                this.name());
     }
 
     /**
