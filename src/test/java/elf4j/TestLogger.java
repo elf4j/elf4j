@@ -197,7 +197,7 @@ public enum TestLogger implements Logger {
                 this.level,
                 thread.getName(),
                 thread.getId(),
-                TestLogger.class.getName());
+                this.name());
     }
 
     /**
