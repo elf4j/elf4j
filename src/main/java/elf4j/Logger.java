@@ -52,21 +52,21 @@ import org.jspecify.annotations.NonNull;
  */
 public interface Logger {
     /**
-     * Static factory method as the "service access API" that provides a default Logger instance.
+     * Static factory method serving as the "service access API", returning a default Logger instance to the caller
+     * class.
      *
-     * @return Logger instance with default name and Level
-     * @apiNote Calling this method can performance-wise expensive. It is highly recommended using it only when
-     *     assigning the value to a static or instance class field.
-     * @implNote It is up to the logging service provider to determine the default name and level of the logger instance
-     *     to be returned.
+     * @return Logger instance with default severity Level
+     * @apiNote Calling this method can be performance-wise expensive. It is highly recommended only using it when
+     *     assigning the returned value to a static or instance class variable, as opposed to a local one.
+     * @implNote It is up to the logging service provider to determine the default level (and name if needed) of the
+     *     logger instance to be returned.
      */
     static Logger instance() {
         return LoggerFactoryLocator.INSTANCE.getLoggerFactory().getLogger();
     }
 
     /**
-     * Instance factory method that provides a Logger instance for the specified log level with the same name as this
-     * Logger instance
+     * Instance factory method that returns a Logger instance for the specified log level as this Logger instance
      *
      * @param level the level of the requested Logger instance
      * @return Logger instance of the specified level
@@ -99,7 +99,7 @@ public interface Logger {
      * @apiNote This returns the same value as {@link Logger#isEnabled()} only when the specified level is the same as
      *     that of the current Logger instance.
      * @param level the logging level to check
-     * @return true if logging is enabled at the specified level, false otherwise
+     * @return true if logging is enabled for a target logger instance at the specified level, false otherwise
      */
     default boolean isEnabled(Level level) {
         return atLevel(level).isEnabled();
@@ -108,14 +108,15 @@ public interface Logger {
     /**
      * Logs a message.
      *
-     * @param message the message to be logged. If the actual type is {@link java.util.function.Supplier}, the result of
-     *     {@link Supplier#get()} is used to construct the final log message.
+     * @param message the message to be logged. If provided as a lazy lambda expression (of type
+     *     {@link java.util.function.Supplier}), the result of {@link Supplier#get()} is used to construct the final log
+     *     message.
      */
     void log(Object message);
 
     /**
-     * Logs a message provided by a Supplier. Convenience overloading method of {@link #log(Object)}, so no need of
-     * downcast to {@link Supplier} when the message argument is provided as a lambda expression.
+     * Logs a message provided by a lazy lambda expression. Convenience overloading method of {@link #log(Object)}, so
+     * no downcast to {@link Supplier} is required for the lambda Supplier.
      *
      * @param message Supplier of the message to be logged
      */
@@ -138,13 +139,13 @@ public interface Logger {
     void log(String message, Object... arguments);
 
     /**
-     * Logs a formatted message with arguments provided by lambda expressions (of the {@link Supplier} type).
+     * Logs a formatted message with all arguments provided by lambda expressions (of the {@link Supplier} type).
      *
      * @param message the message to be logged
-     * @param arguments Suppliers of the arguments to replace placeholders in the message; no downcast needed as all
+     * @param arguments lazy Suppliers arguments to replace placeholders in the message; no downcast needed as all
      *     arguments are of {@code Supplier<?>} type.
-     * @apiNote Convenience overloading method of {@link Logger#log(String, Object...)}, so that no downcast to
-     *     {@link Supplier} is required when all arguments are lazy lambda expressions.
+     * @apiNote Convenience overloading method of {@link #log(String, Object...)}, so that no downcast is required
+     *     because all arguments are lazy lambda expressions of {@link Supplier} type.
      */
     default void log(String message, Supplier<?>... arguments) {
         if (!isEnabled()) {
@@ -168,13 +169,14 @@ public interface Logger {
      * Logs a Throwable with an accompanying message.
      *
      * @param throwable the Throwable to be logged
-     * @param message the accompanying message to be logged. If the actual type is {@link java.util.function.Supplier},
-     *     the result of {@link Supplier#get()} is used to compute the final log message.
+     * @param message the accompanying message to be logged. If the actual type is {@link java.util.function.Supplier}
+     *     as when provided via a lazy lambda expression, the result of {@link Supplier#get()} is used to compute the
+     *     final log message.
      */
     void log(Throwable throwable, Object message);
 
     /**
-     * Logs a Throwable with an accompanying message provided by a Supplier.
+     * Logs a Throwable with an accompanying message provided by a lazy Supplier.
      *
      * @param throwable the Throwable to be logged
      * @param message Supplier of the accompanying message to be logged
@@ -196,7 +198,7 @@ public interface Logger {
     void log(Throwable throwable, String message, Object... arguments);
 
     /**
-     * Logs a Throwable with a formatted message and arguments provided by Suppliers.
+     * Logs a Throwable with a formatted message and all arguments provided by lazy Suppliers.
      *
      * @param throwable the Throwable to be logged
      * @param message the message to be logged
@@ -210,7 +212,7 @@ public interface Logger {
     }
 
     /**
-     * Provides a Logger instance with TRACE severity level.
+     * Instance factory method that provides a Logger instance with TRACE severity level.
      *
      * @return Logger instance with {@link Level#TRACE} severity level
      */
@@ -219,7 +221,7 @@ public interface Logger {
     }
 
     /**
-     * Provides a Logger instance with DEBUG severity level.
+     * Instance factory method that provides a Logger instance with DEBUG severity level.
      *
      * @return Logger instance with {@link Level#DEBUG} severity level
      */
@@ -228,7 +230,7 @@ public interface Logger {
     }
 
     /**
-     * Provides a Logger instance with INFO severity level.
+     * Instance factory method that provides a Logger instance with INFO severity level.
      *
      * @return Logger instance with {@link Level#INFO} severity level
      */
@@ -237,7 +239,7 @@ public interface Logger {
     }
 
     /**
-     * Provides a Logger instance with WARN severity level.
+     * Instance factory method that provides a Logger instance with WARN severity level.
      *
      * @return Logger instance with {@link Level#WARN} severity level
      */
@@ -246,7 +248,7 @@ public interface Logger {
     }
 
     /**
-     * Provides a Logger instance with ERROR severity level.
+     * Instance factory method that provides a Logger instance with ERROR severity level.
      *
      * @return Logger instance with {@link Level#ERROR} severity level
      */
@@ -257,7 +259,7 @@ public interface Logger {
     // The following methods are convenience shorthands added to resemble other logging APIs.
 
     /**
-     * Checks if TRACE level logging is enabled at the TRACE level.
+     * Checks if logging is enabled at the TRACE level.
      *
      * @return true if TRACE level logging is enabled, false otherwise
      */
@@ -266,7 +268,7 @@ public interface Logger {
     }
 
     /**
-     * Checks if DEBUG level logging is enabled at the DEBUG level.
+     * Checks if logging is enabled at the DEBUG level.
      *
      * @return true if DEBUG level logging is enabled, false otherwise
      */
@@ -275,7 +277,7 @@ public interface Logger {
     }
 
     /**
-     * Checks if INFO level logging is enabled at the INFO level.
+     * Checks if logging is enabled at the INFO level.
      *
      * @return true if INFO level logging is enabled, false otherwise
      */
@@ -284,7 +286,7 @@ public interface Logger {
     }
 
     /**
-     * Checks if WARN level logging is enabled at the WARN level.
+     * Checks if logging is enabled at the WARN level.
      *
      * @return true if WARN level logging is enabled, false otherwise
      */
@@ -293,7 +295,7 @@ public interface Logger {
     }
 
     /**
-     * Checks if ERROR level logging is enabled at the ERROR level.
+     * Checks if logging is enabled at the ERROR level.
      *
      * @return true if ERROR level logging is enabled, false otherwise
      */
@@ -302,7 +304,8 @@ public interface Logger {
     }
 
     /**
-     * Creates a logger instance at TRACE level and uses the created instance to log.
+     * Convenience shorthand method that first gets a logger instance at TRACE level, and then uses the instance to log
+     * the specified message.
      *
      * @param message the message to be logged
      */
@@ -311,7 +314,8 @@ public interface Logger {
     }
 
     /**
-     * Logs a formatted message at TRACE level with arguments.
+     * Convenience shorthand method that first gets a logger instance at TRACE level, and then uses the instance to log
+     * the formatted message with the specified arguments.
      *
      * @param message the message to be logged
      * @param arguments the arguments whose values will replace the placeholders in the message
@@ -321,7 +325,7 @@ public interface Logger {
     }
 
     /**
-     * Logs a message provided by a Supplier at TRACE level.
+     * Logs a message provided by a lazy Supplier at TRACE level.
      *
      * @param message Supplier of the message to be logged
      */
@@ -337,7 +341,7 @@ public interface Logger {
     }
 
     /**
-     * Logs a formatted message at TRACE level with arguments provided by Suppliers.
+     * Logs a formatted message at TRACE level with arguments provided by lazy Suppliers.
      *
      * @param message the message to be logged
      * @param arguments Suppliers of the arguments to replace placeholders in the message

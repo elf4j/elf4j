@@ -84,7 +84,7 @@ enum LoggerFactoryLocator {
                             "No elf4j logger factory class specified to select from multiple loaded implementations %s - Either select one via system property '%s', or set up to load only one implementation",
                             loadedLoggerFactories, ELF4J_SERVICE_PROVIDER_FQCN));
                     throw new IllegalStateException(
-                            "Missing selection for multiple loaded elf4j logger factory implementations");
+                            "Missing target selection on multiple loaded elf4j logger factory implementations");
                 }
             }
         }
@@ -94,7 +94,7 @@ enum LoggerFactoryLocator {
             LOGGER.config(() -> String.format("Loaded elf4j logger factory: %s", loadedClassName));
             if (loadedClassName.equals(targetLoggerFactoryClassName)) {
                 LOGGER.config(() -> String.format(
-                        "Using specified elf4j logger factory class: '%s' from loaded %s",
+                        "Using specified elf4j logger factory implementation '%s' from loaded %s",
                         loadedClassName, loadedLoggerFactories));
                 return loggerFactory;
             }
