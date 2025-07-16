@@ -167,8 +167,10 @@ public enum TestLogger implements Logger {
     @Override
     public void log(Throwable throwable, String message, Object... arguments) {
         if (isEnabled()) {
-            printStream.print(resolveThrowableMessage(message, arguments));
-            throwable.printStackTrace(printStream);
+            synchronized (printStream) {
+                printStream.print(resolveThrowableMessage(message, arguments));
+                throwable.printStackTrace(printStream);
+            }
         }
     }
 
