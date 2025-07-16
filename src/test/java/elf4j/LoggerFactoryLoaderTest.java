@@ -20,7 +20,7 @@ class LoggerFactoryLoaderTest {
     }
 
     @Test
-    void givenUnknownSpiFqcnSpecifiedAndTestProvider_thenNop() {
+    void givenUnknownSpiFqcnSpecifiedAndTestProviderLoaded_thenNop() {
         System.setProperty(LoggerFactoryLocator.ELF4J_SERVICE_PROVIDER_FQCN, "testUnknownSpiImplClassName");
 
         assertInstanceOf(NoopLoggerFactory.class, LoggerFactoryLocator.INSTANCE.getLoggerFactory());
@@ -29,7 +29,7 @@ class LoggerFactoryLoaderTest {
     }
 
     @Test
-    void givenNoSpiFqcnSpecifiedAndTestProvider_thenTestProvider() {
+    void givenNoSpiFqcnSpecifiedAndOnlyTestProviderLoaded_thenTestProvider() {
         assert clearedLoggerFactorySpiFqcn == null;
 
         assertInstanceOf(TestLoggerFactory.class, LoggerFactoryLocator.INSTANCE.getLoggerFactory());
