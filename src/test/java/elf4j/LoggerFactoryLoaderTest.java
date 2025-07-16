@@ -12,7 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class LoggerFactoryLoaderTest {
-    @Nullable String clearedLoggerFactorySpiFqcn = System.clearProperty(LoggerFactoryLocator.ELF4J_SERVICE_PROVIDER_FQCN);
+    @Nullable String clearedLoggerFactorySpiFqcn;
 
     @BeforeEach
     void beforeEach() {
