@@ -4,7 +4,6 @@ import java.io.PrintStream;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
-import java.util.concurrent.locks.Lock;
 import java.util.function.Supplier;
 import org.jspecify.annotations.Nullable;
 
@@ -25,7 +24,7 @@ public enum TestLogger implements Logger {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-    private static final Lock lock = new java.util.concurrent.locks.ReentrantLock();
+    public static final Object[] EMPTY_OBJECT_ARRAY = {};
     private final PrintStream printStream;
     private final Level level;
     private final Level thresholdOutputLevel;
@@ -140,9 +139,7 @@ public enum TestLogger implements Logger {
      */
     @Override
     public void log(Throwable throwable) {
-        if (isEnabled()) {
-            this.log(throwable, Objects.toString(throwable));
-        }
+        this.log(throwable, Objects.toString(throwable));
     }
 
     /**
@@ -153,15 +150,7 @@ public enum TestLogger implements Logger {
      */
     @Override
     public void log(Throwable throwable, @Nullable Object message) {
-        if (isEnabled()) {
-            lock.lock();
-            try {
-                printStream.print(resolveThrowableMessage(supply(message)));
-                throwable.printStackTrace(printStream);
-            } finally {
-                lock.unlock();
-            }
-        }
+        log(throwable, supply(message), EMPTY_OBJECT_ARRAY);
     }
 
     private String resolveThrowableMessage(@Nullable String message, Object... arguments) {
@@ -178,13 +167,8 @@ public enum TestLogger implements Logger {
     @Override
     public void log(Throwable throwable, String message, Object... arguments) {
         if (isEnabled()) {
-            lock.lock();
-            try {
-                printStream.print(resolveThrowableMessage(message, arguments));
-                throwable.printStackTrace(printStream);
-            } finally {
-                lock.unlock();
-            }
+            printStream.print(resolveThrowableMessage(message, arguments));
+            throwable.printStackTrace(printStream);
         }
     }
 
@@ -197,11 +181,7 @@ public enum TestLogger implements Logger {
         Thread thread = Thread.currentThread();
         return String.format(
                 "%s %s [%s,%d] %s - ",
-                DATE_TIME_FORMATTER.format(OffsetDateTime.now()),
-                this.level,
-                thread.getName(),
-                thread.getId(),
-                this.name());
+                DATE_TIME_FORMATTER.format(OffsetDateTime.now()), level, thread.getName(), thread.getId(), name());
     }
 
     /**
