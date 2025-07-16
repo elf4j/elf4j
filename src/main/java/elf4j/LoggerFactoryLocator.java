@@ -56,9 +56,8 @@ enum LoggerFactoryLocator {
      * @return the loaded elf4j logger factory implementation for creation of elf4j Logger instances
      */
     LoggerFactory getLoggerFactory() {
-        String specifiedLoggerFactoryClassName = System.getProperty(ELF4J_SERVICE_PROVIDER_FQCN);
-        List<LoggerFactory> loadedLoggerFactories = getLoadedLoggerFactories(loggerFactoryServiceLoader);
-        return locate(specifiedLoggerFactoryClassName, loadedLoggerFactories);
+        return locate(
+                System.getProperty(ELF4J_SERVICE_PROVIDER_FQCN), getLoadedLoggerFactories(loggerFactoryServiceLoader));
     }
 
     private static LoggerFactory locate(
