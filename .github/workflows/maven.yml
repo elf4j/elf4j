@@ -11,9 +11,9 @@ name: Java CI with Maven
 on:
   workflow_dispatch:  # 👈 enables manual triggering
   push:
-    branches: [ "main" ]
+    branches: [ "**" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "**" ]
 
 jobs:
   build:
