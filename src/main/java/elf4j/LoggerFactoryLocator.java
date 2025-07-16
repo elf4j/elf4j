@@ -62,47 +62,45 @@ enum LoggerFactoryLocator {
     }
 
     private static LoggerFactory locate(
-            @Nullable String targetLoggerFactoryClassName, List<LoggerFactory> loadedLoggerFactories) {
-        if (targetLoggerFactoryClassName == null
-                || targetLoggerFactoryClassName.trim().isEmpty()) {
+            @Nullable String specifiedLoggerFactoryClassName, List<LoggerFactory> loadedLoggerFactories) {
+        if (specifiedLoggerFactoryClassName == null
+                || specifiedLoggerFactoryClassName.trim().isEmpty()) {
             LOGGER.config(() -> String.format(
-                    "No target logger factory specified with system property '%s'", ELF4J_SERVICE_PROVIDER_FQCN));
+                    "No elf4j SPI implementation specified using system property '%s'", ELF4J_SERVICE_PROVIDER_FQCN));
             switch (loadedLoggerFactories.size()) {
                 case 0: {
-                    LOGGER.config(() -> "No elf4j provider configured, default to NOP");
+                    LOGGER.config(() -> "Default to NOP: No elf4j provider configured");
                     return new NoopLoggerFactory();
                 }
                 case 1: {
                     LoggerFactory loggerFactory = loadedLoggerFactories.get(0);
                     LOGGER.config(() -> String.format(
-                            "Using the only loaded elf4j logger factory class '%s'",
+                            "Using loaded elf4j SPI implementation '%s'",
                             loggerFactory.getClass().getName()));
                     return loggerFactory;
                 }
                 default: {
                     LOGGER.severe(String.format(
-                            "No elf4j logger factory class specified to select from multiple loaded implementations %s - Either select one via system property '%s', or set up to load only one implementation",
+                            "Failed back to NOP: Nothing specified to select from multiple loaded elf4j SPI implementations %s: Either select one via system property '%s', or set up to load only one SPI implementation",
                             loadedLoggerFactories, ELF4J_SERVICE_PROVIDER_FQCN));
-                    throw new IllegalStateException(
-                            "Missing target selection on multiple loaded elf4j logger factory implementations");
+                    return new NoopLoggerFactory();
                 }
             }
         }
-        targetLoggerFactoryClassName = targetLoggerFactoryClassName.trim();
+        String specifiedLoggerFactoryFqcn = specifiedLoggerFactoryClassName.trim();
+        LOGGER.config(() -> String.format("Specified elf4j SPI implementation '%s'", specifiedLoggerFactoryFqcn));
         for (LoggerFactory loggerFactory : loadedLoggerFactories) {
-            String loadedClassName = loggerFactory.getClass().getName();
-            LOGGER.config(() -> String.format("Loaded elf4j logger factory: %s", loadedClassName));
-            if (loadedClassName.equals(targetLoggerFactoryClassName)) {
+            if (specifiedLoggerFactoryFqcn.equals(loggerFactory.getClass().getName())) {
                 LOGGER.config(() -> String.format(
-                        "Using specified elf4j logger factory implementation '%s' from loaded %s",
-                        loadedClassName, loadedLoggerFactories));
+                        "Using specified elf4j SPI implementation '%s' from loaded collection %s",
+                        loggerFactory, loadedLoggerFactories));
                 return loggerFactory;
             }
         }
         LOGGER.severe(String.format(
-                "Specified elf4j logger factory implementation not found: fqcn='%s', loaded=%s",
-                targetLoggerFactoryClassName, loadedLoggerFactories));
-        throw new IllegalStateException("ELF4J misconfigured");
+                "Failed back to NOP: Specified elf4j SPI implementation not found: specified fqcn='%s', loaded collection=%s",
+                specifiedLoggerFactoryFqcn, loadedLoggerFactories));
+        return new NoopLoggerFactory();
     }
 
     private static List<LoggerFactory> getLoadedLoggerFactories(
