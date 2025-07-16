@@ -54,8 +54,8 @@ public enum TestLogger implements Logger {
      * @param o the object or Supplier to resolve
      * @return the resolved object
      */
-    private static Object supply(@Nullable Object o) {
-        return o instanceof Supplier<?> ? ((Supplier<?>) o).get() : Objects.toString(o);
+    private static String supply(@Nullable Object o) {
+        return Objects.toString(o instanceof Supplier<?> ? ((Supplier<?>) o).get() : o);
     }
 
     /**
@@ -116,7 +116,7 @@ public enum TestLogger implements Logger {
     @Override
     public void log(Object message) {
         if (isEnabled()) {
-            printStream.println(supply(message));
+            printStream.println(resolve(supply(message)));
         }
     }
 
@@ -141,7 +141,7 @@ public enum TestLogger implements Logger {
     @Override
     public void log(Throwable throwable) {
         if (isEnabled()) {
-            this.log(throwable, "");
+            this.log(throwable, Objects.toString(throwable));
         }
     }
 
@@ -156,12 +156,16 @@ public enum TestLogger implements Logger {
         if (isEnabled()) {
             lock.lock();
             try {
-                printStream.println(supply(message));
+                printStream.print(resolveThrowableMessage(supply(message)));
                 throwable.printStackTrace(printStream);
             } finally {
                 lock.unlock();
             }
         }
+    }
+
+    private String resolveThrowableMessage(@Nullable String message, Object... arguments) {
+        return resolve(message, arguments) + System.lineSeparator() + '\t';
     }
 
     /**
@@ -176,7 +180,7 @@ public enum TestLogger implements Logger {
         if (isEnabled()) {
             lock.lock();
             try {
-                printStream.println(resolve(message, arguments));
+                printStream.print(resolveThrowableMessage(message, arguments));
                 throwable.printStackTrace(printStream);
             } finally {
                 lock.unlock();
@@ -207,7 +211,7 @@ public enum TestLogger implements Logger {
      * @param arguments the arguments to replace placeholders
      * @return the resolved message
      */
-    private CharSequence resolve(String message, Object... arguments) {
+    private CharSequence resolve(@Nullable String message, Object... arguments) {
         String suppliedMessage = prefix() + message;
         if (arguments.length == 0) {
             return suppliedMessage;
