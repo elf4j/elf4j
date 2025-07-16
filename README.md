@@ -226,7 +226,7 @@ The empty curly braces token `{}` should be the placeholder for message argument
 
 #### Lazy arguments
 
-Lazy arguments are those whose runtime type is `java.util.function.Supplier`, often provided via lambda expressions. Unlike other/eager types of arguments, lazy ones have to be treated specially in that the `Supplier` function must be applied first before the result is used as the substitution to the argument placeholder. This special handling of lazy arguments is by convention, and not syntactically enforced by the API or SPI. It allows for the API user to mix up lazy and eager arguments within the same logging method call.
+Lazy arguments are those whose runtime type is `java.util.function.Supplier`, often provided via lambda expressions. Unlike other/eager types of arguments, lazy ones have to be treated specially in that the `Supplier` function must be applied first before the result is used as the substitution to the argument placeholder `{}`. This special handling of lazy arguments is by convention, and not syntactically enforced by the API or SPI. It allows for the API user to mix up lazy and eager arguments within the same logging method call.
 
 ## Get it
 
