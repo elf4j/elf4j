@@ -4,6 +4,8 @@ import java.io.PrintStream;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 import org.jspecify.annotations.Nullable;
 
@@ -28,6 +30,7 @@ public enum TestLogger implements Logger {
     private final PrintStream printStream;
     private final Level level;
     private final Level thresholdOutputLevel;
+    private final Lock printStreamLock = new ReentrantLock(true);
 
     /**
      * Constructor for the TestLogger enum.
@@ -167,9 +170,12 @@ public enum TestLogger implements Logger {
     @Override
     public void log(Throwable throwable, String message, Object... arguments) {
         if (isEnabled()) {
-            synchronized (printStream) {
+            printStreamLock.lock();
+            try {
                 printStream.print(resolveThrowableMessage(message, arguments));
                 throwable.printStackTrace(printStream);
+            } finally {
+                printStreamLock.unlock();
             }
         }
     }
