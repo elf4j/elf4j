@@ -54,8 +54,8 @@ public enum TestLogger implements Logger {
      * @param o the object or Supplier to resolve
      * @return the resolved object
      */
-    private static @Nullable Object supply(@Nullable Object o) {
-        return o instanceof Supplier<?> ? ((Supplier<?>) o).get() : o;
+    private static Object supply(@Nullable Object o) {
+        return o instanceof Supplier<?> ? ((Supplier<?>) o).get() : Objects.toString(o);
     }
 
     /**
@@ -116,7 +116,7 @@ public enum TestLogger implements Logger {
     @Override
     public void log(Object message) {
         if (isEnabled()) {
-            printStream.println(resolve(Objects.toString(supply(message))));
+            printStream.println(supply(message));
         }
     }
 
@@ -156,7 +156,7 @@ public enum TestLogger implements Logger {
         if (isEnabled()) {
             lock.lock();
             try {
-                printStream.println(resolve(Objects.toString(supply(message))));
+                printStream.println(supply(message));
                 throwable.printStackTrace(printStream);
             } finally {
                 lock.unlock();
