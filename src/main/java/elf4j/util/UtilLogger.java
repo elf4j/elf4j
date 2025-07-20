@@ -77,7 +77,7 @@ public enum UtilLogger implements Logger {
             throwable.printStackTrace(printWriter);
             return stringWriter.toString();
         } catch (IOException e) {
-            throw new AssertionError("Impossible for StringWriter and PrintWriter's close()");
+            throw new AssertionError("IOException should never occur when closing StringWriter or PrintWriter", e);
         }
     }
 
