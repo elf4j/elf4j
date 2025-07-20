@@ -77,7 +77,7 @@ public enum UtilLogger implements Logger {
             throwable.printStackTrace(printWriter);
             return stringWriter.toString();
         } catch (IOException e) {
-            throw new IllegalStateException("Error getting stack trace info from " + throwable, e);
+            throw new AssertionError("Impossible for StringWriter and PrintWriter's close()");
         }
     }
 
@@ -239,5 +239,16 @@ public enum UtilLogger implements Logger {
             }
         }
         return resolved.toString();
+    }
+
+    static class MySupper {
+        protected void method() throws IOException {
+            throw new IOException();
+        }
+    }
+
+    static class MySub extends MySupper {
+        @Override
+        protected void method() {}
     }
 }
