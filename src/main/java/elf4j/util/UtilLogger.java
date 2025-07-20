@@ -64,15 +64,11 @@ public enum UtilLogger implements Logger {
     }
 
     private static @NonNull String getStackTrace(Throwable throwable) {
-        try {
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            PrintStream printStream = new PrintStream(byteArrayOutputStream, false, UTF_8);
-            throwable.printStackTrace(printStream);
-            printStream.flush();
-            return byteArrayOutputStream.toString(UTF_8);
-        } catch (IOException e) {
-            throw new IllegalStateException("Error getting stack trace text from " + throwable, e);
-        }
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        throwable.printStackTrace(printWriter);
+        printWriter.flush();
+        return stringWriter.toString();
     }
 
     /**
