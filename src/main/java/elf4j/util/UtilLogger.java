@@ -2,7 +2,9 @@ package elf4j.util;
 
 import elf4j.Level;
 import elf4j.Logger;
-import java.io.*;
+import java.io.StringWriter;
+import java.io.PrintWriter;
+import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
