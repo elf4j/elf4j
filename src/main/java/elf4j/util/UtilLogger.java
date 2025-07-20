@@ -2,9 +2,10 @@ package elf4j.util;
 
 import elf4j.Level;
 import elf4j.Logger;
-import java.io.StringWriter;
-import java.io.PrintWriter;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -76,7 +77,7 @@ public enum UtilLogger implements Logger {
             throwable.printStackTrace(printWriter);
             return stringWriter.toString();
         } catch (IOException e) {
-            throw new IllegalStateException("Error getting stack trace info from " + throwable);
+            throw new IllegalStateException("Error getting stack trace info from " + throwable, e);
         }
     }
 
