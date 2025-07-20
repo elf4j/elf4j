@@ -63,9 +63,11 @@ public enum UtilLogger implements Logger {
 
     private static @NonNull String getStackTrace(Throwable throwable) {
         try (StringWriter stringWriter = new StringWriter();
-             PrintWriter printWriter = new PrintWriter(stringWriter)) {
+                PrintWriter printWriter = new PrintWriter(stringWriter)) {
             throwable.printStackTrace(printWriter);
             return stringWriter.toString();
+        } catch (IOException e) {
+            throw new IllegalStateException("Error getting stack trace info from " + throwable);
         }
     }
 
