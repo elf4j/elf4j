@@ -1,16 +1,17 @@
-package elf4j;
+package elf4j.util;
 
+import elf4j.Level;
+import elf4j.Logger;
 import java.io.PrintStream;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Objects;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 import org.jspecify.annotations.Nullable;
 
 /** Util logger for internal usage of the elf4j API. Not meant for any external client applications. */
-public enum TestLogger implements Logger {
+public enum UtilLogger implements Logger {
     /** Logger instance for TRACE level logging. */
     TRACE(Level.TRACE),
     /** Logger instance for DEBUG level logging. */
@@ -30,14 +31,13 @@ public enum TestLogger implements Logger {
     private final PrintStream printStream;
     private final Level level;
     private final Level thresholdOutputLevel;
-    private final Lock printStreamLock = new ReentrantLock(true);
 
     /**
-     * Constructor for the TestLogger enum.
+     * Constructor for the UtilLogger enum.
      *
      * @param level the logging level associated with this logger
      */
-    TestLogger(Level level) {
+    UtilLogger(Level level) {
         this.level = level;
         String outStreamType = System.getProperty("elf4j.internal.log.out.stream");
         if (outStreamType != null && outStreamType.trim().equalsIgnoreCase("stdout")) {
@@ -170,13 +170,8 @@ public enum TestLogger implements Logger {
     @Override
     public void log(Throwable throwable, String message, Object... arguments) {
         if (isEnabled()) {
-            printStreamLock.lock();
-            try {
-                printStream.print(resolveThrowableMessage(message, arguments));
-                throwable.printStackTrace(printStream);
-            } finally {
-                printStreamLock.unlock();
-            }
+            printStream.printf(
+                    "%s%n%s", resolveThrowableMessage(message, arguments), Arrays.toString(throwable.getStackTrace()));
         }
     }
 
@@ -189,7 +184,7 @@ public enum TestLogger implements Logger {
         Thread thread = Thread.currentThread();
         return String.format(
                 "%s %s [%s,%d] %s - ",
-                DATE_TIME_FORMATTER.format(OffsetDateTime.now()), level, thread.getName(), thread.getId(), name());
+                DATE_TIME_FORMATTER.format(OffsetDateTime.now()), level, thread.getName(), thread.getId(), "ELF4J");
     }
 
     /**

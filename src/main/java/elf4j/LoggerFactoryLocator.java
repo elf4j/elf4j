@@ -26,10 +26,10 @@ package elf4j;
 
 import elf4j.spi.LoggerFactory;
 import elf4j.util.NoopLoggerFactory;
+import elf4j.util.UtilLogger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
-import java.util.logging.Logger;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -47,7 +47,7 @@ enum LoggerFactoryLocator {
     }
 
     public static final String ELF4J_SERVICE_PROVIDER_FQCN = "elf4j.service.provider.fqcn";
-    private static final Logger LOGGER = Logger.getLogger(LoggerFactoryLocator.class.getName());
+    private static final Logger LOGGER = UtilLogger.INFO;
 
     /**
      * This method is called each time the {@link elf4j.Logger#instance} service access API is invoked, assuming the
@@ -64,22 +64,22 @@ enum LoggerFactoryLocator {
             @Nullable String specifiedLoggerFactoryClassName, List<LoggerFactory> loadedLoggerFactories) {
         if (specifiedLoggerFactoryClassName == null
                 || specifiedLoggerFactoryClassName.trim().isEmpty()) {
-            LOGGER.config(() -> String.format(
+            LOGGER.trace(String.format(
                     "No elf4j SPI implementation specified using system property '%s'", ELF4J_SERVICE_PROVIDER_FQCN));
             switch (loadedLoggerFactories.size()) {
                 case 0: {
-                    LOGGER.config(() -> "Default to NOP: No elf4j provider configured");
+                    LOGGER.trace("Default to NOP: No elf4j provider configured");
                     return new NoopLoggerFactory();
                 }
                 case 1: {
                     LoggerFactory loggerFactory = loadedLoggerFactories.get(0);
-                    LOGGER.config(() -> String.format(
+                    LOGGER.trace(String.format(
                             "Using loaded elf4j SPI implementation '%s'",
                             loggerFactory.getClass().getName()));
                     return loggerFactory;
                 }
                 default: {
-                    LOGGER.severe(String.format(
+                    LOGGER.error(String.format(
                             "Failed back to NOP: Nothing specified to select from multiple loaded elf4j SPI implementations %s: Either select one via system property '%s', or set up to load only one SPI implementation",
                             loadedLoggerFactories, ELF4J_SERVICE_PROVIDER_FQCN));
                     return new NoopLoggerFactory();
@@ -87,16 +87,16 @@ enum LoggerFactoryLocator {
             }
         }
         String specifiedLoggerFactoryFqcn = specifiedLoggerFactoryClassName.trim();
-        LOGGER.config(() -> String.format("Specified elf4j SPI implementation '%s'", specifiedLoggerFactoryFqcn));
+        LOGGER.trace(String.format("Specified elf4j SPI implementation '%s'", specifiedLoggerFactoryFqcn));
         for (LoggerFactory loggerFactory : loadedLoggerFactories) {
             if (specifiedLoggerFactoryFqcn.equals(loggerFactory.getClass().getName())) {
-                LOGGER.config(() -> String.format(
+                LOGGER.trace(String.format(
                         "Using specified elf4j SPI implementation '%s' from loaded collection %s",
                         loggerFactory, loadedLoggerFactories));
                 return loggerFactory;
             }
         }
-        LOGGER.severe(String.format(
+        LOGGER.error(String.format(
                 "Failed back to NOP: Specified elf4j SPI implementation not found: specified fqcn='%s', loaded collection=%s",
                 specifiedLoggerFactoryFqcn, loadedLoggerFactories));
         return new NoopLoggerFactory();
