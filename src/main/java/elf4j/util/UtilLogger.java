@@ -240,15 +240,4 @@ public enum UtilLogger implements Logger {
         }
         return resolved.toString();
     }
-
-    static class MySupper {
-        protected void method() throws IOException {
-            throw new IOException();
-        }
-    }
-
-    static class MySub extends MySupper {
-        @Override
-        protected void method() {}
-    }
 }
