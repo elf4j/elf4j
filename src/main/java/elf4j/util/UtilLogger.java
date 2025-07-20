@@ -2,12 +2,13 @@ package elf4j.util;
 
 import elf4j.Level;
 import elf4j.Logger;
-import java.io.PrintStream;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Supplier;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /** Util logger for internal usage of the elf4j API. Not meant for any external client applications. */
@@ -27,7 +28,9 @@ public enum UtilLogger implements Logger {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-    public static final Object[] EMPTY_OBJECT_ARRAY = {};
+    private static final String ERROR_MESSAGE_FORMAT = "%s%n%s%n";
+    private static final String UTF_8 = StandardCharsets.UTF_8.name();
+    private static final String PREFIX_FORMAT = "%s %s [%s,%d] ELF4J - ";
     private final PrintStream printStream;
     private final Level level;
     private final Level thresholdOutputLevel;
@@ -58,6 +61,18 @@ public enum UtilLogger implements Logger {
      */
     private static String supply(@Nullable Object o) {
         return Objects.toString(o instanceof Supplier<?> ? ((Supplier<?>) o).get() : o);
+    }
+
+    private static @NonNull String getStackTrace(Throwable throwable) {
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            PrintStream printStream = new PrintStream(byteArrayOutputStream, false, UTF_8);
+            throwable.printStackTrace(printStream);
+            printStream.flush();
+            return byteArrayOutputStream.toString(UTF_8);
+        } catch (IOException e) {
+            throw new IllegalStateException("Error getting stack trace text from " + throwable, e);
+        }
     }
 
     /**
@@ -142,7 +157,9 @@ public enum UtilLogger implements Logger {
      */
     @Override
     public void log(Throwable throwable) {
-        this.log(throwable, Objects.toString(throwable));
+        if (isEnabled()) {
+            printStream.printf(ERROR_MESSAGE_FORMAT, resolve(""), getStackTrace(throwable));
+        }
     }
 
     /**
@@ -153,11 +170,9 @@ public enum UtilLogger implements Logger {
      */
     @Override
     public void log(Throwable throwable, @Nullable Object message) {
-        log(throwable, supply(message), EMPTY_OBJECT_ARRAY);
-    }
-
-    private String resolveThrowableMessage(@Nullable String message, Object... arguments) {
-        return resolve(message, arguments) + System.lineSeparator() + '\t';
+        if (isEnabled()) {
+            printStream.printf(ERROR_MESSAGE_FORMAT, resolve(supply(message)), getStackTrace(throwable));
+        }
     }
 
     /**
@@ -170,8 +185,7 @@ public enum UtilLogger implements Logger {
     @Override
     public void log(Throwable throwable, String message, Object... arguments) {
         if (isEnabled()) {
-            printStream.printf(
-                    "%s%n%s", resolveThrowableMessage(message, arguments), Arrays.toString(throwable.getStackTrace()));
+            printStream.printf(ERROR_MESSAGE_FORMAT, resolve(message, arguments), getStackTrace(throwable));
         }
     }
 
@@ -183,8 +197,11 @@ public enum UtilLogger implements Logger {
     private String prefix() {
         Thread thread = Thread.currentThread();
         return String.format(
-                "%s %s [%s,%d] %s - ",
-                DATE_TIME_FORMATTER.format(OffsetDateTime.now()), level, thread.getName(), thread.getId(), "ELF4J");
+                PREFIX_FORMAT,
+                DATE_TIME_FORMATTER.format(OffsetDateTime.now()),
+                level,
+                thread.getName(),
+                thread.getId());
     }
 
     /**
@@ -194,7 +211,7 @@ public enum UtilLogger implements Logger {
      * @param arguments the arguments to replace placeholders
      * @return the resolved message
      */
-    private CharSequence resolve(@Nullable String message, Object... arguments) {
+    private String resolve(@Nullable String message, Object... arguments) {
         String suppliedMessage = prefix() + message;
         if (arguments.length == 0) {
             return suppliedMessage;
@@ -215,6 +232,6 @@ public enum UtilLogger implements Logger {
                 i += 1;
             }
         }
-        return resolved;
+        return resolved.toString();
     }
 }
