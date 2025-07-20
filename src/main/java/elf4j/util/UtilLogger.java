@@ -63,6 +63,13 @@ public enum UtilLogger implements Logger {
         return Objects.toString(o instanceof Supplier<?> ? ((Supplier<?>) o).get() : o);
     }
 
+    /**
+     * Converts the stack trace of the given throwable into a string representation.
+     *
+     * @param throwable the throwable whose stack trace is to be converted
+     * @return the stack trace of the throwable as a string
+     * @throws IllegalStateException if an IOException occurs while processing the stack trace
+     */
     private static @NonNull String getStackTrace(Throwable throwable) {
         try (StringWriter stringWriter = new StringWriter();
                 PrintWriter printWriter = new PrintWriter(stringWriter)) {
