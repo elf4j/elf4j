@@ -3,7 +3,6 @@ package elf4j.util;
 import elf4j.Level;
 import elf4j.Logger;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -29,7 +28,6 @@ public enum UtilLogger implements Logger {
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
     private static final String ERROR_MESSAGE_FORMAT = "%s%n%s%n";
-    private static final String UTF_8 = "UTF-8";
     private static final String PREFIX_FORMAT = "%s %s [%s,%d] ELF4J - ";
     private final PrintStream printStream;
     private final Level level;
