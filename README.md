@@ -205,8 +205,8 @@ public interface Logger {
 ### It is a logging Service Provider Interface (SPI)
 
 ```java
-public interface LogServiceProvider {
-  Logger logger();
+public interface LoggerFactory {
+    Logger getLogger();
 }
 ```
 

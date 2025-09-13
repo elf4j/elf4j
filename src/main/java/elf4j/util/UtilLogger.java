@@ -10,7 +10,6 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.function.Supplier;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /** Util logger for internal usage of the elf4j API. Not meant for any external client applications. */
@@ -71,7 +70,7 @@ public enum UtilLogger implements Logger {
      * @return the stack trace of the throwable as a string
      * @throws IllegalStateException if an IOException occurs while processing the stack trace
      */
-    private static @NonNull String getStackTrace(Throwable throwable) {
+    private static String getStackTrace(Throwable throwable) {
         try (StringWriter stringWriter = new StringWriter();
                 PrintWriter printWriter = new PrintWriter(stringWriter)) {
             throwable.printStackTrace(printWriter);
@@ -222,22 +221,27 @@ public enum UtilLogger implements Logger {
         if (arguments.length == 0) {
             return suppliedMessage;
         }
-        int messageLength = suppliedMessage.length();
         StringBuilder resolved = new StringBuilder();
-        int i = 0;
-        int j = 0;
-        while (i < messageLength) {
-            char character = suppliedMessage.charAt(i);
-            if (character == '{'
-                    && ((i + 1) < messageLength && suppliedMessage.charAt(i + 1) == '}')
-                    && j < arguments.length) {
-                resolved.append(supply(arguments[j++]));
-                i += 2;
+        int messageIndex = 0;
+        int argumentIndex = 0;
+        while (messageIndex < suppliedMessage.length()) {
+            if (atArgumentSymbol(messageIndex, suppliedMessage) && availableAt(argumentIndex, arguments)) {
+                resolved.append(supply(arguments[argumentIndex++]));
+                messageIndex += 2;
             } else {
-                resolved.append(character);
-                i += 1;
+                resolved.append(suppliedMessage.charAt(messageIndex));
+                messageIndex += 1;
             }
         }
         return resolved.toString();
+    }
+
+    private static boolean availableAt(final int argumentIndex, final Object[] arguments) {
+        return argumentIndex < arguments.length;
+    }
+
+    private static boolean atArgumentSymbol(final int messageIndex, final String message) {
+        return '{' == message.charAt(messageIndex)
+                && ((messageIndex + 1) < message.length() && '}' == message.charAt(messageIndex + 1));
     }
 }
