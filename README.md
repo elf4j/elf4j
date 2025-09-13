@@ -209,6 +209,7 @@ public interface LoggerFactory {
     Logger getLogger();
 }
 ```
+See details [here](#use-it-as-the-_service-provider-interface_-spi-to-provide-concrete-log-service).
 
 ### Conventions, Defaults, and Implementation Notes (a.k.a. "the spec")
 
