@@ -26,7 +26,6 @@ package elf4j;
 
 import java.util.Arrays;
 import java.util.function.Supplier;
-import org.jspecify.annotations.NonNull;
 
 /**
  * Per the "Effective Java" book, <q>There are three essential components in a service provider framework: a service
@@ -120,7 +119,7 @@ public interface Logger {
      *
      * @param message Supplier of the message to be logged
      */
-    default void log(@NonNull Supplier<?> message) {
+    default void log(Supplier<?> message) {
         if (!isEnabled()) {
             return;
         }
@@ -154,7 +153,7 @@ public interface Logger {
         log(message, supply(arguments));
     }
 
-    static Object @NonNull [] supply(Supplier<?>[] arguments) {
+    static Object[] supply(Supplier<?>[] arguments) {
         return Arrays.stream(arguments).map(Supplier::get).toArray(Object[]::new);
     }
 
@@ -181,7 +180,7 @@ public interface Logger {
      * @param throwable the Throwable to be logged
      * @param message Supplier of the accompanying message to be logged
      */
-    default void log(Throwable throwable, @NonNull Supplier<?> message) {
+    default void log(Throwable throwable, Supplier<?> message) {
         if (!isEnabled()) {
             return;
         }
@@ -329,11 +328,11 @@ public interface Logger {
      *
      * @param message Supplier of the message to be logged
      */
-    default void trace(@NonNull Supplier<?> message) {
+    default void trace(Supplier<?> message) {
         logSuppliedAtLevel(Level.TRACE, message);
     }
 
-    default void logSuppliedAtLevel(Level level, @NonNull Supplier<?> message) {
+    default void logSuppliedAtLevel(Level level, Supplier<?> message) {
         if (!isEnabled(level)) {
             return;
         }
@@ -393,11 +392,11 @@ public interface Logger {
      * @param throwable the Throwable to be logged
      * @param message Supplier of the accompanying message to be logged
      */
-    default void trace(Throwable throwable, @NonNull Supplier<?> message) {
+    default void trace(Throwable throwable, Supplier<?> message) {
         logSuppliedAtLevel(Level.TRACE, throwable, message);
     }
 
-    default void logSuppliedAtLevel(Level level, Throwable throwable, @NonNull Supplier<?> message) {
+    default void logSuppliedAtLevel(Level level, Throwable throwable, Supplier<?> message) {
         if (!isEnabled(level)) {
             return;
         }
@@ -446,7 +445,7 @@ public interface Logger {
      *
      * @param message Supplier of the message to be logged
      */
-    default void debug(@NonNull Supplier<?> message) {
+    default void debug(Supplier<?> message) {
         logSuppliedAtLevel(Level.DEBUG, message);
     }
 
@@ -496,7 +495,7 @@ public interface Logger {
      * @param throwable the Throwable to be logged
      * @param message Supplier of the accompanying message to be logged
      */
-    default void debug(Throwable throwable, @NonNull Supplier<?> message) {
+    default void debug(Throwable throwable, Supplier<?> message) {
         logSuppliedAtLevel(Level.DEBUG, throwable, message);
     }
 
@@ -535,7 +534,7 @@ public interface Logger {
      *
      * @param message Supplier of the message to be logged
      */
-    default void info(@NonNull Supplier<?> message) {
+    default void info(Supplier<?> message) {
         logSuppliedAtLevel(Level.INFO, message);
     }
 
@@ -585,7 +584,7 @@ public interface Logger {
      * @param throwable the Throwable to be logged
      * @param message Supplier of the accompanying message to be logged
      */
-    default void info(Throwable throwable, @NonNull Supplier<?> message) {
+    default void info(Throwable throwable, Supplier<?> message) {
         logSuppliedAtLevel(Level.INFO, throwable, message);
     }
 
@@ -624,7 +623,7 @@ public interface Logger {
      *
      * @param message Supplier of the message to be logged
      */
-    default void warn(@NonNull Supplier<?> message) {
+    default void warn(Supplier<?> message) {
         logSuppliedAtLevel(Level.WARN, message);
     }
 
@@ -674,7 +673,7 @@ public interface Logger {
      * @param throwable the Throwable to be logged
      * @param message Supplier of the accompanying message to be logged
      */
-    default void warn(Throwable throwable, @NonNull Supplier<?> message) {
+    default void warn(Throwable throwable, Supplier<?> message) {
         logSuppliedAtLevel(Level.WARN, throwable, message);
     }
 
@@ -713,7 +712,7 @@ public interface Logger {
      *
      * @param message Supplier of the message to be logged
      */
-    default void error(@NonNull Supplier<?> message) {
+    default void error(Supplier<?> message) {
         logSuppliedAtLevel(Level.ERROR, message);
     }
 
@@ -763,7 +762,7 @@ public interface Logger {
      * @param throwable the Throwable to be logged
      * @param message Supplier of the accompanying message to be logged
      */
-    default void error(Throwable throwable, @NonNull Supplier<?> message) {
+    default void error(Throwable throwable, Supplier<?> message) {
         logSuppliedAtLevel(Level.ERROR, throwable, message);
     }
 
