@@ -218,14 +218,14 @@ public enum UtilLogger implements Logger {
      */
     private String resolve(@Nullable String message, Object... arguments) {
         String suppliedMessage = prefix() + message;
-        if (arguments.length == 0) {
+        if (message == null || message.trim().isEmpty() || arguments.length == 0) {
             return suppliedMessage;
         }
         StringBuilder resolved = new StringBuilder();
         int messageIndex = 0;
         int argumentIndex = 0;
         while (messageIndex < suppliedMessage.length()) {
-            if (atArgumentSymbol(messageIndex, suppliedMessage) && availableAt(argumentIndex, arguments)) {
+            if (atPlaceHolder(messageIndex, suppliedMessage) && !exceedsBound(argumentIndex, arguments)) {
                 resolved.append(supply(arguments[argumentIndex++]));
                 messageIndex += 2;
             } else {
@@ -236,12 +236,18 @@ public enum UtilLogger implements Logger {
         return resolved.toString();
     }
 
-    private static boolean availableAt(final int argumentIndex, final Object[] arguments) {
-        return argumentIndex < arguments.length;
+    private static boolean atPlaceHolder(final int messageIndex, final String message) {
+        if (exceedsLength(messageIndex + 1, message)) {
+            return false;
+        }
+        return '{' == message.charAt(messageIndex) && '}' == message.charAt(messageIndex + 1);
     }
 
-    private static boolean atArgumentSymbol(final int messageIndex, final String message) {
-        return '{' == message.charAt(messageIndex)
-                && ((messageIndex + 1) < message.length() && '}' == message.charAt(messageIndex + 1));
+    private static boolean exceedsLength(final int messageIndex, final String message) {
+        return messageIndex >= message.length();
+    }
+
+    private static boolean exceedsBound(final int argumentIndex, final Object[] arguments) {
+        return argumentIndex >= arguments.length;
     }
 }
