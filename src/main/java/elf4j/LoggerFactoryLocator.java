@@ -80,7 +80,7 @@ enum LoggerFactoryLocator {
                 }
                 default: {
                     LOGGER.error(String.format(
-                            "Failed back to NOP: Nothing specified to select from multiple loaded elf4j SPI implementations %s: Either select one via system property '%s', or set up to load only one SPI implementation",
+                            "Falling back to NOP: Nothing specified to select from multiple loaded elf4j SPI implementations %s: Either select one via system property '%s', or set up to load only one SPI implementation",
                             loadedLoggerFactories, ELF4J_SERVICE_PROVIDER_FQCN));
                     return new NoopLoggerFactory();
                 }
@@ -97,7 +97,7 @@ enum LoggerFactoryLocator {
             }
         }
         LOGGER.error(String.format(
-                "Failed back to NOP: Specified elf4j SPI implementation not found: specified fqcn='%s', loaded collection=%s",
+                "Falling back to NOP: Specified elf4j SPI implementation not found: specified fqcn='%s', loaded collection=%s",
                 specifiedLoggerFactoryFqcn, loadedLoggerFactories));
         return new NoopLoggerFactory();
     }
