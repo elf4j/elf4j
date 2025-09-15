@@ -332,7 +332,7 @@ public interface Logger {
         logSuppliedAtLevel(Level.TRACE, message);
     }
 
-    default void logSuppliedAtLevel(Level level, Supplier<?> message) {
+    private void logSuppliedAtLevel(Level level, Supplier<?> message) {
         if (!isEnabled(level)) {
             return;
         }
@@ -349,7 +349,7 @@ public interface Logger {
         logSuppliedAtLevel(Level.TRACE, message, arguments);
     }
 
-    default void logSuppliedAtLevel(Level level, String message, Supplier<?>[] arguments) {
+    private void logSuppliedAtLevel(Level level, String message, Supplier<?>[] arguments) {
         if (!isEnabled(level)) {
             return;
         }
@@ -396,7 +396,7 @@ public interface Logger {
         logSuppliedAtLevel(Level.TRACE, throwable, message);
     }
 
-    default void logSuppliedAtLevel(Level level, Throwable throwable, Supplier<?> message) {
+    private void logSuppliedAtLevel(Level level, Throwable throwable, Supplier<?> message) {
         if (!isEnabled(level)) {
             return;
         }
@@ -414,7 +414,7 @@ public interface Logger {
         logSuppliedAtLevel(Level.TRACE, throwable, message, arguments);
     }
 
-    default void logSuppliedAtLevel(Level level, Throwable throwable, String message, Supplier<?>[] arguments) {
+    private void logSuppliedAtLevel(Level level, Throwable throwable, String message, Supplier<?>[] arguments) {
         if (!isEnabled(level)) {
             return;
         }
