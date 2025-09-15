@@ -24,9 +24,8 @@ Note that individual logging service providers may require higher JDK versions.
 If you are familiar with other logging APIs such as SLF4J/LOGBACK/LOG4J, you will find most counterpart logging methods in ELF4J, with some noticeable differences:
 
 * When logging a Throwable/Exception, the Throwable always goes as the very first argument in the logging method's multi-argument signature (as opposed to the last as in the other APIs).
-* As the logging service access API, the static factory method `Logger.instance()` does not take any argument. When needed, it is up to the log service provider to detect the access API caller class and decide the default Name and severity Level of the logger instance to be returned. As with a value-based Object, although the Logger instance's name may be important in the log service provider implementation, the logger name is insignificant to the service caller/client and not part of the {@code Logger} interface.
+* As the logging service access API, the static factory method `Logger.instance()` does not take any argument. When needed, it is up to the log service provider to detect the access API caller class and decide the default Name and severity Level of the logger instance to be returned. As with a value-based Object, the Logger instance's name may be important for the log configuration and the service provider implementation. However, the logger name is insignificant on the service caller/client API level, and not part of the {@code Logger} interface.
 * The severity Level of a `Logger` instance is immutable. Although the `Logger` instance can log at any level via the convenience `Logger.<level>()` methods, the `Logger.log()` methods are always logging at the level of the current `Logger` instance. The instance factory methods `Logger.at<Level>()` must return a different {@code Logger} instance if the requested \<Level\> is different from the current instance's.
-
 ```java
 public interface Logger {
     static Logger instance() {
@@ -137,7 +136,7 @@ public interface Logger {
         logSuppliedAtLevel(Level.TRACE, message);
     }
 
-    default void logSuppliedAtLevel(Level level, Supplier<?> message) {
+    private void logSuppliedAtLevel(Level level, Supplier<?> message) {
         if (!isEnabled(level)) {
             return;
         }
@@ -148,7 +147,7 @@ public interface Logger {
         logSuppliedAtLevel(Level.TRACE, message, arguments);
     }
 
-    default void logSuppliedAtLevel(Level level, String message, Supplier<?>[] arguments) {
+    private void logSuppliedAtLevel(Level level, String message, Supplier<?>[] arguments) {
         if (!isEnabled(level)) {
             return;
         }
@@ -169,6 +168,24 @@ public interface Logger {
 
     default void trace(Throwable throwable, Supplier<?> message) {
         logSuppliedAtLevel(Level.TRACE, throwable, message);
+    }
+
+    private void logSuppliedAtLevel(Level level, Throwable throwable, Supplier<?> message) {
+        if (!isEnabled(level)) {
+            return;
+        }
+        atLevel(level).log(throwable, message.get());
+    }
+
+    default void trace(Throwable throwable, String message, Supplier<?>... arguments) {
+        logSuppliedAtLevel(Level.TRACE, throwable, message, arguments);
+    }
+
+    private void logSuppliedAtLevel(Level level, Throwable throwable, String message, Supplier<?>[] arguments) {
+        if (!isEnabled(level)) {
+            return;
+        }
+        atLevel(level).log(throwable, message, supply(arguments));
     }
 
   // More resembling convenience methods...
