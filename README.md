@@ -13,7 +13,9 @@ API and SPI of a no-fluff Java logging facade
 
 ## Prerequisite
 
-Java 8 or better, although individual logging service providers may have higher JDK version prerequisite.
+Java 8 or better for versions prior to 7.0.0, exclusive. Java 11 or better for versions post 7.0.0, inclusive.
+
+Note that individual logging service providers may require higher JDK versions.
 
 ## What it is...
 
@@ -22,181 +24,169 @@ Java 8 or better, although individual logging service providers may have higher 
 If you are familiar with other logging APIs such as SLF4J/LOGBACK/LOG4J, you will find most counterpart logging methods in ELF4J, with some noticeable differences:
 
 * When logging a Throwable/Exception, the Throwable always goes as the very first argument in the logging method's multi-argument signature (as opposed to the last as in the other APIs).
-* As the logging service access API, the static factory method `Logger.instance()` does not take any argument. When needed, it is up to the log service provider to detect the access API caller class and decide the default Name and severity Level of the logger instance to be returned. As with a value-based Object, although the Logger instance's name may be important in the log service provider implementation, the logger name is insignificant to the service caller/client and not part of the {@code Logger} interface.
+* As the logging service access API, the static factory method `Logger.instance()` does not take any argument. When needed, it is up to the log service provider to detect the access API caller class and decide the default Name and severity Level of the logger instance to be returned. As with a value-based Object, the Logger instance's name may be important for the log configuration and the service provider implementation. However, the logger name is insignificant on the service caller/client API level, and not part of the {@code Logger} interface.
 * The severity Level of a `Logger` instance is immutable. Although the `Logger` instance can log at any level via the convenience `Logger.<level>()` methods, the `Logger.log()` methods are always logging at the level of the current `Logger` instance. The instance factory methods `Logger.at<Level>()` must return a different {@code Logger} instance if the requested \<Level\> is different from the current instance's.
-
 ```java
-/**
- * The Logger serves as both the "service interface" and "access API" as in the <a
- * href="https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html">Java Service Provider Framework</a>.
- *
- * <p>All {@link Logger} instances from this API should be thread-safe.
- */
 public interface Logger {
-  /**
-   * Static factory method as the "service access API" that provides a default Logger instance
-   *
-   * @return Logger instance with default name and Level
-   * @implNote It is up to the logging service provider to determine the default name and level of the logger instance
-   *     to be returned.
-   */
-  static Logger instance() {
-    return LoggerFactoryLocator.INSTANCE.getLoggerFactory().getLogger();
-  }
-
-  /**
-   * Instance factory method that provides a Logger instance for the specified log level with the same name as this
-   * Logger instance
-   *
-   * @param level the logging level of the requested Logger instance
-   * @return Logger instance of the specified level
-   * @implNote A Logger instance's severity level is immutable and cannot be changed after creation. Therefore, this
-   *     method can return the current instance itself only if the specified level is the same as the current
-   *     instance's; otherwise, it will have to be a different Logger instance to be returned.
-   */
-  Logger atLevel(Level level);
-
-  /**
-   * Retrieves the severity level of the Logger instance.
-   *
-   * @return the severity level of the logger instance
-   */
-  Level getLevel();
-
-  /**
-   * Checks if logging is enabled for this Logger instance.
-   *
-   * @return true if logging is enabled, false otherwise
-   */
-  boolean isEnabled();
-
-  /**
-   * Checks if logging is enabled for the Logger instance obtained by calling one of the instance factory methods of this Logger
-   * instance at the specified level
-   *
-   * @param level the logging level to check
-   * @return true if logging is enabled at the specified level, false otherwise
-   */
-  default boolean isEnabled(Level level) {
-    return atLevel(level).isEnabled();
-  }
-
-  /**
-   * Logs a message.
-   *
-   * @param message the message to be logged. If the actual type is {@link java.util.function.Supplier}, the result of
-   *     {@link Supplier#get()} is used to construct the final log message.
-   */
-  void log(Object message);
-
-  /**
-   * Logs a message provided by a Supplier. Convenience overloading method of {@link #log(Object)}, so no need of
-   * downcast to {@link Supplier} when the message argument is provided as a lambda expression.
-   *
-   * @param message Supplier of the message to be logged
-   */
-  default void log(@NonNull Supplier<?> message) {
-    if (!isEnabled()) {
-      return;
+    static Logger instance() {
+        return LoggerFactoryLocator.INSTANCE.getLoggerFactory().getLogger();
     }
-    log(message.get());
-  }
 
-  /**
-   * Logs a formatted message with arguments.
-   *
-   * @param message the message to be logged, which may contain argument placeholders denoted as `{}` tokens
-   * @param arguments the arguments whose values will replace the placeholders in the message. The arguments can be a
-   *     mixture of both eager {@code Object} and lazy {@code Supplier<?>} types. When both types are present, lambda
-   *     expression arguments need to be downcast to {@code Supplier<?>} per the lambda syntax requirement.
-   */
-  void log(String message, Object... arguments);
+    Logger atLevel(Level level);
 
-  /**
-   * Logs a formatted message with arguments provided by Suppliers (lambda expressions). Convenience overloading
-   * method of {@link Logger#log(String, Object...)}, so that no need to downcast to {@link Supplier} when all
-   * arguments are lazy lambda expressions.
-   *
-   * @param message the message to be logged
-   * @param arguments Suppliers of the arguments to replace placeholders in the message; no downcast needed as all
-   *     arguments are of {@code Supplier<?>} type.
-   */
-  default void log(String message, Supplier<?>... arguments) {
-    if (!isEnabled()) {
-      return;
+    Level getLevel();
+
+    boolean isEnabled();
+
+    default boolean isEnabled(Level level) {
+        return atLevel(level).isEnabled();
     }
-    log(message, supply(arguments));
-  }
 
-  static Object @NonNull [] supply(Supplier<?>[] arguments) {
-    return Arrays.stream(arguments).map(Supplier::get).toArray(Object[]::new);
-  }
+    void log(Object message);
 
-  /**
-   * Logs a Throwable.
-   *
-   * @param throwable the Throwable to be logged
-   */
-  void log(Throwable throwable);
-
-  /**
-   * Logs a Throwable with an accompanying message.
-   *
-   * @param throwable the Throwable to be logged
-   * @param message the accompanying message to be logged. If the actual type is {@link java.util.function.Supplier},
-   *     the result of {@link Supplier#get()} is used to compute the final log message.
-   */
-  void log(Throwable throwable, Object message);
-
-  /**
-   * Logs a Throwable with an accompanying message provided by a Supplier.
-   *
-   * @param throwable the Throwable to be logged
-   * @param message Supplier of the accompanying message to be logged
-   */
-  default void log(Throwable throwable, @NonNull Supplier<?> message) {
-    if (!isEnabled()) {
-      return;
+    default void log(Supplier<?> message) {
+        if (!isEnabled()) {
+            return;
+        }
+        log(message.get());
     }
-    log(throwable, message.get());
-  }
 
-  /**
-   * Logs a Throwable with a formatted message and arguments.
-   *
-   * @param throwable the Throwable to be logged
-   * @param message the message to be logged, which may contain argument placeholders
-   * @param arguments the arguments whose values will replace the placeholders in the message
-   */
-  void log(Throwable throwable, String message, Object... arguments);
+    void log(String message, Object... arguments);
 
-  /**
-   * Logs a Throwable with a formatted message and arguments provided by Suppliers.
-   *
-   * @param throwable the Throwable to be logged
-   * @param message the message to be logged
-   * @param arguments Suppliers of the arguments to replace placeholders in the message
-   */
-  default void log(Throwable throwable, String message, Supplier<?>... arguments) {
-    if (!isEnabled()) {
-      return;
+    default void log(String message, Supplier<?>... arguments) {
+        if (!isEnabled()) {
+            return;
+        }
+        log(message, supply(arguments));
     }
-    log(throwable, message, supply(arguments));
-  }
 
-  // Following methods are convenience shorthands added to resemble other logging APIs
+    private static Object[] supply(Supplier<?>[] arguments) {
+        return Arrays.stream(arguments).map(Supplier::get).toArray(Object[]::new);
+    }
 
-  default boolean isTraceEnabled() {
-    return atTrace().isEnabled();
-  }
+    void log(Throwable throwable);
 
-  default void trace(Object message) {
-    atTrace().log(message);
-  }
+    void log(Throwable throwable, Object message);
 
-  default void trace(Throwable throwable, String message, Object... arguments) { // again, the throwable goes first
-    atTrace().log(throwable, message, arguments);
-  }
+    default void log(Throwable throwable, Supplier<?> message) {
+        if (!isEnabled()) {
+            return;
+        }
+        log(throwable, message.get());
+    }
+
+    void log(Throwable throwable, String message, Object... arguments);
+
+    default void log(Throwable throwable, String message, Supplier<?>... arguments) {
+        if (!isEnabled()) {
+            return;
+        }
+        log(throwable, message, supply(arguments));
+    }
+
+    default Logger atTrace() {
+        return atLevel(Level.TRACE);
+    }
+
+    default Logger atDebug() {
+        return atLevel(Level.DEBUG);
+    }
+
+    default Logger atInfo() {
+        return atLevel(Level.INFO);
+    }
+
+    default Logger atWarn() {
+        return atLevel(Level.WARN);
+    }
+
+    default Logger atError() {
+        return atLevel(Level.ERROR);
+    }
+
+    default boolean isTraceEnabled() {
+        return atTrace().isEnabled();
+    }
+
+    default boolean isDebugEnabled() {
+        return atDebug().isEnabled();
+    }
+
+    default boolean isInfoEnabled() {
+        return atInfo().isEnabled();
+    }
+
+    default boolean isWarnEnabled() {
+        return atWarn().isEnabled();
+    }
+
+    default boolean isErrorEnabled() {
+        return atError().isEnabled();
+    }
+
+    default void trace(Object message) {
+        atTrace().log(message);
+    }
+
+    default void trace(String message, Object... arguments) {
+        atTrace().log(message, arguments);
+    }
+
+    default void trace(Supplier<?> message) {
+        logSuppliedAtLevel(Level.TRACE, message);
+    }
+
+    private void logSuppliedAtLevel(Level level, Supplier<?> message) {
+        if (!isEnabled(level)) {
+            return;
+        }
+        atLevel(level).log(message.get());
+    }
+
+    default void trace(String message, Supplier<?>... arguments) {
+        logSuppliedAtLevel(Level.TRACE, message, arguments);
+    }
+
+    private void logSuppliedAtLevel(Level level, String message, Supplier<?>[] arguments) {
+        if (!isEnabled(level)) {
+            return;
+        }
+        atLevel(level).log(message, supply(arguments));
+    }
+
+    default void trace(Throwable throwable) {
+        atTrace().log(throwable);
+    }
+
+    default void trace(Throwable throwable, Object message) {
+        atTrace().log(throwable, message);
+    }
+
+    default void trace(Throwable throwable, String message, Object... arguments) {
+        atTrace().log(throwable, message, arguments);
+    }
+
+    default void trace(Throwable throwable, Supplier<?> message) {
+        logSuppliedAtLevel(Level.TRACE, throwable, message);
+    }
+
+    private void logSuppliedAtLevel(Level level, Throwable throwable, Supplier<?> message) {
+        if (!isEnabled(level)) {
+            return;
+        }
+        atLevel(level).log(throwable, message.get());
+    }
+
+    default void trace(Throwable throwable, String message, Supplier<?>... arguments) {
+        logSuppliedAtLevel(Level.TRACE, throwable, message, arguments);
+    }
+
+    private void logSuppliedAtLevel(Level level, Throwable throwable, String message, Supplier<?>[] arguments) {
+        if (!isEnabled(level)) {
+            return;
+        }
+        atLevel(level).log(throwable, message, supply(arguments));
+    }
 
   // More resembling convenience methods...
 }
