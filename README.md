@@ -13,7 +13,8 @@ API and SPI of a no-fluff Java logging facade
 
 ## Prerequisite
 
-Java 8 or better for versions prior to 7.0.0, exclusive. Java 11 or better for versions post 7.0.0, inclusive.
+* Java 8 or better for versions prior to 7.0.0, exclusive.
+* Java 11 or better for versions post 7.0.0, inclusive.
 
 Note that individual logging service providers may require higher JDK versions.
 
