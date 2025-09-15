@@ -153,7 +153,7 @@ public interface Logger {
         log(message, supply(arguments));
     }
 
-    static Object[] supply(Supplier<?>[] arguments) {
+    private static Object[] supply(Supplier<?>[] arguments) {
         return Arrays.stream(arguments).map(Supplier::get).toArray(Object[]::new);
     }
 
